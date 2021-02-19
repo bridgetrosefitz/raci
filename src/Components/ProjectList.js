@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class TeamMemberList extends React.Component{
+export default class ProjectList extends React.Component{
   constructor() {
     super()
 
@@ -11,7 +11,7 @@ export default class TeamMemberList extends React.Component{
 
   render(){
     return(
-      <h2>Hi I'm the TeamMemberList component</h2>
+      <h2>Hi I'm the ProjectList component</h2>
     )
   }
 
