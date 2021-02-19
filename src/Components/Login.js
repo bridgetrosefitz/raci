@@ -7,15 +7,33 @@ export default class Login extends React.Component {
     super()
 
     this.state = {
-      email: null,
-      password: null,
+      email: `kevin@test.com`,
+      password: `beef`,
     }
   }
 
+  // controlledForm = () => {
+
+  // }
+
   handleButtonClick = () => {
-    fetch('http://localhost:3001/api/v1/projects')
+    const userEmail = this.state.email
+    const userPassword = this.state.password
+    fetch(`http://localhost:3001/api/v1/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json',
+        'Accept' : 'application/json'
+      },
+      body: JSON.stringify({
+        "email" : userEmail,
+        "password" : userPassword
+      })
+    })
     .then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => {
+      debugger
+      })
   }
 
   render(){
