@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ProjectList extends React.Component{
+export default class TeamMemberList extends React.Component{
   constructor() {
     super()
 

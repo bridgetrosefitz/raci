@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input } from 'semantic-ui-react'
 
 export default class Login extends React.Component {
   constructor() {
@@ -11,7 +12,12 @@ export default class Login extends React.Component {
 
   render(){
     return(
-      <h2>Hi I'm the Login component</h2>
+      <div>
+        <h2>Login</h2>
+        <Input />
+      </div>
+      
+
     )
   }
 }

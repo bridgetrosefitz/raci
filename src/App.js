@@ -1,8 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
-import RACITable from './Components/RACITable'
-import Login from './Components/Login'
+import RACITable from './Components/RACITable';
+import Login from './Components/Login';
 import TeamMemberList from './Components/TeamMemberList';
+import 'semantic-ui-css/semantic.min.css';
 
 function App() {
   return (
