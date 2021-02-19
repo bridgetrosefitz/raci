@@ -9,6 +9,7 @@ export default class Login extends React.Component {
     this.state = {
       email: `kevin@test.com`,
       password: `beef`,
+      user_id: null
     }
   }
 
@@ -40,9 +41,9 @@ export default class Login extends React.Component {
     return(
       <div>
         <h2>Login</h2>
-        <Input placeholder='Your email' />
+        <Input placeholder='Your email' type='text'/>
         <br/>
-        <Input placeholder='Password' />
+        <Input placeholder='Password' type='password'/>
         <br/>
         <Button onClick={this.handleButtonClick}>Log in</Button>
         <br/>
