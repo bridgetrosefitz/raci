@@ -13,7 +13,6 @@ export default class RACITable extends React.Component {
     render() {
       return(
         <div>
-          hi
         </div>
       )
     }

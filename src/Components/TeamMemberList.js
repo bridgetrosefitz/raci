@@ -11,7 +11,7 @@ export default class TeamMemberList extends React.Component{
 
   render(){
     return(
-      <h2>Hi I'm the ProjectList component</h2>
+      <div></div>
     )
   }
 
