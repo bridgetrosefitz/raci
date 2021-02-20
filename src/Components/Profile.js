@@ -9,7 +9,7 @@ export default class Profile extends React.Component {
   componentDidMount() {
     fetch(`http://localhost:3001/api/v1/profile`, {
       headers: {
-        'Authorization' : localStorage.token
+        'Authorization' : `Bearer: ${localStorage.token}`
       }
     })
     .then(res => res.json())
