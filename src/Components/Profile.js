@@ -2,9 +2,26 @@ import React from 'react';
 
 export default class Profile extends React.Component {
 
+  state = {
+    first_name: ''
+  }
+
+  componentDidMount() {
+    fetch(`http://localhost:3001/api/v1/profile`, {
+      headers: {
+        'Authorization' : localStorage.token
+      }
+    })
+    .then(res => res.json())
+    // .then(data => console.log(data))
+    .then(data => this.setState({first_name: data.first_name}))
+  }
   render() {
     return(
-      <div>Hi I'm the Profile Page</div>
+      <div>{
+        this.state.first_name? `Welcome ${this.state.first_name}` :
+        `Getting your profile info`
+      }</div>
     )
   }
 }

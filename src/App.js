@@ -9,7 +9,8 @@ import { Container } from 'semantic-ui-css/semantic.min.css';
 class App extends React.Component {
 
   state = {
-    page: ''
+    page: '',
+    user_id: ''
   }
 
   redirect = (page) => {
@@ -28,11 +29,11 @@ class App extends React.Component {
       case ('login'):
         return <Login redirect={this.redirect}/>
       case ('RACITable'):
-        return <RACITable/>
+        return <RACITable user_id={this.state.user_id}/>
       case ('profile'):
         return <Profile />
       default:
-        return <Login/>
+        return <Login redirect={this.redirect}/>
     }
   } 
   // </Container>

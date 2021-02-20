@@ -13,7 +13,7 @@ export default class Login extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    fetch(`http://localhost:3002/api/v1/login`, {
+    fetch(`http://localhost:3001/api/v1/login`, {
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json',
