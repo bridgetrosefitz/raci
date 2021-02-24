@@ -6,15 +6,28 @@ export default class RACITable extends React.Component {
     constructor() {
       super();
 
-      // this.state = {
+      this.state = {
+        userTasks: [],
+        creator: {},
+        projectName: '',
 
-      // }
+      }
+    }
+
+    componentDidMount() {
+      fetch('http://localhost:3001/api/v1/projects/1')
+      .then(res => res.json())
+        .then(data => this.setState({ 
+          userTasks: data.data.attributes.user_tasks, 
+          creator: data.data.attributes.creator, 
+          projectName: data.data.attributes.name
+        }))
     }
 
     render() {
       return(
         <div>
-          <h1>Project Title</h1>
+          <h1>{this.state.projectName}</h1>
           <Button>Edit project</Button>
           <Table celled> 
             <Table.Header>
@@ -26,27 +39,16 @@ export default class RACITable extends React.Component {
                 <Table.HeaderCell>Informed</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-              <Table.Row>          
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell> 
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-              </Table.Row>
+            {this.state.userTasks.map(task => {
+              return (<Table.Row>
+                <Table.Cell>task_id: {task.task_id}</Table.Cell>
+                <Table.Cell>{task.function_id === 1 && "✅"}</Table.Cell>
+                <Table.Cell>{task.function_id === 2 && "✅"}</Table.Cell>
+                <Table.Cell>{task.function_id === 3 && "✅"}</Table.Cell>
+                <Table.Cell>{task.function_id === 4 && "✅"}</Table.Cell>
+              </Table.Row>)
+            })}
+    
           </Table>
         </div>
       )

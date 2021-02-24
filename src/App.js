@@ -9,7 +9,7 @@ import { Container } from 'semantic-ui-css/semantic.min.css';
 class App extends React.Component {
 
   state = {
-    page: '',
+    page: 'RACITable',
     user_id: ''
   }
 
@@ -17,11 +17,11 @@ class App extends React.Component {
     this.setState({ page: page })
   }
 
-  componentDidMount() {
-    if (localStorage.token) {
-      this.redirect('profile')
-    }
-  }
+  // componentDidMount() {
+  //   if (localStorage.token) {
+  //     this.redirect('profile')
+  //   }
+  // }
 
   render () {
     // <Container>{
