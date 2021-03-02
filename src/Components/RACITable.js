@@ -41,8 +41,8 @@ export default class RACITable extends React.Component {
             </Table.Header>
             {this.state.tasks.map(task => {
               return (<Table.Row>
-                <Table.Cell>task_id: {task.task_id}</Table.Cell>
-                <Table.Cell>{task.function_id === 1 && "✅"}</Table.Cell>
+                <Table.Cell>{task.task_name}</Table.Cell>
+                <Table.Cell></Table.Cell>
                 <Table.Cell>{task.function_id === 2 && "✅"}</Table.Cell>
                 <Table.Cell>{task.function_id === 3 && "✅"}</Table.Cell>
                 <Table.Cell>{task.function_id === 4 && "✅"}</Table.Cell>
