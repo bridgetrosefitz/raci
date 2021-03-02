@@ -7,9 +7,9 @@ export default class RACITable extends React.Component {
       super();
 
       this.state = {
-        userTasks: [],
-        creator: {},
         projectName: '',
+        tasks: [],
+        creator: {}
 
       }
     }
@@ -18,9 +18,9 @@ export default class RACITable extends React.Component {
       fetch('http://localhost:3001/api/v1/projects/1')
       .then(res => res.json())
         .then(data => this.setState({ 
-          userTasks: data.data.attributes.user_tasks, 
+          projectName: data.data.attributes.name,
+          tasks: data.data.attributes.tasks,
           creator: data.data.attributes.creator, 
-          projectName: data.data.attributes.name
         }))
     }
 
@@ -39,7 +39,7 @@ export default class RACITable extends React.Component {
                 <Table.HeaderCell>Informed</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            {this.state.userTasks.map(task => {
+            {this.state.tasks.map(task => {
               return (<Table.Row>
                 <Table.Cell>task_id: {task.task_id}</Table.Cell>
                 <Table.Cell>{task.function_id === 1 && "✅"}</Table.Cell>
