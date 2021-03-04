@@ -42,14 +42,38 @@ export default class RACITable extends React.Component {
             {this.state.tasks.map(task => {
               return (<Table.Row>
                 <Table.Cell>{task.task_name}</Table.Cell>
-                <Table.Cell></Table.Cell>
                 <Table.Cell>{
-                  task.responsible.map(user_task => {
-                  return ` ${user_task.user_full_name}`
+                  task.responsible.map((user_task, i) => {
+                    if (i === task.responsible.length - 1) {
+                      return `${user_task.user_full_name}`
+                    } 
+                    return `${user_task.user_full_name}, `
                   } )}
                 </Table.Cell>
-                <Table.Cell>{task.function_id === 3 && "✅"}</Table.Cell>
-                <Table.Cell>{task.function_id === 4 && "✅"}</Table.Cell>
+                <Table.Cell>{
+                    task.accountable.map((user_task, i) => {
+                    if (i === task.accountable.length - 1) {
+                      return `${user_task.user_full_name}`
+                    }
+                    return `${user_task.user_full_name}, `
+                  } )}
+                </Table.Cell>
+                <Table.Cell>{
+                  task.consulted.map((user_task, i) => {
+                    if (i === task.consulted.length - 1) {
+                      return `${user_task.user_full_name}`
+                    }
+                    return `${user_task.user_full_name}, `
+                  })}
+                </Table.Cell>
+                <Table.Cell>{
+                  task.informed.map((user_task, i) => {
+                    if (i === task.informed.length - 1) {
+                      return `${user_task.user_full_name}`
+                    }
+                    return `${user_task.user_full_name}, `
+                  })}
+                </Table.Cell>
               </Table.Row>)
             })}
     
