@@ -78,7 +78,14 @@ export default class RACITable extends React.Component {
             })}
             <Table.Row>
                <Table.Row>
+               <Table.Cell>
                 <button class="ui icon button"><i aria-hidden="true" class="plus square icon"></i></button>  
+                Create task
+              </Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell></Table.Cell>
               </Table.Row>
             </Table.Row>
           </Table>
