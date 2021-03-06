@@ -76,7 +76,11 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
               </Table.Row>)
             })}
-    
+            <Table.Row>
+               <Table.Row>
+                <button class="ui icon button"><i aria-hidden="true" class="plus square icon"></i></button>  
+              </Table.Row>
+            </Table.Row>
           </Table>
         </div>
       )
