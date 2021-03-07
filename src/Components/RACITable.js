@@ -1,6 +1,6 @@
 import React from "react";
 import { useTable } from 'react-table';
-import { Icon, Label, Menu, Tab, Table, Button } from 'semantic-ui-react';
+import { Icon, Label, Menu, Tab, Table, Button, Dropdown } from 'semantic-ui-react';
 
 export default class RACITable extends React.Component {
     constructor() {
@@ -9,10 +9,24 @@ export default class RACITable extends React.Component {
       this.state = {
         projectName: '',
         tasks: [],
-        creator: {}
+        creator: {},
+        members: {}
 
       }
     }
+
+    teamMembers = () => {
+      this.state.members.map(member => {
+        
+      })   
+      }
+
+      // {
+      //   key: 'Jenny Hess',
+      //   text: 'Jenny Hess',
+      //   value: 'Jenny Hess',
+      //   image: { avatar: true, src: '/images/avatar/small/jenny.jpg' },
+      // }
 
     componentDidMount() {
       fetch('http://localhost:3001/api/v1/projects/1')
@@ -21,6 +35,7 @@ export default class RACITable extends React.Component {
           projectName: data.data.attributes.name,
           tasks: data.data.attributes.tasks,
           creator: data.data.attributes.creator, 
+          members: data.data.attributes.members
         }))
     }
 
@@ -79,10 +94,18 @@ export default class RACITable extends React.Component {
             <Table.Row>
                <Table.Row>
                <Table.Cell>
-                <button class="ui icon button"><i aria-hidden="true" class="plus square icon"></i></button>  
+                  <button class="ui icon button" onClick={this.teamMembers}><i aria-hidden="true" class="plus square icon"></i></button>
                 Create task
               </Table.Cell>
-              <Table.Cell></Table.Cell>
+              <Table.Cell >
+                
+                  {/* <Dropdown
+                    placeholder='Select Friend'
+                    fluid
+                    selection
+                    options={this.state.members}
+                  /> */}
+              </Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
