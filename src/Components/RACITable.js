@@ -59,34 +59,34 @@ export default class RACITable extends React.Component {
                 <Table.Cell>{task.task_name}</Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {
-                    if (i === task.responsible.length - 1) {
-                      return `${user_task.user_full_name}`
-                    } 
-                    return `${user_task.user_full_name}, `
+                    return (<Label>
+                      {user_task.user_full_name}
+                      <Icon name='delete' />
+                    </Label>)
                   } )}
                 </Table.Cell>
                 <Table.Cell>{
                     task.accountable.map((user_task, i) => {
-                    if (i === task.accountable.length - 1) {
-                      return `${user_task.user_full_name}`
-                    }
-                    return `${user_task.user_full_name}, `
+                      return (<Label>
+                        {user_task.user_full_name}
+                        <Icon name='delete' />
+                      </Label>)
                   } )}
                 </Table.Cell>
                 <Table.Cell>{
                   task.consulted.map((user_task, i) => {
-                    if (i === task.consulted.length - 1) {
-                      return `${user_task.user_full_name}`
-                    }
-                    return `${user_task.user_full_name}, `
+                    return (<Label>
+                      {user_task.user_full_name}
+                      <Icon name='delete' />
+                    </Label>)
                   })}
                 </Table.Cell>
                 <Table.Cell>{
                   task.informed.map((user_task, i) => {
-                    if (i === task.informed.length - 1) {
-                      return `${user_task.user_full_name}`
-                    }
-                    return `${user_task.user_full_name}, `
+                    return (<Label>
+                      {user_task.user_full_name}
+                      <Icon name='delete' />
+                    </Label>)
                   })}
                 </Table.Cell>
               </Table.Row>)
