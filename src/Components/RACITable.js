@@ -10,14 +10,18 @@ export default class RACITable extends React.Component {
         projectName: '',
         tasks: [],
         creator: {},
-        members: {}
-
+        members: []
       }
     }
-
     teamMembers = () => {
-      this.state.members.map(member => {
-        
+      return this.state.members.map(member => {
+        return (
+          {
+            key: member.first_name,
+            text: member.first_name,
+            value: member.first_name,
+          }
+        )
       })   
       }
 
@@ -40,6 +44,7 @@ export default class RACITable extends React.Component {
     }
 
     render() {
+      console.log(this.state)
       return(
         <div>
           <h1>{this.state.projectName}</h1>
@@ -98,13 +103,13 @@ export default class RACITable extends React.Component {
                 Create task
               </Table.Cell>
               <Table.Cell >
-                
-                  {/* <Dropdown
+                <Dropdown
                     placeholder='Select Friend'
                     fluid
                     selection
-                    options={this.state.members}
-                  /> */}
+                    options={this.teamMembers()}
+                  />
+                  
               </Table.Cell>
               <Table.Cell></Table.Cell>
               <Table.Cell></Table.Cell>
