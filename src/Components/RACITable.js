@@ -52,11 +52,11 @@ export default class RACITable extends React.Component {
           <Table celled> 
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Task</Table.HeaderCell>
-                <Table.HeaderCell>Responsible</Table.HeaderCell>
-                <Table.HeaderCell>Accountable</Table.HeaderCell>
-                <Table.HeaderCell>Consulted</Table.HeaderCell>
-                <Table.HeaderCell>Informed</Table.HeaderCell>
+                <Table.HeaderCell width='four'>Task</Table.HeaderCell>
+                <Table.HeaderCell width='two'>Responsible</Table.HeaderCell>
+                <Table.HeaderCell width='two'>Accountable</Table.HeaderCell>
+                <Table.HeaderCell width='two'>Consulted</Table.HeaderCell>
+                <Table.HeaderCell width='two'>Informed</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             {this.state.tasks.map(task => {
@@ -97,24 +97,42 @@ export default class RACITable extends React.Component {
               </Table.Row>)
             })}
             <Table.Row>
-               <Table.Row>
                <Table.Cell>
                   <button class="ui icon button" onClick={this.teamMembers}><i aria-hidden="true" class="plus square icon"></i></button>
                 Create task
               </Table.Cell>
               <Table.Cell >
                 <Dropdown
-                    placeholder='Select Friend'
+                    placeholder='Select team member'
                     fluid
                     selection
                     options={this.teamMembers()}
                   />
-                  
               </Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              <Table.Cell></Table.Cell>
-              </Table.Row>
+              <Table.Cell>
+                <Dropdown
+                  placeholder='Select team member'
+                  fluid
+                  selection
+                  options={this.teamMembers()}
+                />
+              </Table.Cell>
+              <Table.Cell>
+                <Dropdown
+                  placeholder='Select team member'
+                  fluid
+                  selection
+                  options={this.teamMembers()}
+                />
+              </Table.Cell>
+              <Table.Cell>
+                <Dropdown
+                  placeholder='Select team member'
+                  fluid
+                  selection
+                  options={this.teamMembers()}
+                />
+              </Table.Cell>
             </Table.Row>
           </Table>
         </div>
