@@ -10,7 +10,7 @@ import { Container } from 'semantic-ui-css/semantic.min.css';
 class App extends React.Component {
 
   state = {
-    page: 'RACITable',
+    page: 'projects',
     user_id: ''
   }
 
