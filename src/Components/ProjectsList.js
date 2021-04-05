@@ -20,15 +20,15 @@ export default class ProjectsList extends React.Component {
     })
   }
 
-  componentDidMount() {
-    fetch('http://localhost:3001/api/v1/projects')
-      .then(res => res.json())
-      .then(data =>
-        this.setState({
-        projects: data.data
-        })
-      )
-  }
+  // componentDidMount() {
+  //   fetch('http://localhost:3001/api/v1/projects')
+  //     .then(res => res.json())
+  //     .then(data =>
+  //       this.setState({
+  //       projects: data.data
+  //       })
+  //     )
+  // }
 
   render() {
     return (

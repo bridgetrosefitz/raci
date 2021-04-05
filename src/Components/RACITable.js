@@ -25,12 +25,11 @@ export default class RACITable extends React.Component {
       })   
       }
 
-      // {
-      //   key: 'Jenny Hess',
-      //   text: 'Jenny Hess',
-      //   value: 'Jenny Hess',
-      //   image: { avatar: true, src: '/images/avatar/small/jenny.jpg' },
-      // }
+      createTask = () => {
+        // - Cell with Create Task in it is cleared
+        // - a text field appears in its place
+        console.log(this)
+      }
 
     componentDidMount() {
       fetch('http://localhost:3001/api/v1/projects/1')
@@ -44,7 +43,6 @@ export default class RACITable extends React.Component {
     }
 
     render() {
-      console.log(this.state)
       return(
         <div>
           <h1>{this.state.projectName}</h1>
@@ -95,12 +93,13 @@ export default class RACITable extends React.Component {
                   })}
                 </Table.Cell>
               </Table.Row>)
-            })}
-            <Table.Row>
-               <Table.Cell>
-                  <button class="ui icon button" onClick={this.teamMembers}><i aria-hidden="true" class="plus square icon"></i></button>
+            })}  
+            {/* <Table.Row>
+              <Table.Cell>
+                  <button class="ui icon button" onClick={this.createTask}><i aria-hidden="true" class="plus square icon"></i></button>
                 Create task
               </Table.Cell>
+              {}
               <Table.Cell >
                 <Dropdown
                     placeholder='Select team member'
@@ -133,7 +132,24 @@ export default class RACITable extends React.Component {
                   options={this.teamMembers()}
                 />
               </Table.Cell>
-            </Table.Row>
+            </Table.Row> 
+             */}
+            <Table.Footer fullWidth>
+              <Table.Row>
+                <Table.HeaderCell />
+                <Table.HeaderCell colSpan='4'>
+                  <Button
+                    floated='right'
+                    icon
+                    labelPosition='left'
+                    primary
+                    size='small'
+                  >
+                    <Icon name='plus square icon' /> Add Task
+                  </Button>
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
           </Table>
         </div>
       )
