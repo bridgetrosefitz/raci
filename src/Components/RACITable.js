@@ -11,8 +11,7 @@ export default class RACITable extends React.Component {
         projectName: '',
         tasks: [],
         creator: {},
-        members: [],
-        taskModalIsOpen: false
+        members: []
       }
     }
 
@@ -91,51 +90,11 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
               </Table.Row>)
             })}  
-            {/* <Table.Row>
-              <Table.Cell>
-                  <button class="ui icon button" onClick={this.createTask}><i aria-hidden="true" class="plus square icon"></i></button>
-                Create task
-              </Table.Cell>
-              {}
-              <Table.Cell >
-                <Dropdown
-                    placeholder='Select team member'
-                    fluid
-                    selection
-                    options={this.teamMembers()}
-                  />
-              </Table.Cell>
-              <Table.Cell>
-                <Dropdown
-                  placeholder='Select team member'
-                  fluid
-                  selection
-                  options={this.teamMembers()}
-                />
-              </Table.Cell>
-              <Table.Cell>
-                <Dropdown
-                  placeholder='Select team member'
-                  fluid
-                  selection
-                  options={this.teamMembers()}
-                />
-              </Table.Cell>
-              <Table.Cell>
-                <Dropdown
-                  placeholder='Select team member'
-                  fluid
-                  selection
-                  options={this.teamMembers()}
-                />
-              </Table.Cell>
-            </Table.Row> 
-             */}
             <Table.Footer fullWidth>
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <TaskModal />
+                  <TaskModal teamMembers={this.teamMembers()}/>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

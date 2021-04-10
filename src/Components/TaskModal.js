@@ -1,20 +1,31 @@
 import React from 'react'
-import { Button, Header, Image, Modal, Icon } from 'semantic-ui-react'
+import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 
-function TaskModal() {
-  const [open, setOpen] = React.useState(true)
+function TaskModal(props) {
+  const [open, setOpen] = React.useState(false)
 
   // if (open) {
   //   alert('im open!')
   // } else {
   //   alert('im closed!')
   // }
+  
+  const teamMemberDropdown = () => {
+    return (
+    <Dropdown
+      placeholder='Select team member'
+      fluid
+      selection
+      options={props.teamMembers}
+    />)
+  }
 
   return (
     <Modal
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
+      // hi={props}
       trigger={
       <Button 
         floated='right'
@@ -26,29 +37,43 @@ function TaskModal() {
       </Button>
       }
     >
-      <Modal.Header>Select a Photo</Modal.Header>
-      <Modal.Content image>
-        <Image size='medium' src='/images/avatar/large/rachel.png' wrapped />
+      <Modal.Header>Create new task</Modal.Header>
+      <Modal.Content>
         <Modal.Description>
-          <Header>Default Profile Image</Header>
-          <p>
-            We've found the following gravatar image associated with your e-mail
-            address.
-          </p>
-          <p>Is it okay to use this photo?</p>
+          <Form>
+            <Form.Field>
+              <label>Text</label>
+              <input placeholder='Define the task here...' />
+            </Form.Field>
+            <Form.Field>
+              <label>Responsible</label>
+              {teamMemberDropdown()}
+            </Form.Field>
+            <Form.Field>
+              <label>Accountable</label>
+              {teamMemberDropdown()}
+            </Form.Field>
+            <Form.Field>
+              <label>Consulted</label>
+              {teamMemberDropdown()}
+            </Form.Field>
+            <Form.Field>
+              <label>Informed</label>
+              {teamMemberDropdown()}
+            </Form.Field>
+          </Form>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
         <Button color='black' onClick={() => setOpen(false)}>
-          Nope
+          Cancel
         </Button>
         <Button
-          content="Yep, that's me"
           labelPosition='right'
           icon='checkmark'
           onClick={() => setOpen(false)}
           positive
-        />
+          type='submit'>Create task</Button>
       </Modal.Actions>
     </Modal>
   )
