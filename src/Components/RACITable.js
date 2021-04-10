@@ -21,7 +21,7 @@ export default class RACITable extends React.Component {
           {
             key: member.first_name,
             text: member.first_name,
-            value: member.first_name,
+            value: member.id,
           }
         )
       })   

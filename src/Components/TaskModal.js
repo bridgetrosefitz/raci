@@ -4,12 +4,6 @@ import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 function TaskModal(props) {
   const [open, setOpen] = React.useState(false)
 
-  // if (open) {
-  //   alert('im open!')
-  // } else {
-  //   alert('im closed!')
-  // }
-  
   const teamMemberDropdown = () => {
     return (
     <Dropdown
@@ -18,6 +12,19 @@ function TaskModal(props) {
       selection
       options={props.teamMembers}
     />)
+  }
+
+  const handleSubmit = () => {
+    fetch('http://localhost:3001/api/v1/projects/1', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: {
+        
+      }
+    })
   }
 
   return (
@@ -69,11 +76,15 @@ function TaskModal(props) {
           Cancel
         </Button>
         <Button
-          labelPosition='right'
-          icon='checkmark'
-          onClick={() => setOpen(false)}
-          positive
-          type='submit'>Create task</Button>
+            type='submit'
+            icon='checkmark'
+            onClick={() => {
+              setOpen(false)
+              handleSubmit()
+              }}
+            positive>
+          Create task
+        </Button>
       </Modal.Actions>
     </Modal>
   )
