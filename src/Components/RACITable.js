@@ -1,6 +1,7 @@
 import React from "react";
 import { useTable } from 'react-table';
-import { Icon, Label, Menu, Tab, Table, Button, Dropdown } from 'semantic-ui-react';
+import { Icon, Label, Menu, Tab, Table, Button, Dropdown, Modal } from 'semantic-ui-react';
+import TaskModal from './TaskModal';
 
 export default class RACITable extends React.Component {
     constructor() {
@@ -10,9 +11,11 @@ export default class RACITable extends React.Component {
         projectName: '',
         tasks: [],
         creator: {},
-        members: []
+        members: [],
+        taskModalIsOpen: false
       }
     }
+
     teamMembers = () => {
       return this.state.members.map(member => {
         return (
@@ -23,12 +26,6 @@ export default class RACITable extends React.Component {
           }
         )
       })   
-      }
-
-      createTask = () => {
-        // - Cell with Create Task in it is cleared
-        // - a text field appears in its place
-        console.log(this)
       }
 
     componentDidMount() {
@@ -138,15 +135,7 @@ export default class RACITable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <Button
-                    floated='right'
-                    icon
-                    labelPosition='left'
-                    primary
-                    size='small'
-                  >
-                    <Icon name='plus square icon' /> Add Task
-                  </Button>
+                  <TaskModal />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
