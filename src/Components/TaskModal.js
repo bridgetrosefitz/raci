@@ -118,6 +118,7 @@ function TaskModal(props) {
               const text = taskText
               setOpen(false)
               handleSubmit(event, text)
+              setTaskText("")
               }}
             positive>
           Create task
