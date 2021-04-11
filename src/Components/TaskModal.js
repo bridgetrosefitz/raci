@@ -32,10 +32,10 @@ function TaskModal(props) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: {
+      body: JSON.stringify({
         "text": text,
         "project_id": projectId
-      }
+      })
     })
     // .then(data => {
     //   const teamMemberId = 1 // Remove hard coding
