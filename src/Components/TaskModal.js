@@ -37,12 +37,12 @@ function TaskModal(props) {
         "project_id": projectId
       })
     })
-    // .then(data => {
-    //   const teamMemberId = 1 // Remove hard coding
-    //   const functionId = 1 // Remove hard coding
-    //   const taskId = 100 // Remove hard coding
+    .then(data => {
+      const teamMemberId = 1 // Remove hard coding
+      const functionId = 1 // Remove hard coding
+      const taskId = data.data.id
 
-    // })
+    })
 
     
     // return fetch(`http://localhost:3001/api/v1/user_tasks/`, {

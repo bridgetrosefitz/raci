@@ -11,7 +11,7 @@ class App extends React.Component {
 
   state = {
     page: 'RACITable',
-    user_id: ''
+    user_id: 1
   }
 
   redirect = (page) => {

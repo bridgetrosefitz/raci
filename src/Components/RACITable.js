@@ -8,6 +8,7 @@ export default class RACITable extends React.Component {
       super();
 
       this.state = {
+        projectId: '',
         projectName: '',
         tasks: [],
         creator: {},
@@ -31,6 +32,7 @@ export default class RACITable extends React.Component {
       fetch('http://localhost:3001/api/v1/projects/1')
       .then(res => res.json())
         .then(data => this.setState({ 
+          projectId: data.data.id,
           projectName: data.data.attributes.name,
           tasks: data.data.attributes.tasks,
           creator: data.data.attributes.creator, 
