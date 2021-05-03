@@ -4,22 +4,49 @@ import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 function TaskModal(props) {
   const [open, setOpen] = React.useState(false)
   const [taskText, setTaskText] = React.useState(null)
-  // const state = {
-  //   taskText: ''
-  // }
+  const [responsibleUserId, setResponsibleUserId] = React.useState(null)
+  const [accountableUserId, setAccountableUserId] = React.useState(null)
+  const [consultedUserId, setConsultedUserId] = React.useState(null)
+  const [informedUserId, setInformedUserId] = React.useState(null)
 
   const teamMemberDropdown = () => {
     return (
     <Dropdown
       placeholder='Select team member'
       fluid
+      hi="hi"
       selection
       options={props.teamMembers}
+      onChange={event => handleDropdownChange(event)}
     />)
+  }
+
+  const createDropdowns = () => {
+    return(  
+      props.functionIds.map(functionId => {
+        return(
+          <Form.Field>
+          <label>Placeholder Label</label>
+            <Dropdown
+              placeholder='Select team member'
+              fluid
+              function_id={functionId}
+              selection
+              options={props.teamMembers}
+              onChange={event => handleDropdownChange(event)}
+            />
+          </Form.Field>
+        )
+      })
+    )
   }
 
   const handleTextFieldChange = event => {
     setTaskText(event.target.value)
+  }
+
+  const handleDropdownChange = event => {
+    console.log("hi")
   }
 
   const handleSubmit = (event, taskText) => {
@@ -39,8 +66,8 @@ function TaskModal(props) {
     })
     .then(res => res.json())
     .then(data => {
-      console.log("Hi this is 'data' from my fetch response", data)
-      console.log("And this is the 'event' from my submit", event)
+      // console.log("Hi this is 'data' from my fetch response", data)
+      console.log("And this is the 'responsibleUserId' from my state", responsibleUserId)
       const teamMemberId = 1 // Remove hard coding
       const functionId = 1 // Remove hard coding
       const taskId = data.data.attributes.id
@@ -91,13 +118,15 @@ function TaskModal(props) {
                 onChange={event => handleTextFieldChange(event)}
                 />
             </Form.Field>
-            <Form.Field>
+            {createDropdowns()}
+            {/* <Form.Field>
               <label>Responsible</label>
               {teamMemberDropdown()}
             </Form.Field>
             <Form.Field>
               <label>Accountable</label>
               {teamMemberDropdown()}
+              {}
             </Form.Field>
             <Form.Field>
               <label>Consulted</label>
@@ -106,7 +135,7 @@ function TaskModal(props) {
             <Form.Field>
               <label>Informed</label>
               {teamMemberDropdown()}
-            </Form.Field>
+            </Form.Field> */}
           </Form>
         </Modal.Description>
       </Modal.Content>
@@ -119,6 +148,8 @@ function TaskModal(props) {
             icon='checkmark'
             onClick={(event) => {
               const text = taskText
+              console.log("ths is the event.target", event.target)
+              setResponsibleUserId(event.target)
               setOpen(false)
               handleSubmit(event, text)
               setTaskText("")

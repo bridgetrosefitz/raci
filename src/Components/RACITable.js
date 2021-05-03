@@ -10,6 +10,7 @@ export default class RACITable extends React.Component {
       this.state = {
         projectId: '',
         projectName: '',
+        function_ids: [1,2,3,4],
         tasks: [],
         creator: {},
         members: []
@@ -96,7 +97,7 @@ export default class RACITable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId}/>
+                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId} functionIds={this.state.function_ids}/>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
