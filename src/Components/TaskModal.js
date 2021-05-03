@@ -37,10 +37,13 @@ function TaskModal(props) {
         "project_id": projectId
       })
     })
+    .then(res => res.json())
     .then(data => {
+      console.log("Hi this is 'data' from my fetch response", data)
+      console.log("And this is the 'event' from my submit", event)
       const teamMemberId = 1 // Remove hard coding
       const functionId = 1 // Remove hard coding
-      const taskId = data.data.id
+      const taskId = data.data.attributes.id
 
     })
 
