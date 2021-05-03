@@ -24,7 +24,7 @@ function TaskModal(props) {
 
   const handleSubmit = (event, taskText) => {
     event.preventDefault()
-    const projectId = 1 // Remove hard coding
+    const projectId = props.projectId
     const text = taskText
     return fetch(`http://localhost:3001/api/v1/tasks/`, {
       method: 'POST',
