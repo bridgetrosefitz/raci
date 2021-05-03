@@ -96,7 +96,7 @@ export default class RACITable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <TaskModal teamMembers={this.teamMembers()}/>
+                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId}/>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
