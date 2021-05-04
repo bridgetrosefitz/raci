@@ -5,18 +5,18 @@ import Login from './Components/Login';
 import Profile from './Components/Profile';
 import ProjectsList from './Components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
-import { Container } from 'semantic-ui-css/semantic.min.css';
+import { Switch, Route } from 'react-router-dom'
 
 class App extends React.Component {
 
   state = {
-    page: 'RACITable',
+    // page: 'RACITable',
     user_id: 1
   }
 
-  redirect = (page) => {
-    this.setState({ page: page })
-  }
+  // redirect = (page) => {
+  //   this.setState({ page: page })
+  // }
 
   // componentDidMount() {
   //   if (localStorage.token) {
@@ -25,21 +25,29 @@ class App extends React.Component {
   // }
 
   render () {
+  
+    return (
+      <div>
+        <Route path="/" component={RACITable}/>
+      </div>
+    )
+
     // <Container>{
-    switch(this.state.page) {
-      case ('login'):
-        return <Login redirect={this.redirect}/>
-      case ('projects'):
-        return <ProjectsList redirect={this.redirect} />
-      case ('RACITable'):
-        return <RACITable user_id={this.state.user_id}/>
-      case ('profile'):
-        return <Profile />
-      default:
-        return <Login redirect={this.redirect}/>
-    }
-  } 
+  //   switch(this.state.page) {
+  //     case ('login'):
+  //       return <Login redirect={this.redirect}/>
+  //     case ('projects'):
+  //       return <ProjectsList redirect={this.redirect} />
+  //     case ('RACITable'):
+  //       return <RACITable user_id={this.state.user_id}/>
+  //     case ('profile'):
+  //       return <Profile />
+  //     default:
+  //       return <Login redirect={this.redirect}/>
+  //   }
+  // } 
   // </Container>
+  }
 }
 
 export default App;
