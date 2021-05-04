@@ -161,7 +161,6 @@ export default class RACITable extends React.Component {
       return(
         <div>
           <h1>{this.state.projectName}</h1>
-          <Button>Edit project</Button>
           <Table celled> 
             <Table.Header>
               <Table.Row>
