@@ -1,6 +1,5 @@
 import React from "react";
-import { useTable } from 'react-table';
-import { Icon, Label, Menu, Tab, Table, Button, Dropdown, Modal } from 'semantic-ui-react';
+import { Icon, Label, Table, Button } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 
 export default class RACITable extends React.Component {
@@ -154,9 +153,9 @@ export default class RACITable extends React.Component {
       ))
   } 
 
-    componentDidMount() {
-      this.putProjectDataInState()
-    }
+  componentDidMount() {
+    this.putProjectDataInState()
+  }
 
     render() {
       return(
