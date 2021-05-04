@@ -8,44 +8,154 @@ export default class RACITable extends React.Component {
       super();
 
       this.state = {
-        projectId: '',
-        projectName: '',
-        functions: [],
-        tasks: [],
-        creator: {},
-        members: []
+          projectId: '',
+          projectName: '',
+          functions: [],
+          tasks: [],
+          creator: {},
+          members: [],
+          newTask: {
+            taskText: '',
+            responsibleUserId: '',
+            accountableUserId: '',
+            consultedUserId: '',
+            informedUserId: ''
+          }
       }
     }
 
-    teamMembers = () => {
-      return this.state.members.map(member => {
-        return (
-          {
-            key: member.first_name,
-            text: member.first_name,
-            value: member.id
-          }
-        )
-      })   
+  teamMembers = () => {
+    return this.state.members.map(member => {
+      return (
+        {
+          key: member.first_name,
+          text: member.first_name,
+          value: member.id
+        }
+      )
+    })   
+  }
+
+  handleTextFieldChange = event => {
+    this.setState({
+      newTask: {
+        ...this.state.newTask,
+      taskText: event.target.value}
+    })
+  }
+
+  handleDropdownChange = (event, data, raciFunction) => {
+    if (raciFunction.id === "1") {
+      this.setState({
+        newTask: {
+          ...this.state.newTask,
+          responsibleUserId: data.value
+        }
+      })
+    }
+    else if (raciFunction.id === "2") {
+      this.setState({
+        newTask: {
+          ...this.state.newTask,
+          accountableUserId: data.value
+        }
+      })
+    }
+    else if (raciFunction.id === "3") {
+      this.setState({
+        newTask: {
+          ...this.state.newTask,
+          consultedUserId: data.value
+        }
+      })
+    }
+    else if (raciFunction.id === "4") {
+      this.setState({
+        newTask: {
+          ...this.state.newTask,
+          informedUserId: data.value
+        }
+      })
+    }
+  }
+
+  createUserTasks = (dataFromTaskCreation) => {
+    this.state.functions.forEach((raciFunction, index) => {
+      let functionId = parseInt(raciFunction.id)
+      let teamMemberId
+      let taskId = parseInt(dataFromTaskCreation.data.id)
+
+      if (functionId === 1) {
+        teamMemberId = this.state.newTask.responsibleUserId
+      }
+      else if (functionId === 2) {
+        teamMemberId = this.state.newTask.accountableUserId
+      }
+      else if (functionId === 3) {
+        teamMemberId = this.state.newTask.consultedUserId
+      }
+      else if (functionId === 4) {
+        teamMemberId = this.state.newTask.informedUserId
       }
 
-    componentDidMount() {
-      fetch('http://localhost:3001/api/v1/projects/1')
-      .then(res => res.json())
-        .then(data => this.setState({ 
-          projectId: data.data.id,
-          projectName: data.data.attributes.name,
-          tasks: data.data.attributes.tasks,
-          creator: data.data.attributes.creator, 
-          members: data.data.attributes.members
-        }))
+      setTimeout(() => {
+        fetch('http://localhost:3001/api/v1/user_tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            "function_id": functionId,
+            "user_id": teamMemberId,
+            "task_id": taskId
+          })
+        })
+        .then(this.putProjectDataInState)
+      }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+    })
+  }
 
-      fetch('http://localhost:3001/api/v1/functions')
+  handleSubmit = (event) => {
+    event.preventDefault()
+    const projectId = this.state.projectId
+    const text = this.state.newTask.taskText
+    return fetch(`http://localhost:3001/api/v1/tasks/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        "text": text,
+        "project_id": projectId
+      })
+    })
+      .then(res => res.json())
+      .then(data => this.createUserTasks(data))
+  }
+
+  putProjectDataInState = () => {
+    fetch('http://localhost:3001/api/v1/projects/1')
+      .then(res => res.json())
+      .then(data => this.setState({
+        projectId: data.data.id,
+        projectName: data.data.attributes.name,
+        tasks: data.data.attributes.tasks,
+        creator: data.data.attributes.creator,
+        members: data.data.attributes.members
+      }))
+
+    fetch('http://localhost:3001/api/v1/functions')
       .then(res => res.json())
       .then(data => this.setState({
         functions: data.data
       }
       ))
+  } 
+
+    componentDidMount() {
+      this.putProjectDataInState()
     }
 
     render() {
@@ -104,7 +214,14 @@ export default class RACITable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId} raciFunctions={this.state.functions}/>
+                  <TaskModal 
+                    projectId={this.state.projectId}
+                    raciFunctions={this.state.functions}
+                    teamMembers={this.teamMembers()}
+                    taskText={this.state.newTask.taskText}
+                    handleTextFieldChange={this.handleTextFieldChange}
+                    handleDropdownChange={this.handleDropdownChange}
+                    handleSubmit={this.handleSubmit} />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
