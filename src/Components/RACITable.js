@@ -10,7 +10,7 @@ export default class RACITable extends React.Component {
       this.state = {
         projectId: '',
         projectName: '',
-        function_ids: [1,2,3,4],
+        functions: [],
         tasks: [],
         creator: {},
         members: []
@@ -23,7 +23,7 @@ export default class RACITable extends React.Component {
           {
             key: member.first_name,
             text: member.first_name,
-            value: member.id,
+            value: member.id
           }
         )
       })   
@@ -39,6 +39,13 @@ export default class RACITable extends React.Component {
           creator: data.data.attributes.creator, 
           members: data.data.attributes.members
         }))
+
+      fetch('http://localhost:3001/api/v1/functions')
+      .then(res => res.json())
+      .then(data => this.setState({
+        functions: data.data
+      }
+      ))
     }
 
     render() {
@@ -97,7 +104,7 @@ export default class RACITable extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell colSpan='4'>
-                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId} functionIds={this.state.function_ids}/>
+                  <TaskModal teamMembers={this.teamMembers()} projectId={this.state.projectId} raciFunctions={this.state.functions}/>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

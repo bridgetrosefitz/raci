@@ -9,31 +9,31 @@ function TaskModal(props) {
   const [consultedUserId, setConsultedUserId] = React.useState(null)
   const [informedUserId, setInformedUserId] = React.useState(null)
 
-  const teamMemberDropdown = () => {
-    return (
-    <Dropdown
-      placeholder='Select team member'
-      fluid
-      hi="hi"
-      selection
-      options={props.teamMembers}
-      onChange={event => handleDropdownChange(event)}
-    />)
-  }
+  // const teamMemberDropdown = () => {
+  //   return (
+  //   <Dropdown
+  //     placeholder='Select team member'
+  //     fluid
+  //     hi="hi"
+  //     selection
+  //     options={props.teamMembers}
+  //     onChange={event => handleDropdownChange(event)}
+  //   />)
+  // }
 
   const createDropdowns = () => {
     return(  
-      props.functionIds.map(functionId => {
+      props.raciFunctions.map(raciFunction => {
         return(
           <Form.Field>
-          <label>Placeholder Label</label>
+            <label>{raciFunction.attributes.name}</label>
             <Dropdown
               placeholder='Select team member'
               fluid
-              function_id={functionId}
+              function_id={raciFunction.id}
               selection
               options={props.teamMembers}
-              onChange={event => handleDropdownChange(event)}
+              onChange={(e, d) => handleDropdownChange(e, d, raciFunction)}
             />
           </Form.Field>
         )
@@ -45,11 +45,22 @@ function TaskModal(props) {
     setTaskText(event.target.value)
   }
 
-  const handleDropdownChange = event => {
-    console.log("hi")
+  const handleDropdownChange = (event, data, raciFunction) => {
+    if (raciFunction.id === "1") {
+      setResponsibleUserId(data.value)
+    }
+    else if (raciFunction.id === "2") {
+      setAccountableUserId(data.value)
+    }
+    else if (raciFunction.id === "3"){
+      setConsultedUserId(data.value)
+    }
+    else if (raciFunction.id === "4") {
+      setInformedUserId(data.value)
+    }
   }
 
-  const handleSubmit = (event, taskText) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     const projectId = props.projectId
     const text = taskText
@@ -66,11 +77,43 @@ function TaskModal(props) {
     })
     .then(res => res.json())
     .then(data => {
-      // console.log("Hi this is 'data' from my fetch response", data)
-      console.log("And this is the 'responsibleUserId' from my state", responsibleUserId)
-      const teamMemberId = 1 // Remove hard coding
-      const functionId = 1 // Remove hard coding
-      const taskId = data.data.attributes.id
+      props.raciFunctions.forEach((raciFunction, index) => {
+        let functionId = parseInt(raciFunction.id)
+        console.log("functionId, the little fucker:", functionId)
+        let teamMemberId
+        let taskId = parseInt(data.data.id)
+
+        if(functionId === 1) {
+          teamMemberId = responsibleUserId 
+        }
+        else if (functionId === 2) {
+          teamMemberId = accountableUserId
+        }
+        else if (functionId === 3) {
+          teamMemberId = consultedUserId
+        }
+        else if (functionId === 4) {
+          teamMemberId = informedUserId
+        }
+        
+        console.log("functionId", functionId, typeof(functionId))
+        console.log("userId", teamMemberId, typeof (teamMemberId))
+        console.log("taskId", taskId, typeof (teamMemberId))
+        setTimeout(() => { 
+          return fetch('http://localhost:3001/api/v1/user_tasks', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                "function_id": functionId,
+                "user_id": teamMemberId,
+                "task_id": taskId
+            })
+          })
+        }, index * 1000)
+      })
 
     })
 
@@ -115,7 +158,7 @@ function TaskModal(props) {
               <input 
                 placeholder='Define the task here...'
                 value={taskText}
-                onChange={event => handleTextFieldChange(event)}
+                onChange={handleTextFieldChange}
                 />
             </Form.Field>
             {createDropdowns()}
@@ -146,10 +189,8 @@ function TaskModal(props) {
         <Button
             type='submit'
             icon='checkmark'
-            onClick={(event) => {
-              const text = taskText
-              console.log("ths is the event.target", event.target)
-              setResponsibleUserId(event.target)
+            onClick={(event, data) => {
+              const text = data.taskText
               setOpen(false)
               handleSubmit(event, text)
               setTaskText("")
