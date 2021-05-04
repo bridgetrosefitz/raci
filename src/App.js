@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import RACITable from './Components/RACITable';
 import Login from './Components/Login';
+import SignUp from './Components/SignUp';
 import Profile from './Components/Profile';
 import ProjectsList from './Components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
@@ -25,11 +26,15 @@ class App extends React.Component {
   // }
 
   render () {
-  
     return (
-      <div>
-        <Route path="/" component={RACITable}/>
-      </div>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/projects/:id" component={RACITable} /> 
+          <Route path="/projects" component={ProjectsList} />
+          <Route path="/" component={Login} />
+        </Switch>
     )
 
     // <Container>{

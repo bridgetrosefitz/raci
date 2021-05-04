@@ -158,6 +158,7 @@ export default class RACITable extends React.Component {
   }
 
     render() {
+      console.log(this.props)
       return(
         <div>
           <h1>{this.state.projectName}</h1>

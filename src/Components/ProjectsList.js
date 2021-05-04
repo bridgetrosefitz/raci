@@ -32,9 +32,12 @@ export default class ProjectsList extends React.Component {
 
   render() {
     return (
-      <div>{
+      <div>
+      Hi I'm the ProjectsList page
+      {
         this.projectNames()
-      }</div>
+      }
+      </div>
     )
   }
 }
