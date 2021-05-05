@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input, Button, Form } from 'semantic-ui-react';
+import { Link } from 'react-router-dom'
 
 export default class Login extends React.Component {
   
@@ -80,7 +81,7 @@ export default class Login extends React.Component {
           </Button>
         </Form>
         <br/>
-        <a>Forgot password?</a> or <a>Sign up</a>
+        <Link to="/login">Forgot password?</Link> or <Link to="/signup">Sign up</Link>
       </div>
       
 

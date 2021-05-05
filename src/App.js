@@ -29,7 +29,7 @@ class App extends React.Component {
     if(localStorage.token) {
       this.authenticateMe()
     } else {
-      this.props.history.push('/signup')
+      this.props.history.push('/login')
     }
   }
 

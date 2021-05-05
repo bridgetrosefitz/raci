@@ -103,6 +103,7 @@ export default class RACITable extends React.Component {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.token}`
           },
           body: JSON.stringify({
             "function_id": functionId,
@@ -124,6 +125,7 @@ export default class RACITable extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
       },
       body: JSON.stringify({
         "text": text,
@@ -135,7 +137,11 @@ export default class RACITable extends React.Component {
   }
 
   putProjectDataInState = () => {
-    fetch('http://localhost:3001/api/v1/projects/1')
+    fetch('http://localhost:3001/api/v1/projects/1', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
       .then(res => res.json())
       .then(data => this.setState({
         projectId: data.data.id,
@@ -145,7 +151,11 @@ export default class RACITable extends React.Component {
         members: data.data.attributes.members
       }))
 
-    fetch('http://localhost:3001/api/v1/functions')
+    fetch('http://localhost:3001/api/v1/functions', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
       .then(res => res.json())
       .then(data => this.setState({
         functions: data.data
