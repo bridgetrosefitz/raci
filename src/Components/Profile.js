@@ -19,7 +19,7 @@ export default class Profile extends React.Component {
   render() {
     return(
       <div>{
-        this.state.first_name? `Welcome ${this.state.first_name}` :
+        this.props.first_name? `Welcome ${this.props.first_name}` :
         `Getting your profile info`
       }</div>
     )
