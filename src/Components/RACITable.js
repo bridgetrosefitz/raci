@@ -184,7 +184,14 @@ export default class RACITable extends React.Component {
             </Table.Header>
             {this.state.tasks.map(task => {
               return (<Table.Row>
-                <Table.Cell>{task.task_name}</Table.Cell>
+                <Table.Cell>{task.task_name}
+                  <Button icon>
+                    <Icon name='pencil square' />
+                  </Button>
+                  <Button>
+                    <Icon name='trash alternate outline' />
+                  </Button>
+                </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {
                     return (<Label>
