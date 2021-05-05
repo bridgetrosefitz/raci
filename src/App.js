@@ -6,17 +6,30 @@ import SignUp from './Components/SignUp';
 import Profile from './Components/Profile';
 import ProjectsList from './Components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 
 class App extends React.Component {
 
   state = {
-    user_id: 1
+    user_id: null,
+
+  }
+
+  authenticateMe() {
+    fetch(`http://localhost:3001/api/v1/profile`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ user_id: data.id }))
   }
 
   componentDidMount() {
     if(localStorage.token) {
-      //Set user_id
+      this.authenticateMe()
+    } else {
+      this.props.history.push('/signup')
     }
   }
 
@@ -26,7 +39,9 @@ class App extends React.Component {
           <Route 
             path="/login" 
             render={routerProps => <Login {...routerProps} user_id={this.state.user_id}/> } />
-          <Route path="/signup" component={SignUp} />
+          <Route 
+          path="/signup" 
+          render={routerProps => <SignUp {...routerProps}/>} />
           <Route 
             path="/profile" 
             render={routerProps => <Profile {...routerProps} user_id={this.state.user_id} /> } />
@@ -39,4 +54,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);

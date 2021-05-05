@@ -24,14 +24,29 @@ export default class SignUp extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3001/users')
+    fetch('http://localhost:3001/api/v1/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.token) {
+        localStorage.token = data.token
+
+        this.props.history.push('/projects/1')
+      }
+    })
   }
 
   render () {
     return (
       <div>
         <h2>Sign up</h2>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
         <Input
           placeholder='First name'
           type='text'
@@ -66,7 +81,6 @@ export default class SignUp extends React.Component {
         <br />
         <Button
           type="submit"
-          onSubmit={this.handleSubmit}
           >Create account</Button>
         </Form>
         <br />
