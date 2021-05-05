@@ -2,12 +2,15 @@ import React from 'react';
 import { Input, Button, Form } from 'semantic-ui-react';
 
 export default class Login extends React.Component {
+  
   constructor() {
     super()
 
     this.state = {
+      first_name: '',
+      last_name: '',
       email: '',
-      password: '',
+      password: ''
     }
   }
 
@@ -25,7 +28,7 @@ export default class Login extends React.Component {
     .then(data => {
       if(data.token) {
       localStorage.token = data.token
-      this.props.history.push('/profile')
+      this.props.history.push('/projects/1')
       } 
     })
   }
@@ -42,8 +45,22 @@ export default class Login extends React.Component {
       <div>
         <h2>Login</h2>
         <Form>
+          <Input
+            placeholder='First name'
+            type='text'
+            name='first_name'
+            value={this.state.first_name}
+            onChange={this.handleChange} />
+          <br />
+          <Input
+            placeholder='Last name'
+            type='text'
+            name='last_name'
+            value={this.state.last_name}
+            onChange={this.handleChange} />
+          <br />
           <Input 
-            placeholder='Your email' 
+            placeholder='Email' 
             type='text' 
             name='email'
             value={this.state.email}
