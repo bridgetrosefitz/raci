@@ -8,8 +8,6 @@ export default class Login extends React.Component {
     super()
 
     this.state = {
-      first_name: '',
-      last_name: '',
       email: '',
       password: ''
     }
@@ -46,20 +44,6 @@ export default class Login extends React.Component {
       <div>
         <h2>Login</h2>
         <Form>
-          <Input
-            placeholder='First name'
-            type='text'
-            name='first_name'
-            value={this.state.first_name}
-            onChange={this.handleChange} />
-          <br />
-          <Input
-            placeholder='Last name'
-            type='text'
-            name='last_name'
-            value={this.state.last_name}
-            onChange={this.handleChange} />
-          <br />
           <Input 
             placeholder='Email' 
             type='text' 
