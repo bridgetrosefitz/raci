@@ -1,6 +1,7 @@
 import React from "react";
-import { Icon, Label, Table, Button } from 'semantic-ui-react';
+import { Icon, Label, Table, Button, Form, Dropdown } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
+import EditTaskModal from './EditTaskModal';
 import { Link } from 'react-router-dom';
 
 export default class RACITable extends React.Component {
@@ -24,7 +25,8 @@ export default class RACITable extends React.Component {
       }
     }
 
-  teamMembers = () => {
+  createTeamMemberOptions = () => {
+    console.log()
     return this.state.members.map(member => {
       return (
         {
@@ -34,6 +36,26 @@ export default class RACITable extends React.Component {
         }
       )
     })   
+  }
+
+  createDropdowns = () => {
+    return (
+      this.state.functions.map(raciFunction => {
+        return (
+          <Form.Field>
+            <label>{raciFunction.attributes.name}</label>
+            <Dropdown
+              placeholder='Select team member'
+              fluid
+              function_id={raciFunction.id}
+              selection
+              options={this.createTeamMemberOptions()}
+              onChange={(e, d) => this.handleDropdownChange(e, d, raciFunction)}
+            />
+          </Form.Field>
+        )
+      })
+    )
   }
 
   handleTextFieldChange = event => {
@@ -117,7 +139,7 @@ export default class RACITable extends React.Component {
     })
   }
 
-  handleSubmit = (event) => {
+  handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
     const text = this.state.newTask.taskText
@@ -171,16 +193,17 @@ export default class RACITable extends React.Component {
       } else {
         this.props.history.push('/login')
       }
-    }
+  }
 
     render() {
       console.log(this.props)
       return(
         <div>
-          <h1>{this.state.projectName}</h1>
           <Button
             onClick={this.props.logOut}
+            floated='right'
           >Log out</Button>
+          <h1>{this.state.projectName}</h1>
           <Table celled> 
             <Table.Header>
               <Table.Row>
@@ -194,12 +217,14 @@ export default class RACITable extends React.Component {
             {this.state.tasks.map(task => {
               return (<Table.Row>
                 <Table.Cell>{task.task_name}
-                  <Button icon>
-                    <Icon name='pencil square' />
-                  </Button>
-                  <Button>
-                    <Icon name='trash alternate outline' />
-                  </Button>
+                <EditTaskModal
+                  projectId={this.state.projectId}
+                  raciFunctions={this.state.functions}
+                  createDropdowns={this.createDropdowns}
+                  taskText={this.state.newTask.taskText}
+                  handleTextFieldChange={this.handleTextFieldChange}
+                  handleDropdownChange={this.handleDropdownChange}
+                  handleSubmitOnTaskModal={this.handleSubmitOnTaskModal} />
                 </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {
@@ -242,11 +267,11 @@ export default class RACITable extends React.Component {
                   <TaskModal 
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
-                    teamMembers={this.teamMembers()}
+                    createDropdowns={this.createDropdowns}
                     taskText={this.state.newTask.taskText}
                     handleTextFieldChange={this.handleTextFieldChange}
                     handleDropdownChange={this.handleDropdownChange}
-                    handleSubmit={this.handleSubmit} />
+                    handleSubmit={this.handleSubmitOnTaskModal} />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

@@ -4,40 +4,20 @@ import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 function TaskModal(props) {
   const [open, setOpen] = React.useState(false)
 
-  const createDropdowns = () => {
-    return(  
-      props.raciFunctions.map(raciFunction => {
-        return(
-          <Form.Field>
-            <label>{raciFunction.attributes.name}</label>
-            <Dropdown
-              placeholder='Select team member'
-              fluid
-              function_id={raciFunction.id}
-              selection
-              options={props.teamMembers}
-              onChange={(e, d) => props.handleDropdownChange(e, d, raciFunction)}
-            />
-          </Form.Field>
-        )
-      })
-    )
-  }
-
   return (
     <Modal
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
       trigger={
-      <Button 
-        floated='right'
-        icon
-        labelPosition = 'left'
-        primary
-        size='small'>
-          <Icon name='plus square icon' /> Add Task
-      </Button>
+        <Button 
+          floated='right'
+          icon
+          labelPosition = 'left'
+          primary
+          size='small'>
+            <Icon name='plus square icon' /> Add Task
+        </Button>
       }
     >
       <Modal.Header>Create new task</Modal.Header>
@@ -52,7 +32,7 @@ function TaskModal(props) {
                 onChange={props.handleTextFieldChange}
                 />
             </Form.Field>
-            {createDropdowns()}
+            {props.createDropdowns()}
           </Form>
         </Modal.Description>
       </Modal.Content>
