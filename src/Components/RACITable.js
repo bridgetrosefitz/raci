@@ -186,6 +186,10 @@ export default class RACITable extends React.Component {
       ))
   } 
 
+  putSelectedTaskDataInState = () => {
+
+  }
+
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
@@ -215,7 +219,8 @@ export default class RACITable extends React.Component {
               </Table.Row>
             </Table.Header>
             {this.state.tasks.map(task => {
-              return (<Table.Row>
+              return (<Table.Row
+                data-task-id={task.id}>
                 <Table.Cell>{task.task_name}
                 <EditTaskModal
                   projectId={this.state.projectId}
