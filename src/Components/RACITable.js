@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon, Label, Table, Button } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
+import { Link } from 'react-router-dom';
 
 export default class RACITable extends React.Component {
     constructor() {
@@ -172,6 +173,9 @@ export default class RACITable extends React.Component {
       return(
         <div>
           <h1>{this.state.projectName}</h1>
+          <Button
+            onClick={this.props.logOut}
+          >Log out</Button>
           <Table celled> 
             <Table.Header>
               <Table.Row>

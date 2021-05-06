@@ -15,7 +15,7 @@ class App extends React.Component {
 
   }
 
-  authenticateMe() {
+  authenticateMe = () => {
     fetch(`http://localhost:3001/api/v1/profile`, {
       headers: {
         'Authorization': `Bearer ${localStorage.token}`
@@ -23,6 +23,11 @@ class App extends React.Component {
     })
       .then(res => res.json())
       .then(data => this.setState({ user_id: data.id }))
+  }
+
+  logOut = () => {
+    localStorage.clear()
+    this.props.history.push('/login')
   }
 
   componentDidMount() {
@@ -43,11 +48,14 @@ class App extends React.Component {
           path="/signup" 
           render={routerProps => <SignUp {...routerProps}/>} />
           <Route 
-            path="/profile" 
-            render={routerProps => <Profile {...routerProps} user_id={this.state.user_id} /> } />
-          <Route path="/projects/:id" component={RACITable} /> 
-          <Route path="/projects" component={ProjectsList} />
-          <Route path="/" component={Login} />
+            path="/projects/:id" 
+            render={routerProps => <RACITable {...routerProps} logOut={this.logOut}/>} />
+          <Route 
+            path="/projects" 
+            render={routerProps => <ProjectsList {...routerProps} logOut={this.logOut} />} />
+          <Route 
+            path="/" 
+            render={routerProps => <RACITable {...routerProps} logOut={this.logOut} />} />
         </Switch>
     )
 
