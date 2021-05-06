@@ -165,8 +165,13 @@ export default class RACITable extends React.Component {
   } 
 
   componentDidMount() {
-    this.putProjectDataInState()
-  }
+      if (localStorage.token) {
+        this.props.authenticateMe()
+        this.putProjectDataInState()
+      } else {
+        this.props.history.push('/login')
+      }
+    }
 
     render() {
       console.log(this.props)

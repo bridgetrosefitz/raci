@@ -20,6 +20,14 @@ export default class ProjectsList extends React.Component {
     })
   }
 
+  componentDidMount() {
+    if (localStorage.token) {
+      this.props.authenticateMe()
+    } else {
+      this.props.history.push('/login')
+    }
+  }
+
   // componentDidMount() {
   //   fetch('http://localhost:3001/api/v1/projects')
   //     .then(res => res.json())
