@@ -42,7 +42,6 @@ export default class RACITable extends React.Component {
       this.state.functions.map(raciFunction => {
         const functionName = raciFunction.attributes.name.toLowerCase()
         const defaultValues = task ? task[functionName].map(userTask => userTask.user_id) : [];
-       console.log(task)
         return (
           <Form.Field>
             <label>{raciFunction.attributes.name}</label>
@@ -143,6 +142,10 @@ export default class RACITable extends React.Component {
     })
   }
 
+  updateUserTasks = (dataFromTaskUpdate) => {
+    console.log("hi, I will make you in a few")
+  }
+
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
@@ -161,6 +164,24 @@ export default class RACITable extends React.Component {
     })
       .then(res => res.json())
       .then(data => this.createUserTasks(data))
+  }
+
+  handleSubmitOnEditTaskModal = (event, text, task) => {
+    event.preventDefault()
+    const taskId = task.id
+    return fetch(`https://localhost:3001/api/v1/task/${taskId}`,{
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      },
+      body: JSON.stringify({
+        "text": this.state.newTask.taskText
+      })
+    })
+    .then(res => res.json())
+    .then(data => this.updateUserTasks(data))
   }
 
   putProjectDataInState = () => {
@@ -279,7 +300,7 @@ export default class RACITable extends React.Component {
                   taskText={this.state.newTask.taskText}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChange}
-                  handleSubmitOnTaskModal={this.handleSubmitOnTaskModal} />
+                  handleSubmit={this.handleSubmitOnEditTaskModal} />
                 </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {

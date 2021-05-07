@@ -39,6 +39,23 @@ function EditTaskModal(props) {
         </Form>
       </Modal.Description>
     </Modal.Content>
+      <Modal.Actions>
+        <Button color='black' onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+        <Button
+          type='submit'
+          icon='checkmark'
+          onClick={(event, data) => {
+            const text = data.taskText
+            const task = props.task
+            setOpen(false)
+            props.handleSubmit(event, text, task)
+          }}
+          positive>
+          Update task
+        </Button>
+      </Modal.Actions>
     </Modal>
   )
 }
