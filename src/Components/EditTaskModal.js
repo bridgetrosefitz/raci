@@ -4,6 +4,11 @@ import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 function EditTaskModal(props) {
   const [open, setOpen] = React.useState(false)
 
+
+  const handleTriggerButtonClick = () => {
+    props.putSelectedTaskDataInState(props.task.id)
+  }
+
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -12,6 +17,7 @@ function EditTaskModal(props) {
       trigger={
         <Button
           icon
+          onClick={handleTriggerButtonClick}
           floated='right'>
           <Icon name='pencil square' />
         </Button>

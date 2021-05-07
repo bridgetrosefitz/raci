@@ -186,8 +186,55 @@ export default class RACITable extends React.Component {
       ))
   } 
 
-  putSelectedTaskDataInState = () => {
-
+  putSelectedTaskDataInState = (id) => {
+    fetch(`http://localhost:3001/api/v1/tasks/${id}`,
+    {
+      headers: {
+        "Authorization" : `Bearer ${localStorage.token}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      this.setState({
+        newTask: {
+          taskText: data.data.attributes.text,
+        }
+      })
+      data.data.attributes.user_tasks.forEach(user_task => {
+        if (user_task.function_id === 1) {
+          this.setState(previousState => ({
+            newTask: {
+              ...previousState.newTask,
+              responsibleUserId: user_task.user_id
+            }
+          }))
+        }
+        else if (user_task.function_id === 2) {
+          this.setState(previousState => ({
+            newTask: {
+              ...previousState.newTask,
+              accountableUserId: user_task.user_id
+            }
+          }))
+        }
+        else if (user_task.function_id === 3) {
+          this.setState(previousState => ({
+            newTask: {
+              ...previousState.newTask,
+              consultedUserId: user_task.user_id
+            }
+          }))
+        }
+        else if (user_task.function_id === 4) {
+          this.setState(previousState => ({
+            newTask: {
+              ...previousState.newTask,
+              informedUserId: user_task.user_id
+            }
+          }))
+        }
+      })
+    })
   }
 
   componentDidMount() {
@@ -219,13 +266,13 @@ export default class RACITable extends React.Component {
               </Table.Row>
             </Table.Header>
             {this.state.tasks.map(task => {
-              return (<Table.Row
-                data-task-id={task.id}>
+              return (<Table.Row>
                 <Table.Cell>{task.task_name}
                 <EditTaskModal
+                  task={task}
                   projectId={this.state.projectId}
-                  raciFunctions={this.state.functions}
                   createDropdowns={this.createDropdowns}
+                  putSelectedTaskDataInState={this.putSelectedTaskDataInState}
                   taskText={this.state.newTask.taskText}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChange}
