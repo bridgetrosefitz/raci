@@ -169,7 +169,7 @@ export default class RACITable extends React.Component {
   handleSubmitOnEditTaskModal = (event, text, task) => {
     event.preventDefault()
     const taskId = task.id
-    return fetch(`https://localhost:3001/api/v1/task/${taskId}`,{
+    return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
       method: 'PUT', 
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ export default class RACITable extends React.Component {
         'Authorization': `Bearer ${localStorage.token}`
       },
       body: JSON.stringify({
-        "text": this.state.newTask.taskText
+        "text": this.state.newTask.taskText,
       })
     })
     .then(res => res.json())
