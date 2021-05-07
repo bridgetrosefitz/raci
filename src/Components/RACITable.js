@@ -26,7 +26,6 @@ export default class RACITable extends React.Component {
     }
 
   createTeamMemberOptions = () => {
-    console.log()
     return this.state.members.map(member => {
       return (
         {
@@ -38,15 +37,20 @@ export default class RACITable extends React.Component {
     })   
   }
 
-  createDropdowns = () => {
+  createDropdowns = (task) => {
     return (
       this.state.functions.map(raciFunction => {
+        const functionName = raciFunction.attributes.name.toLowerCase()
+        const defaultValues = task ? task[functionName].map(userTask => userTask.user_id) : [];
+       console.log(task)
         return (
           <Form.Field>
             <label>{raciFunction.attributes.name}</label>
             <Dropdown
               placeholder='Select team member'
               fluid
+              multiple={[3,4].includes(parseInt(raciFunction.id))}
+              defaultValue={[1,2].includes(parseInt(raciFunction.id)) ? defaultValues[0] : defaultValues}
               function_id={raciFunction.id}
               selection
               options={this.createTeamMemberOptions()}
@@ -247,7 +251,6 @@ export default class RACITable extends React.Component {
   }
 
     render() {
-      console.log(this.props)
       return(
         <div>
           <Button
@@ -271,7 +274,7 @@ export default class RACITable extends React.Component {
                 <EditTaskModal
                   task={task}
                   projectId={this.state.projectId}
-                  createDropdowns={this.createDropdowns}
+                  createDropdowns={() => this.createDropdowns(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
                   taskText={this.state.newTask.taskText}
                   handleTextFieldChange={this.handleTextFieldChange}

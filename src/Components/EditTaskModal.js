@@ -35,7 +35,7 @@ function EditTaskModal(props) {
                 onChange={props.handleTextFieldChange}
               />
             </Form.Field>
-            {props.createDropdowns()}
+            {props.createDropdowns(props.task)}
         </Form>
       </Modal.Description>
     </Modal.Content>
