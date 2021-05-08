@@ -15,7 +15,7 @@ export default class RACITable extends React.Component {
           tasks: [],
           creator: {},
           members: [],
-          newTask: {
+          selectedTask: {
             taskText: '',
             responsibleUserId: '',
             accountableUserId: '',
@@ -63,8 +63,8 @@ export default class RACITable extends React.Component {
 
   handleTextFieldChange = event => {
     this.setState({
-      newTask: {
-        ...this.state.newTask,
+      selectedTask: {
+        ...this.state.selectedTask,
       taskText: event.target.value}
     })
   }
@@ -72,32 +72,32 @@ export default class RACITable extends React.Component {
   handleDropdownChange = (event, data, raciFunction) => {
     if (raciFunction.id === "1") {
       this.setState({
-        newTask: {
-          ...this.state.newTask,
+        selectedTask: {
+          ...this.state.selectedTask,
           responsibleUserId: data.value
         }
       })
     }
     else if (raciFunction.id === "2") {
       this.setState({
-        newTask: {
-          ...this.state.newTask,
+        selectedTask: {
+          ...this.state.selectedTask,
           accountableUserId: data.value
         }
       })
     }
     else if (raciFunction.id === "3") {
       this.setState({
-        newTask: {
-          ...this.state.newTask,
+        selectedTask: {
+          ...this.state.selectedTask,
           consultedUserId: data.value
         }
       })
     }
     else if (raciFunction.id === "4") {
       this.setState({
-        newTask: {
-          ...this.state.newTask,
+        selectedTask: {
+          ...this.state.selectedTask,
           informedUserId: data.value
         }
       })
@@ -111,16 +111,16 @@ export default class RACITable extends React.Component {
       let taskId = parseInt(dataFromTaskCreation.data.id)
 
       if (functionId === 1) {
-        teamMemberId = this.state.newTask.responsibleUserId
+        teamMemberId = this.state.selectedTask.responsibleUserId
       }
       else if (functionId === 2) {
-        teamMemberId = this.state.newTask.accountableUserId
+        teamMemberId = this.state.selectedTask.accountableUserId
       }
       else if (functionId === 3) {
-        teamMemberId = this.state.newTask.consultedUserId
+        teamMemberId = this.state.selectedTask.consultedUserId
       }
       else if (functionId === 4) {
-        teamMemberId = this.state.newTask.informedUserId
+        teamMemberId = this.state.selectedTask.informedUserId
       }
 
       setTimeout(() => {
@@ -143,13 +143,13 @@ export default class RACITable extends React.Component {
   }
 
   updateUserTasks = (dataFromTaskUpdate) => {
-    console.log("hi, I will make you in a few")
+    console.log("I am the state, in my present state", this.state)
   }
 
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
-    const text = this.state.newTask.taskText
+    const text = this.state.selectedTask.taskText
     return fetch(`http://localhost:3001/api/v1/tasks/`, {
       method: 'POST',
       headers: {
@@ -177,7 +177,7 @@ export default class RACITable extends React.Component {
         'Authorization': `Bearer ${localStorage.token}`
       },
       body: JSON.stringify({
-        "text": this.state.newTask.taskText,
+        "text": this.state.selectedTask.taskText,
       })
     })
     .then(res => res.json())
@@ -221,39 +221,39 @@ export default class RACITable extends React.Component {
     .then(res => res.json())
     .then(data => {
       this.setState({
-        newTask: {
+        selectedTask: {
           taskText: data.data.attributes.text,
         }
       })
       data.data.attributes.user_tasks.forEach(user_task => {
         if (user_task.function_id === 1) {
           this.setState(previousState => ({
-            newTask: {
-              ...previousState.newTask,
+            selectedTask: {
+              ...previousState.selectedTask,
               responsibleUserId: user_task.user_id
             }
           }))
         }
         else if (user_task.function_id === 2) {
           this.setState(previousState => ({
-            newTask: {
-              ...previousState.newTask,
+            selectedTask: {
+              ...previousState.selectedTask,
               accountableUserId: user_task.user_id
             }
           }))
         }
         else if (user_task.function_id === 3) {
           this.setState(previousState => ({
-            newTask: {
-              ...previousState.newTask,
+            selectedTask: {
+              ...previousState.selectedTask,
               consultedUserId: user_task.user_id
             }
           }))
         }
         else if (user_task.function_id === 4) {
           this.setState(previousState => ({
-            newTask: {
-              ...previousState.newTask,
+            selectedTask: {
+              ...previousState.selectedTask,
               informedUserId: user_task.user_id
             }
           }))
@@ -297,7 +297,7 @@ export default class RACITable extends React.Component {
                   projectId={this.state.projectId}
                   createDropdowns={() => this.createDropdowns(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskText={this.state.newTask.taskText}
+                  taskText={this.state.selectedTask.taskText}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChange}
                   handleSubmit={this.handleSubmitOnEditTaskModal} />
@@ -344,7 +344,7 @@ export default class RACITable extends React.Component {
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
                     createDropdowns={this.createDropdowns}
-                    taskText={this.state.newTask.taskText}
+                    taskText={this.state.selectedTask.taskText}
                     handleTextFieldChange={this.handleTextFieldChange}
                     handleDropdownChange={this.handleDropdownChange}
                     handleSubmit={this.handleSubmitOnTaskModal} />
