@@ -8,20 +8,49 @@ export default class RACITable extends React.Component {
     constructor() {
       super();
 
+      // this.state = {
+      //     projectId: '',
+      //     projectName: '',
+      //     functions: [],
+      //     tasks: [],
+      //     creator: {},
+      //     members: [],
+      //     selectedTask: {
+      //       taskText: '',
+      //       responsibleUserId: '',
+      //       accountableUserId: '',
+      //       consultedUserId: '',
+      //       informedUserId: ''
+      //     }
+      // }
+
       this.state = {
-          projectId: '',
-          projectName: '',
-          functions: [],
-          tasks: [],
-          creator: {},
-          members: [],
-          selectedTask: {
-            taskText: '',
-            responsibleUserId: '',
-            accountableUserId: '',
-            consultedUserId: '',
-            informedUserId: ''
+        projectId: '',
+        projectName: '',
+        functions: [],
+        tasks: [],
+        creator: {},
+        members: [],
+        selectedTask: {
+          taskId: null,
+          taskText: null,
+          responsibleUserTask: {
+            user_task_id: null,
+            user_id: null
+          },
+          accountableUserTask: {
+            user_task_id: null,
+            user_id: null
+          },
+          consultedUserTask: {
+            user_task_id: null,
+            user_id: null
+          },
+          informedUserTask: {
+            user_task_id: null,
+            user_id: null
           }
+        }
       }
     }
 
@@ -70,11 +99,17 @@ export default class RACITable extends React.Component {
   }
 
   handleDropdownChange = (event, data, raciFunction) => {
+    debugger
     if (raciFunction.id === "1") {
       this.setState({
         selectedTask: {
           ...this.state.selectedTask,
-          responsibleUserId: data.value
+        //   responsibleUserId: data.value
+        // }
+          responsibleUserTask: {
+            // user_task_id: user_task.id,
+            // user_id: data.id
+          }
         }
       })
     }
@@ -222,6 +257,7 @@ export default class RACITable extends React.Component {
     .then(data => {
       this.setState({
         selectedTask: {
+          taskId: data.data.id,
           taskText: data.data.attributes.text,
         }
       })
@@ -230,7 +266,10 @@ export default class RACITable extends React.Component {
           this.setState(previousState => ({
             selectedTask: {
               ...previousState.selectedTask,
-              responsibleUserId: user_task.user_id
+              responsibleUserTask: {
+                user_task_id: user_task.user_task_id,
+                user_id: user_task.user_id
+              }
             }
           }))
         }
@@ -238,7 +277,10 @@ export default class RACITable extends React.Component {
           this.setState(previousState => ({
             selectedTask: {
               ...previousState.selectedTask,
-              accountableUserId: user_task.user_id
+              accountableUserTask: {
+                user_task_id: user_task.user_task_id,
+                user_id: user_task.user_id
+              }
             }
           }))
         }
@@ -246,7 +288,10 @@ export default class RACITable extends React.Component {
           this.setState(previousState => ({
             selectedTask: {
               ...previousState.selectedTask,
-              consultedUserId: user_task.user_id
+              consultedUserTask: {
+                user_task_id: user_task.user_task_id,
+                user_id: user_task.user_id
+              }
             }
           }))
         }
@@ -254,7 +299,10 @@ export default class RACITable extends React.Component {
           this.setState(previousState => ({
             selectedTask: {
               ...previousState.selectedTask,
-              informedUserId: user_task.user_id
+              informedUserTask: {
+                user_task_id: user_task.user_task_id,
+                user_id: user_task.user_id
+              }
             }
           }))
         }
