@@ -99,16 +99,14 @@ export default class RACITable extends React.Component {
   }
 
   handleDropdownChange = (event, data, raciFunction) => {
-    debugger
     if (raciFunction.id === "1") {
+      // debugger
       this.setState({
         selectedTask: {
           ...this.state.selectedTask,
-        //   responsibleUserId: data.value
-        // }
           responsibleUserTask: {
-            // user_task_id: user_task.id,
-            // user_id: data.id
+            ...this.state.selectedTask.responsibleUserTask,    
+            user_id: data.value
           }
         }
       })
@@ -117,7 +115,10 @@ export default class RACITable extends React.Component {
       this.setState({
         selectedTask: {
           ...this.state.selectedTask,
-          accountableUserId: data.value
+          accountableUserTask: {
+            ...this.state.selectedTask.accountableUserTask,
+            user_id: data.value
+          }
         }
       })
     }
@@ -125,7 +126,10 @@ export default class RACITable extends React.Component {
       this.setState({
         selectedTask: {
           ...this.state.selectedTask,
-          consultedUserId: data.value
+          consultedUserTask: {
+            ...this.state.selectedTask.consultedUserTask,
+            user_id: data.value
+          }
         }
       })
     }
@@ -133,7 +137,10 @@ export default class RACITable extends React.Component {
       this.setState({
         selectedTask: {
           ...this.state.selectedTask,
-          informedUserId: data.value
+          informedUserTask: {
+            ...this.state.selectedTask.informedUserTask,
+            user_id: data.value
+          }
         }
       })
     }
@@ -146,16 +153,16 @@ export default class RACITable extends React.Component {
       let taskId = parseInt(dataFromTaskCreation.data.id)
 
       if (functionId === 1) {
-        teamMemberId = this.state.selectedTask.responsibleUserId
+        teamMemberId = this.state.selectedTask.responsibleUserTask.user_id
       }
       else if (functionId === 2) {
-        teamMemberId = this.state.selectedTask.accountableUserId
+        teamMemberId = this.state.selectedTask.accountableUserTask.user_id
       }
       else if (functionId === 3) {
-        teamMemberId = this.state.selectedTask.consultedUserId
+        teamMemberId = this.state.selectedTask.consultedUserTask.user_id
       }
       else if (functionId === 4) {
-        teamMemberId = this.state.selectedTask.informedUserId
+        teamMemberId = this.state.selectedTask.informedUserTask.user_id
       }
 
       setTimeout(() => {
