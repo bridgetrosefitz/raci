@@ -15,6 +15,7 @@ function TaskModal(props) {
           icon
           labelPosition = 'left'
           primary
+          onClick={props.onTriggerButtonClick}
           size='small'>
             <Icon name='plus square icon' /> Add Task
         </Button>
@@ -28,7 +29,7 @@ function TaskModal(props) {
               <label>Text</label>
               <input 
                 placeholder='Define the task here...'
-                value={props.taskText}
+                value={props.taskName}
                 onChange={props.handleTextFieldChange}
                 />
             </Form.Field>
@@ -44,10 +45,9 @@ function TaskModal(props) {
             type='submit'
             icon='checkmark'
             onClick={(event, data) => {
-              const text = data.taskText
+              const text = data.taskName
               setOpen(false)
               props.handleSubmit(event, text)
-              // setTaskText("")
               }}
             positive>
           Create task

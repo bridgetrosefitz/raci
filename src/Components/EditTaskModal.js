@@ -31,7 +31,7 @@ function EditTaskModal(props) {
               <label>Text</label>
               <input
                 placeholder='Define the task here...'
-                value={props.taskText}
+                value={props.taskName}
                 onChange={props.handleTextFieldChange}
               />
             </Form.Field>

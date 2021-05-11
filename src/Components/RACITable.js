@@ -196,12 +196,11 @@ export default class RACITable extends React.Component {
     this.setState({
       selectedTask: {
         ...this.state.selectedTask,
-      taskText: event.target.value}
+      task_name: event.target.value}
     })
   }
 
   createUserTasks = (dataFromTaskCreation) => {
-    debugger
     this.state.functions.forEach((raciFunction, index) => {
       let functionId = parseInt(raciFunction.id)
       let teamMemberIds = []
@@ -241,7 +240,7 @@ export default class RACITable extends React.Component {
   }
 
   updateUserTasks = (dataFromTaskUpdate) => {
-    console.log("I am the state, in my present state", this.state)
+    console.log("I am the data back from updating the task text", dataFromTaskUpdate)
   }
 
   handleSubmitOnTaskModal = (event) => {
@@ -342,7 +341,8 @@ export default class RACITable extends React.Component {
       })
     })
     .then(res => res.json())
-    .then(data => this.updateUserTasks(data))
+    .then(data => {
+      this.updateUserTasks(data)})
   }
 
   putSelectedTaskDataInState = (id) => {
@@ -411,7 +411,7 @@ export default class RACITable extends React.Component {
                   projectId={this.state.projectId}
                   createDropdowns={() => this.createDropdowns(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskText={task.task_name}
+                  taskName={this.state.selectedTask.task_name}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChange}
                   handleSubmit={this.handleSubmitOnEditTaskModal} />
@@ -458,9 +458,20 @@ export default class RACITable extends React.Component {
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
                     createDropdowns={this.createDropdowns}
-                    taskText={this.state.selectedTask.taskText}
+                    taskName={this.state.selectedTask.task_name}
                     handleTextFieldChange={this.handleTextFieldChange}
                     handleDropdownChange={this.handleDropdownChange}
+                    onTriggerButtonClick={() => {
+                      this.setState({
+                        selectedTask: {
+                          taskId: null,
+                          taskText: null,
+                          responsibleUserTasks: [],
+                          accountableUserTasks: [],
+                          consultedUserTasks: [],
+                          informedUserTasks: []
+                        }
+                      })}}
                     handleSubmit={this.handleSubmitOnTaskModal} />
                 </Table.HeaderCell>
               </Table.Row>
