@@ -267,43 +267,82 @@ export default class RACITable extends React.Component {
   handleSubmitOnEditTaskModal = (event, text, task) => {
     event.preventDefault()
 
-    const userIdsForUserTasksToCreate = []
-    const userIdsforUserTasksToDelete = []
-    const selectedTaskUserIds = []
+    const userIdsForUserTasksToCreate = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+
+    const userIdsforUserTasksToDelete = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+
+    const selectedTaskUserIds = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+    
+    // Assign data from state to our little variable here, for convenience
+
     const taskToEditUserIds = this.state.taskToEditUserIds
 
-    console.log("taskToEditUserIds: ", taskToEditUserIds)
+    // Parse data out of selectedTask (i.e. the user_ids for user_tasks already in the database) 
+    // into the same shape as taskToEditUserIds
 
-    // this.state.selectedTask.responsible.forEach(userTask => {
-    //   selectedTaskUserIds.push(userTask.user_id)
-    // })
+    selectedTaskUserIds.responsible = this.state.selectedTask.responsible.map(user_task => {
+      return(user_task.user_id)
+    })
 
-    // this.state.selectedTask.accountable.forEach(userTask => {
-    //   selectedTaskUserIds.push(userTask.user_id)
-    // })
+    selectedTaskUserIds.accountable = this.state.selectedTask.accountable.map(user_task => {
+      return (user_task.user_id)
+    })
 
-    // this.state.selectedTask.consulted.forEach(userTask => {
-    //   selectedTaskUserIds.push(userTask.user_id)
-    // })
+    selectedTaskUserIds.consulted = this.state.selectedTask.consulted.map(user_task => {
+      return (user_task.user_id)
+    })
 
-    // this.state.selectedTask.informed.forEach(userTask => {
-    //   selectedTaskUserIds.push(userTask.user_id)
-    // })
+    selectedTaskUserIds.informed = this.state.selectedTask.informed.map(user_task => {
+      return (user_task.user_id)
+    })
 
-  //   const taskId = task.id
-  //   return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
-  //     method: 'PUT', 
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //       'Authorization': `Bearer ${localStorage.token}`
-  //     },
-  //     body: JSON.stringify({
-  //       "text": this.state.selectedTask.taskText,
-  //     })
-  //   })
-  //   .then(res => res.json())
-  //   .then(data => this.updateUserTasks(data))
+    // For each function, do a diff to find the user_ids which have been removed 
+    // from selectedTask (i.e. those we need to delete)
+
+    userIdsforUserTasksToDelete.responsible = selectedTaskUserIds.responsible.filter(n => !taskToEditUserIds.responsible.includes(n))
+    userIdsforUserTasksToDelete.accountable = selectedTaskUserIds.accountable.filter(n => !taskToEditUserIds.accountable.includes(n))
+    userIdsforUserTasksToDelete.consulted = selectedTaskUserIds.consulted.filter(n => !taskToEditUserIds.consulted.includes(n))
+    userIdsforUserTasksToDelete.informed = selectedTaskUserIds.informed.filter(n => !taskToEditUserIds.informed.includes(n))
+
+    // For each function, do a diff to find the user_ids which have been added 
+    // to selectedTask (i.e. those we need to create)
+    
+    userIdsForUserTasksToCreate.responsible = taskToEditUserIds.responsible.filter(n => !selectedTaskUserIds.responsible.includes(n))
+    userIdsForUserTasksToCreate.accountable = taskToEditUserIds.accountable.filter(n => !selectedTaskUserIds.accountable.includes(n))
+    userIdsForUserTasksToCreate.consulted = taskToEditUserIds.consulted.filter(n => !selectedTaskUserIds.consulted.includes(n))
+    userIdsForUserTasksToCreate.informed = taskToEditUserIds.informed.filter(n => !selectedTaskUserIds.informed.includes(n))
+
+    // Update the task text
+
+    const taskId = task.id
+    return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      },
+      body: JSON.stringify({
+        "text": this.state.selectedTask.taskText,
+      })
+    })
+    .then(res => res.json())
+    .then(data => this.updateUserTasks(data))
   }
 
   putSelectedTaskDataInState = (id) => {
