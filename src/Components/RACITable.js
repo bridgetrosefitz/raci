@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Label, Table, Button, Form, Dropdown } from 'semantic-ui-react';
+import { Icon, Label, Table, Button, Form, Dropdown, Select } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import { Link } from 'react-router-dom';
@@ -23,13 +23,19 @@ export default class RACITable extends React.Component {
         consultedUserTasks: [],
         informedUserTasks: []
       },
-      tasktoEdit: {
+      taskToEdit: {
         taskId: null,
         taskText: null,
         responsibleUserTasks: [],
         accountableUserTasks: [],
         consultedUserTasks: [],
         informedUserTasks: []
+      },
+      taskToEditUserIds: {
+        responsible: [],
+        accountable: [],
+        consulted: [],
+        informed: []
       }
     }
   }
@@ -74,7 +80,6 @@ export default class RACITable extends React.Component {
   }
 
   createDropdowns = (task) => {
-    // Put data in state here?
 
     return (
       this.state.functions.map(raciFunction => {
@@ -88,10 +93,9 @@ export default class RACITable extends React.Component {
               fluid
               multiple={[3,4].includes(parseInt(raciFunction.id))}
               defaultValue={[3,4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
-              task={task}
               selection
               options={this.createTeamMemberOptions()}
-              onChange={(event, data, function_id) => this.handleDropdownChange(event, data, function_id)}
+              onChange={(event, data) => {this.handleDropdownChange(data, raciFunction)}}
             />
           </Form.Field>
         )
@@ -99,23 +103,60 @@ export default class RACITable extends React.Component {
     )
   }
 
-  handleDropdownChange = (event, data, function_id) => {
-    console.log("Voila! data.value: ", data.value)
-    if (function_id === 1) {
+  handleDropdownChange = (data, raciFunction) => {
+
+    const raciFunctionId = parseInt(raciFunction.id)
+
+    if (raciFunctionId === 1){
       this.setState({
-        taskToEdit: {
-          ...this.state.taskToEdit,
-          responsibleUserTasks: [
-            ...this.state.selectedTask.responsibleUserTasks,
-            {
-              user_task_id: function_id,
-              user_id: data.value,
-              function_id: parseInt(function_id)
-            }
-          ]
+        taskToEditUserIds: {
+          ...this.state.taskToEditUserIds,
+          responsible: [data.value]
         }
       })
     }
+    else if (raciFunctionId === 2) {
+      this.setState({
+        taskToEditUserIds: {
+          ...this.state.taskToEditUserIds,
+          accountable: [data.value]
+        }
+      })
+    }
+    else if (raciFunctionId === 3) {
+      this.setState({
+        taskToEditUserIds: {
+          ...this.state.taskToEditUserIds,
+          consulted: data.value
+        }
+      })
+    }
+    else if (raciFunctionId === 4) {
+      this.setState({
+        taskToEditUserIds: {
+          ...this.state.taskToEditUserIds,
+          informed: data.value
+        }
+      })
+    }
+
+    
+
+    // if (function_id === 1) {
+    //   this.setState({
+    //     taskToEdit: {
+    //       ...this.state.taskToEdit,
+    //       responsibleUserTasks: [
+    //         ...this.state.selectedTask.responsibleUserTasks,
+    //         {
+    //           user_task_id: function_id,
+    //           user_id: data.value,
+    //           function_id: parseInt(function_id)
+    //         }
+    //       ]
+    //     }
+    //   })
+    // }
     // else if (function_id === 2) {
     //   this.setState({
     //     selectedTask: {
@@ -158,7 +199,6 @@ export default class RACITable extends React.Component {
       taskText: event.target.value}
     })
   }
-
 
   createUserTasks = (dataFromTaskCreation) => {
     debugger
@@ -226,35 +266,75 @@ export default class RACITable extends React.Component {
 
   handleSubmitOnEditTaskModal = (event, text, task) => {
     event.preventDefault()
-    const taskId = task.id
-    return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
-      method: 'PUT', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      },
-      body: JSON.stringify({
-        "text": this.state.selectedTask.taskText,
-      })
-    })
-    .then(res => res.json())
-    .then(data => this.updateUserTasks(data))
+
+    const userIdsForUserTasksToCreate = []
+    const userIdsforUserTasksToDelete = []
+    const selectedTaskUserIds = []
+    const taskToEditUserIds = this.state.taskToEditUserIds
+
+    console.log("taskToEditUserIds: ", taskToEditUserIds)
+
+    // this.state.selectedTask.responsible.forEach(userTask => {
+    //   selectedTaskUserIds.push(userTask.user_id)
+    // })
+
+    // this.state.selectedTask.accountable.forEach(userTask => {
+    //   selectedTaskUserIds.push(userTask.user_id)
+    // })
+
+    // this.state.selectedTask.consulted.forEach(userTask => {
+    //   selectedTaskUserIds.push(userTask.user_id)
+    // })
+
+    // this.state.selectedTask.informed.forEach(userTask => {
+    //   selectedTaskUserIds.push(userTask.user_id)
+    // })
+
+  //   const taskId = task.id
+  //   return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
+  //     method: 'PUT', 
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Authorization': `Bearer ${localStorage.token}`
+  //     },
+  //     body: JSON.stringify({
+  //       "text": this.state.selectedTask.taskText,
+  //     })
+  //   })
+  //   .then(res => res.json())
+  //   .then(data => this.updateUserTasks(data))
   }
 
   putSelectedTaskDataInState = (id) => {
     let taskToPutInState = null
+
+    const taskToEditUserIds = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+
     this.state.tasks.forEach(task => {
       if(task.id === id) {
+        // Get the task / user task data to put into state
+
         taskToPutInState = task
+
+        // Get an array of IDs for the user tasks, organized by function
+
+        taskToEditUserIds.responsible = task.responsible.map(user_task => user_task.user_id)
+        taskToEditUserIds.accountable = task.accountable.map(user_task => user_task.user_id)
+        taskToEditUserIds.consulted = task.consulted.map(user_task => user_task.user_id)
+        taskToEditUserIds.informed = task.informed.map(user_task => user_task.user_id)
       }  
     })
 
     this.setState({
       selectedTask: taskToPutInState,
-      taskToEdit: taskToPutInState
+      taskToEditUserIds: taskToEditUserIds
     })
-
   }
 
   componentDidMount() {
@@ -292,7 +372,7 @@ export default class RACITable extends React.Component {
                   projectId={this.state.projectId}
                   createDropdowns={() => this.createDropdowns(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskText={this.state.selectedTask.taskText}
+                  taskText={task.task_name}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChange}
                   handleSubmit={this.handleSubmitOnEditTaskModal} />
@@ -352,3 +432,26 @@ export default class RACITable extends React.Component {
     }
 
 }
+
+
+// const TestComponent = (props) => {
+//   props.fab
+//   return (
+//     <select onChange={(event, data) => props.onChange(event, data, 2)}>
+//       {props.options.map(option => <option value={option.value}>{option.text}</option>)}
+//       {/* <option value={2}>hi</option>
+//       <option value={3}>yo</option> */}
+//     </select>
+//   )
+// }
+
+// <TestComponent onChange={(hi, fab, gu) => {alert(gu)}} fab='poop' options={[{text: 'hi', value: 2}, {text: 'yo', value: 3}]}/>
+
+
+{/* <select id="poop"></select>
+
+document.querySelector("#poop").addEventListener("change", (event,poop, gu,sup, pickles) => {
+
+})
+
+myFunciton(event) */}
