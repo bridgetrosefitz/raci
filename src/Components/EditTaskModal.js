@@ -47,10 +47,9 @@ function EditTaskModal(props) {
           type='submit'
           icon='checkmark'
           onClick={(event, data) => {
-            const text = data.taskText
             const task = props.task
             setOpen(false)
-            props.handleSubmit(event, text, task)
+            props.handleSubmit(event, task)
           }}
           positive>
           Update task

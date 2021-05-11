@@ -202,23 +202,25 @@ export default class RACITable extends React.Component {
 
   createUserTasks = (dataFromTaskCreation) => {
     this.state.functions.forEach((raciFunction, index) => {
-      let functionId = parseInt(raciFunction.id)
-      let teamMemberIds = []
-      let taskId = parseInt(dataFromTaskCreation.data.id)
+      const functionId = parseInt(raciFunction.id)
+      const responsibleTeamMemberIds = []
+      const accountableTeamMemberIds = []
+      const consultedTeamMemberIds = []
+      const informedTeamMemberIds = []
+      const taskId = parseInt(dataFromTaskCreation.data.id)
 
       if (functionId === 1) {
-        teamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
+        responsibleTeamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
       }
       else if (functionId === 2) {
-        teamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
+        accountableTeamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
       }
       else if (functionId === 3) {
-        teamMemberIds = this.state.selectedTask.consultedTasks.map(task => task.user_id)
+        consultedTeamMemberIds = this.state.selectedTask.consultedUserTasks.map(task => task.user_id)
       }
       else if (functionId === 4) {
-        teamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
+        informedTeamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
       }
-      
 
       setTimeout(() => {
         fetch('http://localhost:3001/api/v1/user_tasks', {
@@ -230,7 +232,7 @@ export default class RACITable extends React.Component {
           },
           body: JSON.stringify({
             "function_id": functionId,
-            "user_id": teamMemberIds,
+            "user_id": 1,
             "task_id": taskId
           })
         })
@@ -238,6 +240,47 @@ export default class RACITable extends React.Component {
       }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
     })
   }
+
+  // createUserTasksInCreate = (dataFromTaskCreation) => {
+  //   this.state.functions.forEach((raciFunction, index) => {
+  //     const functionId = parseInt(raciFunction.id)
+  //     const responsibleTeamMemberIds = []
+  //     const accountableTeamMemberIds = []
+  //     const consultedTeamMemberIds = []
+  //     const informedTeamMemberIds = []
+  //     const taskId = parseInt(dataFromTaskCreation.data.id)
+
+  //     if (functionId === 1) {
+  //       responsibleTeamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
+  //     }
+  //     else if (functionId === 2) {
+  //       accountableTeamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
+  //     }
+  //     else if (functionId === 3) {
+  //       consultedTeamMemberIds = this.state.selectedTask.consultedUserTasks.map(task => task.user_id)
+  //     }
+  //     else if (functionId === 4) {
+  //       informedTeamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
+  //     }
+
+  //     setTimeout(() => {
+  //       fetch('http://localhost:3001/api/v1/user_tasks', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Accept': 'application/json',
+  //           'Authorization': `Bearer ${localStorage.token}`
+  //         },
+  //         body: JSON.stringify({
+  //           "function_id": functionId,
+  //           "user_id": teamMemberIds,
+  //           "task_id": taskId
+  //         })
+  //       })
+  //         .then(this.putProjectDataInState)
+  //     }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+  //   })
+  // }
 
   updateUserTasks = (dataFromTaskUpdate) => {
     console.log("I am the data back from updating the task text", dataFromTaskUpdate)
@@ -263,7 +306,7 @@ export default class RACITable extends React.Component {
       .then(data => this.createUserTasks(data))
   }
 
-  handleSubmitOnEditTaskModal = (event, text, task) => {
+  handleSubmitOnEditTaskModal = (event, task) => {
     event.preventDefault()
 
     const userIdsForUserTasksToCreate = {
@@ -273,12 +316,7 @@ export default class RACITable extends React.Component {
       informed: []
     }
 
-    const userIdsforUserTasksToDelete = {
-      responsible: [],
-      accountable: [],
-      consulted: [],
-      informed: []
-    }
+    const UserTaskIdsForUserTasksToDelete = []
 
     const selectedTaskUserIds = {
       responsible: [],
@@ -313,10 +351,10 @@ export default class RACITable extends React.Component {
     // For each function, do a diff to find the user_ids which have been removed 
     // from selectedTask (i.e. those we need to delete)
 
-    userIdsforUserTasksToDelete.responsible = selectedTaskUserIds.responsible.filter(n => !taskToEditUserIds.responsible.includes(n))
-    userIdsforUserTasksToDelete.accountable = selectedTaskUserIds.accountable.filter(n => !taskToEditUserIds.accountable.includes(n))
-    userIdsforUserTasksToDelete.consulted = selectedTaskUserIds.consulted.filter(n => !taskToEditUserIds.consulted.includes(n))
-    userIdsforUserTasksToDelete.informed = selectedTaskUserIds.informed.filter(n => !taskToEditUserIds.informed.includes(n))
+    // userIdsForUserTasksToDelete.responsible = selectedTaskUserIds.responsible.filter(n => !taskToEditUserIds.responsible.includes(n))
+    // userIdsForUserTasksToDelete.accountable = selectedTaskUserIds.accountable.filter(n => !taskToEditUserIds.accountable.includes(n))
+    // userIdsForUserTasksToDelete.consulted = selectedTaskUserIds.consulted.filter(n => !taskToEditUserIds.consulted.includes(n))
+    // userIdsForUserTasksToDelete.informed = selectedTaskUserIds.informed.filter(n => !taskToEditUserIds.informed.includes(n))
 
     // For each function, do a diff to find the user_ids which have been added 
     // to selectedTask (i.e. those we need to create)
@@ -326,23 +364,77 @@ export default class RACITable extends React.Component {
     userIdsForUserTasksToCreate.consulted = taskToEditUserIds.consulted.filter(n => !selectedTaskUserIds.consulted.includes(n))
     userIdsForUserTasksToCreate.informed = taskToEditUserIds.informed.filter(n => !selectedTaskUserIds.informed.includes(n))
 
-    // Update the task text
+    // Build user tasks to be created
 
     const taskId = task.id
-    return fetch(`http://localhost:3001/api/v1/tasks/${taskId}`,{
-      method: 'PUT', 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      },
-      body: JSON.stringify({
-        "text": this.state.selectedTask.taskText,
-      })
+    const userTasksToCreate = []
+
+    userIdsForUserTasksToCreate.responsible.forEach(userId => {
+
+      userTasksToCreate.push(
+            {
+              task_id: taskId,
+              function_id: 1,
+              user_id: userId
+            }
+        )
     })
-    .then(res => res.json())
-    .then(data => {
-      this.updateUserTasks(data)})
+
+    userIdsForUserTasksToCreate.accountable.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 2,
+          user_id: userId
+        }
+      )
+    })
+
+    userIdsForUserTasksToCreate.consulted.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 3,
+          user_id: userId
+        }
+      )
+    })
+
+    userIdsForUserTasksToCreate.informed.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 4,
+          user_id: userId
+        }
+      )
+    })
+
+    // Send user tasks to the server for creation!
+
+      userTasksToCreate.forEach((userTask, index) => {
+        setTimeout(() => {
+          return fetch(`http://localhost:3001/api/v1/user_tasks`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify(userTask)
+          })
+          .then(this.putProjectDataInState)
+        }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+      })  
+
+      // Delete user tasks
+
+        // Update the task text
+
+
   }
 
   putSelectedTaskDataInState = (id) => {
