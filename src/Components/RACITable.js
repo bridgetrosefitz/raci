@@ -5,54 +5,61 @@ import EditTaskModal from './EditTaskModal';
 import { Link } from 'react-router-dom';
 
 export default class RACITable extends React.Component {
-    constructor() {
-      super();
+  constructor() {
+    super();
 
-      // this.state = {
-      //     projectId: '',
-      //     projectName: '',
-      //     functions: [],
-      //     tasks: [],
-      //     creator: {},
-      //     members: [],
-      //     selectedTask: {
-      //       taskText: '',
-      //       responsibleUserId: '',
-      //       accountableUserId: '',
-      //       consultedUserId: '',
-      //       informedUserId: ''
-      //     }
-      // }
-
-      this.state = {
-        projectId: '',
-        projectName: '',
-        functions: [],
-        tasks: [],
-        creator: {},
-        members: [],
-        selectedTask: {
-          taskId: null,
-          taskText: null,
-          responsibleUserTask: {
-            user_task_id: null,
-            user_id: null
-          },
-          accountableUserTask: {
-            user_task_id: null,
-            user_id: null
-          },
-          consultedUserTask: {
-            user_task_id: null,
-            user_id: null
-          },
-          informedUserTask: {
-            user_task_id: null,
-            user_id: null
-          }
-        }
+    this.state = {
+      projectId: '',
+      projectName: '',
+      functions: [],
+      tasks: [],
+      creator: {},
+      members: [],
+      selectedTask: {
+        taskId: null,
+        taskText: null,
+        responsibleUserTasks: [],
+        accountableUserTasks: [],
+        consultedUserTasks: [],
+        informedUserTasks: []
+      },
+      tasktoEdit: {
+        taskId: null,
+        taskText: null,
+        responsibleUserTasks: [],
+        accountableUserTasks: [],
+        consultedUserTasks: [],
+        informedUserTasks: []
       }
     }
+  }
+
+  putProjectDataInState = () => {
+    fetch('http://localhost:3001/api/v1/projects/1', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => this.setState({
+        projectId: data.data.id,
+        projectName: data.data.attributes.name,
+        tasks: data.data.attributes.tasks,
+        creator: data.data.attributes.creator,
+        members: data.data.attributes.members
+      }))
+
+    fetch('http://localhost:3001/api/v1/functions', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => this.setState({
+        functions: data.data
+      }
+      ))
+  }
 
   createTeamMemberOptions = () => {
     return this.state.members.map(member => {
@@ -67,6 +74,8 @@ export default class RACITable extends React.Component {
   }
 
   createDropdowns = (task) => {
+    // Put data in state here?
+
     return (
       this.state.functions.map(raciFunction => {
         const functionName = raciFunction.attributes.name.toLowerCase()
@@ -78,16 +87,68 @@ export default class RACITable extends React.Component {
               placeholder='Select team member'
               fluid
               multiple={[3,4].includes(parseInt(raciFunction.id))}
-              defaultValue={[1,2].includes(parseInt(raciFunction.id)) ? defaultValues[0] : defaultValues}
-              function_id={raciFunction.id}
+              defaultValue={[3,4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
+              task={task}
               selection
               options={this.createTeamMemberOptions()}
-              onChange={(e, d) => this.handleDropdownChange(e, d, raciFunction)}
+              onChange={(event, data, function_id) => this.handleDropdownChange(event, data, function_id)}
             />
           </Form.Field>
         )
       })
     )
+  }
+
+  handleDropdownChange = (event, data, function_id) => {
+    console.log("Voila! data.value: ", data.value)
+    if (function_id === 1) {
+      this.setState({
+        taskToEdit: {
+          ...this.state.taskToEdit,
+          responsibleUserTasks: [
+            ...this.state.selectedTask.responsibleUserTasks,
+            {
+              user_task_id: function_id,
+              user_id: data.value,
+              function_id: parseInt(function_id)
+            }
+          ]
+        }
+      })
+    }
+    // else if (function_id === 2) {
+    //   this.setState({
+    //     selectedTask: {
+    //       ...this.state.selectedTask,
+    //       accountableUserTask: {
+    //         ...this.state.selectedTask.accountableUserTask,
+    //         user_id: data.value
+    //       }
+    //     }
+    //   })
+    // }
+    // else if (function_id === 3) {
+    //   this.setState({
+    //     selectedTask: {
+    //       ...this.state.selectedTask,
+    //       consultedUserTask: {
+    //         ...this.state.selectedTask.consultedUserTask,
+    //         user_id: data.value
+    //       }
+    //     }
+    //   })
+    // }
+    // else if (function_id === 4) {
+    //   this.setState({
+    //     selectedTask: {
+    //       ...this.state.selectedTask,
+    //       informedUserTask: {
+    //         ...this.state.selectedTask.informedUserTask,
+    //         user_id: data.value
+    //       }
+    //     }
+    //   })
+    // }
   }
 
   handleTextFieldChange = event => {
@@ -98,72 +159,27 @@ export default class RACITable extends React.Component {
     })
   }
 
-  handleDropdownChange = (event, data, raciFunction) => {
-    if (raciFunction.id === "1") {
-      // debugger
-      this.setState({
-        selectedTask: {
-          ...this.state.selectedTask,
-          responsibleUserTask: {
-            ...this.state.selectedTask.responsibleUserTask,    
-            user_id: data.value
-          }
-        }
-      })
-    }
-    else if (raciFunction.id === "2") {
-      this.setState({
-        selectedTask: {
-          ...this.state.selectedTask,
-          accountableUserTask: {
-            ...this.state.selectedTask.accountableUserTask,
-            user_id: data.value
-          }
-        }
-      })
-    }
-    else if (raciFunction.id === "3") {
-      this.setState({
-        selectedTask: {
-          ...this.state.selectedTask,
-          consultedUserTask: {
-            ...this.state.selectedTask.consultedUserTask,
-            user_id: data.value
-          }
-        }
-      })
-    }
-    else if (raciFunction.id === "4") {
-      this.setState({
-        selectedTask: {
-          ...this.state.selectedTask,
-          informedUserTask: {
-            ...this.state.selectedTask.informedUserTask,
-            user_id: data.value
-          }
-        }
-      })
-    }
-  }
 
   createUserTasks = (dataFromTaskCreation) => {
+    debugger
     this.state.functions.forEach((raciFunction, index) => {
       let functionId = parseInt(raciFunction.id)
-      let teamMemberId
+      let teamMemberIds = []
       let taskId = parseInt(dataFromTaskCreation.data.id)
 
       if (functionId === 1) {
-        teamMemberId = this.state.selectedTask.responsibleUserTask.user_id
+        teamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
       }
       else if (functionId === 2) {
-        teamMemberId = this.state.selectedTask.accountableUserTask.user_id
+        teamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
       }
       else if (functionId === 3) {
-        teamMemberId = this.state.selectedTask.consultedUserTask.user_id
+        teamMemberIds = this.state.selectedTask.consultedTasks.map(task => task.user_id)
       }
       else if (functionId === 4) {
-        teamMemberId = this.state.selectedTask.informedUserTask.user_id
+        teamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
       }
+      
 
       setTimeout(() => {
         fetch('http://localhost:3001/api/v1/user_tasks', {
@@ -175,7 +191,7 @@ export default class RACITable extends React.Component {
           },
           body: JSON.stringify({
             "function_id": functionId,
-            "user_id": teamMemberId,
+            "user_id": teamMemberIds,
             "task_id": taskId
           })
         })
@@ -226,95 +242,19 @@ export default class RACITable extends React.Component {
     .then(data => this.updateUserTasks(data))
   }
 
-  putProjectDataInState = () => {
-    fetch('http://localhost:3001/api/v1/projects/1', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
-      .then(data => this.setState({
-        projectId: data.data.id,
-        projectName: data.data.attributes.name,
-        tasks: data.data.attributes.tasks,
-        creator: data.data.attributes.creator,
-        members: data.data.attributes.members
-      }))
-
-    fetch('http://localhost:3001/api/v1/functions', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
-      .then(data => this.setState({
-        functions: data.data
-      }
-      ))
-  } 
-
   putSelectedTaskDataInState = (id) => {
-    fetch(`http://localhost:3001/api/v1/tasks/${id}`,
-    {
-      headers: {
-        "Authorization" : `Bearer ${localStorage.token}`
-      }
+    let taskToPutInState = null
+    this.state.tasks.forEach(task => {
+      if(task.id === id) {
+        taskToPutInState = task
+      }  
     })
-    .then(res => res.json())
-    .then(data => {
-      this.setState({
-        selectedTask: {
-          taskId: data.data.id,
-          taskText: data.data.attributes.text,
-        }
-      })
-      data.data.attributes.user_tasks.forEach(user_task => {
-        if (user_task.function_id === 1) {
-          this.setState(previousState => ({
-            selectedTask: {
-              ...previousState.selectedTask,
-              responsibleUserTask: {
-                user_task_id: user_task.user_task_id,
-                user_id: user_task.user_id
-              }
-            }
-          }))
-        }
-        else if (user_task.function_id === 2) {
-          this.setState(previousState => ({
-            selectedTask: {
-              ...previousState.selectedTask,
-              accountableUserTask: {
-                user_task_id: user_task.user_task_id,
-                user_id: user_task.user_id
-              }
-            }
-          }))
-        }
-        else if (user_task.function_id === 3) {
-          this.setState(previousState => ({
-            selectedTask: {
-              ...previousState.selectedTask,
-              consultedUserTask: {
-                user_task_id: user_task.user_task_id,
-                user_id: user_task.user_id
-              }
-            }
-          }))
-        }
-        else if (user_task.function_id === 4) {
-          this.setState(previousState => ({
-            selectedTask: {
-              ...previousState.selectedTask,
-              informedUserTask: {
-                user_task_id: user_task.user_task_id,
-                user_id: user_task.user_id
-              }
-            }
-          }))
-        }
-      })
+
+    this.setState({
+      selectedTask: taskToPutInState,
+      taskToEdit: taskToPutInState
     })
+
   }
 
   componentDidMount() {
