@@ -23,14 +23,6 @@ export default class RACITable extends React.Component {
         consultedUserTasks: [],
         informedUserTasks: []
       },
-      taskToEdit: {
-        taskId: null,
-        taskText: null,
-        responsibleUserTasks: [],
-        accountableUserTasks: [],
-        consultedUserTasks: [],
-        informedUserTasks: []
-      },
       taskToEditUserIds: {
         responsible: [],
         accountable: [],
@@ -95,7 +87,7 @@ export default class RACITable extends React.Component {
               defaultValue={[3,4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
               selection
               options={this.createTeamMemberOptions()}
-              onChange={(event, data) => {this.handleDropdownChange(data, raciFunction)}}
+              onChange={(event, data) => {this.handleDropdownChangeForEditModal(data, raciFunction)}}
             />
           </Form.Field>
         )
@@ -103,7 +95,7 @@ export default class RACITable extends React.Component {
     )
   }
 
-  handleDropdownChange = (data, raciFunction) => {
+  handleDropdownChangeForEditModal = (data, raciFunction) => {
 
     const raciFunctionId = parseInt(raciFunction.id)
 
@@ -139,57 +131,6 @@ export default class RACITable extends React.Component {
         }
       })
     }
-
-    
-
-    // if (function_id === 1) {
-    //   this.setState({
-    //     taskToEdit: {
-    //       ...this.state.taskToEdit,
-    //       responsibleUserTasks: [
-    //         ...this.state.selectedTask.responsibleUserTasks,
-    //         {
-    //           user_task_id: function_id,
-    //           user_id: data.value,
-    //           function_id: parseInt(function_id)
-    //         }
-    //       ]
-    //     }
-    //   })
-    // }
-    // else if (function_id === 2) {
-    //   this.setState({
-    //     selectedTask: {
-    //       ...this.state.selectedTask,
-    //       accountableUserTask: {
-    //         ...this.state.selectedTask.accountableUserTask,
-    //         user_id: data.value
-    //       }
-    //     }
-    //   })
-    // }
-    // else if (function_id === 3) {
-    //   this.setState({
-    //     selectedTask: {
-    //       ...this.state.selectedTask,
-    //       consultedUserTask: {
-    //         ...this.state.selectedTask.consultedUserTask,
-    //         user_id: data.value
-    //       }
-    //     }
-    //   })
-    // }
-    // else if (function_id === 4) {
-    //   this.setState({
-    //     selectedTask: {
-    //       ...this.state.selectedTask,
-    //       informedUserTask: {
-    //         ...this.state.selectedTask.informedUserTask,
-    //         user_id: data.value
-    //       }
-    //     }
-    //   })
-    // }
   }
 
   handleTextFieldChange = event => {
@@ -201,6 +142,14 @@ export default class RACITable extends React.Component {
   }
 
   createUserTasks = (dataFromTaskCreation) => {
+
+    const userIdsForUserTasksToCreate = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+
     this.state.functions.forEach((raciFunction, index) => {
       const functionId = parseInt(raciFunction.id)
       const responsibleTeamMemberIds = []
@@ -241,51 +190,6 @@ export default class RACITable extends React.Component {
     })
   }
 
-  // createUserTasksInCreate = (dataFromTaskCreation) => {
-  //   this.state.functions.forEach((raciFunction, index) => {
-  //     const functionId = parseInt(raciFunction.id)
-  //     const responsibleTeamMemberIds = []
-  //     const accountableTeamMemberIds = []
-  //     const consultedTeamMemberIds = []
-  //     const informedTeamMemberIds = []
-  //     const taskId = parseInt(dataFromTaskCreation.data.id)
-
-  //     if (functionId === 1) {
-  //       responsibleTeamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
-  //     }
-  //     else if (functionId === 2) {
-  //       accountableTeamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
-  //     }
-  //     else if (functionId === 3) {
-  //       consultedTeamMemberIds = this.state.selectedTask.consultedUserTasks.map(task => task.user_id)
-  //     }
-  //     else if (functionId === 4) {
-  //       informedTeamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
-  //     }
-
-  //     setTimeout(() => {
-  //       fetch('http://localhost:3001/api/v1/user_tasks', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Accept': 'application/json',
-  //           'Authorization': `Bearer ${localStorage.token}`
-  //         },
-  //         body: JSON.stringify({
-  //           "function_id": functionId,
-  //           "user_id": teamMemberIds,
-  //           "task_id": taskId
-  //         })
-  //       })
-  //         .then(this.putProjectDataInState)
-  //     }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
-  //   })
-  // }
-
-  updateUserTasks = (dataFromTaskUpdate) => {
-    console.log("I am the data back from updating the task text", dataFromTaskUpdate)
-  }
-
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
@@ -323,14 +227,14 @@ export default class RACITable extends React.Component {
       informed: []
     }
 
-    const userTaskIdsForUserTasksToDelete = {
+    const selectedTaskUserIds = {
       responsible: [],
       accountable: [],
       consulted: [],
       informed: []
     }
 
-    const selectedTaskUserIds = {
+    const userTaskIdsForUserTasksToDelete = {
       responsible: [],
       accountable: [],
       consulted: [],
@@ -566,7 +470,7 @@ export default class RACITable extends React.Component {
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
                   taskName={this.state.selectedTask.task_name}
                   handleTextFieldChange={this.handleTextFieldChange}
-                  handleDropdownChange={this.handleDropdownChange}
+                  handleDropdownChange={this.handleDropdownChangeForEditModal}
                   handleSubmit={this.handleSubmitOnEditTaskModal} />
                 </Table.Cell>
                 <Table.Cell>{
