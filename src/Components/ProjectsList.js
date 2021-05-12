@@ -13,14 +13,31 @@ export default class ProjectsList extends React.Component {
 
   createProjectCards = () => {
     return this.state.projects.map(project => {
+      // return (
+      //   {
+      //     header: project.attributes.name,
+      //     description: 'Cool project',
+      //     meta: '24/04/1987',
+      //   }
+      // )
+
       return (
-        {
-          header: project.attributes.name,
-          description: 'Cool project',
-          meta: '24/04/1987'
-        }
+        <Card
+          header={project.attributes.name}
+          description={'Cool project'}
+          meta={'24/04/1987'}
+          onClick={() => {
+            {/* const task = TBD
+            this.redirectToProjectPage(taskId) */}
+           }
+          }>
+        </Card>
       )
     })
+  }
+
+  redirectToProjectPage = (projectId) => {
+    this.props.history.push(`/projects/${projectId}`)
   }
 
   loadProjectsData = () => {
@@ -43,9 +60,11 @@ export default class ProjectsList extends React.Component {
   }
   
  
-  cardExampleGroupProps = () => {
+  createCardGroup = () => {
     return(
-      <Card.Group items={this.createProjectCards()} />
+      <Card.Group>
+      {this.createProjectCards()}
+      </Card.Group>
     )
   }
 
@@ -53,7 +72,7 @@ export default class ProjectsList extends React.Component {
     return (
       <div>
       {
-        this.cardExampleGroupProps()
+        this.createCardGroup()
       }
       </div>
     )
