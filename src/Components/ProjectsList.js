@@ -27,10 +27,9 @@ export default class ProjectsList extends React.Component {
           description={'Cool project'}
           meta={'24/04/1987'}
           onClick={() => {
-            {/* const task = TBD
-            this.redirectToProjectPage(taskId) */}
-           }
-          }>
+            const taskId = 1
+            this.redirectToProjectPage(taskId)}
+           }>
         </Card>
       )
     })
