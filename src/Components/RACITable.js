@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Label, Table, Button, Form, Dropdown, Select } from 'semantic-ui-react';
+import { Icon, Label, Table, Button, Form, Dropdown, Select, Message } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,11 @@ export default class RACITable extends React.Component {
     super();
 
     this.state = {
+      hideTopMessage: true,
+      topMessage: {
+        header: '',
+        message: '',
+      },
       projectId: '',
       projectName: '',
       functions: [],
@@ -18,10 +23,16 @@ export default class RACITable extends React.Component {
       selectedTask: {
         taskId: null,
         taskText: null,
-        responsibleUserTasks: [],
-        accountableUserTasks: [],
-        consultedUserTasks: [],
-        informedUserTasks: []
+        responsible: [],
+        accountable: [],
+        consulted: [],
+        informed: []
+      },
+      taskToCreateUserIds: {
+        responsible: [],
+        accountable: [],
+        consulted: [],
+        informed: []
       },
       taskToEditUserIds: {
         responsible: [],
@@ -71,7 +82,7 @@ export default class RACITable extends React.Component {
     })   
   }
 
-  createDropdowns = (task) => {
+  createDropdownsForEditModal = (task) => {
 
     return (
       this.state.functions.map(raciFunction => {
@@ -93,6 +104,99 @@ export default class RACITable extends React.Component {
         )
       })
     )
+  }
+
+  createDropdownsForCreateModal = (task) => {
+
+    return (
+      this.state.functions.map(raciFunction => {
+        const functionName = raciFunction.attributes.name.toLowerCase()
+        // const defaultValues = task ? task[functionName].map(userTask => userTask.user_id) : [];
+        return (
+          <Form.Field>
+            <label>{raciFunction.attributes.name}</label>
+            <Dropdown
+              placeholder='Select team member'
+              fluid
+              multiple={[3, 4].includes(parseInt(raciFunction.id))}
+              // defaultValue={[3, 4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
+              selection
+              options={this.createTeamMemberOptions()}
+              onChange={(event, data) => { this.handleDropdownChangeForCreateModal(data, raciFunction) }}
+            />
+          </Form.Field>
+        )
+      })
+    )
+  }
+
+  handleDropdownChangeForCreateModal = (data, raciFunction) => {
+
+    const raciFunctionId = parseInt(raciFunction.id)
+
+    if (raciFunctionId === 1) {
+      this.setState({
+        taskToCreateUserIds: {
+          ...this.state.taskToCreateUserIds,
+          responsible: [data.value]
+        }
+      })
+    }
+    else if (raciFunctionId === 2) {
+      this.setState({
+        taskToCreateUserIds: {
+          ...this.state.taskToCreateUserIds,
+          accountable: [data.value]
+        }
+      })
+    }
+    else if (raciFunctionId === 3) {
+      this.setState({
+        taskToCreateUserIds: {
+          ...this.state.taskToCreateUserIds,
+          consulted: data.value
+        }
+      })
+    }
+    else if (raciFunctionId === 4) {
+      this.setState({
+        taskToCreateUserIds: {
+          ...this.state.taskToCreateUserIds,
+          informed: data.value
+        }
+      })
+    }
+
+
+    // Create an array of userTask objects which gets a new objects every time the dropdown changes
+    // NOT USING THIS STRATEGY BECAUSE IT IS TOO HARD TO DEDUPLICATE WHEN IDENTICAL OBJECTS 
+    // ARE CREATED IN CASES WHERE THE DROPDOWN CHANGES MULTIPLE TIMES TO INCLUDE MORE THAN ONE USER
+    // if (raciFunctionId === 1 || raciFunctionId === 2) {
+    //   [data.value].forEach(userId => {
+    //       const newUserTask = {
+    //         task_id: null,
+    //         function_id: raciFunctionId,
+    //         user_id: userId
+    //       }
+    //     this.setState(previousState => ({
+    //       userTasksToCreate: [...previousState.userTasksToCreate, newUserTask]
+    //     }))
+    //   })
+    // }
+    // else if (raciFunctionId === 3 || raciFunctionId === 4) {
+    //   data.value.forEach(userId => {
+    //     const newUserTask = {
+    //       task_id: null,
+    //       function_id: raciFunctionId,
+    //       user_id: userId
+    //     }
+
+
+    //     this.setState(previousState => ({
+    //       userTasksToCreate: [...previousState.userTasksToCreate, newUserTask]
+    //     }))
+    //   })
+    // }
   }
 
   handleDropdownChangeForEditModal = (data, raciFunction) => {
@@ -143,57 +247,81 @@ export default class RACITable extends React.Component {
 
   createUserTasks = (dataFromTaskCreation) => {
 
-    const userIdsForUserTasksToCreate = {
-      responsible: [],
-      accountable: [],
-      consulted: [],
-      informed: []
-    }
+    const taskId = parseInt(dataFromTaskCreation.data.id)
 
-    this.state.functions.forEach((raciFunction, index) => {
-      const functionId = parseInt(raciFunction.id)
-      const responsibleTeamMemberIds = []
-      const accountableTeamMemberIds = []
-      const consultedTeamMemberIds = []
-      const informedTeamMemberIds = []
-      const taskId = parseInt(dataFromTaskCreation.data.id)
+    const userTasksToCreate = []
 
-      if (functionId === 1) {
-        responsibleTeamMemberIds = this.state.selectedTask.responsibleUserTasks.map(task => task.user_id)
-      }
-      else if (functionId === 2) {
-        accountableTeamMemberIds = this.state.selectedTask.accountableUserTasks.map(task => task.user_id)
-      }
-      else if (functionId === 3) {
-        consultedTeamMemberIds = this.state.selectedTask.consultedUserTasks.map(task => task.user_id)
-      }
-      else if (functionId === 4) {
-        informedTeamMemberIds = this.state.selectedTask.informedUserTasks.map(task => task.user_id)
-      }
+    const userIdsForUserTasksToCreate = this.state.taskToCreateUserIds
 
-      setTimeout(() => {
-        fetch('http://localhost:3001/api/v1/user_tasks', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.token}`
-          },
-          body: JSON.stringify({
-            "function_id": functionId,
-            "user_id": 1,
-            "task_id": taskId
-          })
-        })
-        .then(this.putProjectDataInState)
-      }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+    userIdsForUserTasksToCreate.responsible.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 1,
+          user_id: userId
+        }
+      )
     })
-  }
+
+    userIdsForUserTasksToCreate.accountable.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 2,
+          user_id: userId
+        }
+      )
+    })
+
+    userIdsForUserTasksToCreate.consulted.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 3,
+          user_id: userId
+        }
+      )
+    })
+
+    userIdsForUserTasksToCreate.informed.forEach(userId => {
+
+      userTasksToCreate.push(
+        {
+          task_id: taskId,
+          function_id: 4,
+          user_id: userId
+        }
+      )
+    })
+      // Send the now-complete userTasks to the server for creation
+
+    userTasksToCreate.forEach((userTask, index) => {
+        setTimeout(() => {
+          fetch('http://localhost:3001/api/v1/user_tasks', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${localStorage.token}`
+            },
+            body: JSON.stringify(userTask)
+          })
+            .then(this.putProjectDataInState)
+        }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+      })
+      
+      this.setState({
+        userTasksToCreate: []
+      })
+}
 
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
-    const text = this.state.selectedTask.taskText
+    const text = this.state.selectedTask.task_name
     return fetch(`http://localhost:3001/api/v1/tasks/`, {
       method: 'POST',
       headers: {
@@ -433,6 +561,33 @@ export default class RACITable extends React.Component {
     })
   }
 
+  handleDelete = (task) => {
+    fetch(`http://localhost:3001/api/v1/tasks/${task.id}`,{
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+    .then(this.putProjectDataInState)
+
+  }
+
+  deleteUserTask = (user_task) => {
+    fetch(`http://localhost:3001/api/v1/user_tasks/${user_task.user_task_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+      .then(this.putProjectDataInState)
+      // .then(() => {
+      //   this.setState({ hideTopMessage: false, topMessage: { header: `successfully deleted ${user_task.full_name} from task`, message: 'woooh!'}})
+      //   setTimeout(() => this.setState({ hideTopMessage: true, topMessage: { header: ``, message: '' } }), 1000)
+      // })
+  }
+
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
@@ -445,6 +600,12 @@ export default class RACITable extends React.Component {
     render() {
       return(
         <div>
+          <Message positive hidden={this.state.hideTopMessage}>
+            <Message.Header>{this.state.topMessage.header}</Message.Header>
+            <p>
+              {this.state.topMessage.message}
+            </p>
+          </Message>
           <Button
             onClick={this.props.logOut}
             floated='right'
@@ -466,18 +627,22 @@ export default class RACITable extends React.Component {
                 <EditTaskModal
                   task={task}
                   projectId={this.state.projectId}
-                  createDropdowns={() => this.createDropdowns(task)}
+                  createDropdowns={() => this.createDropdownsForEditModal(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
                   taskName={this.state.selectedTask.task_name}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChangeForEditModal}
-                  handleSubmit={this.handleSubmitOnEditTaskModal} />
+                  handleSubmit={this.handleSubmitOnEditTaskModal} 
+                  handleDelete={this.handleDelete}  
+                  />
                 </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {
                     return (<Label>
                       {user_task.user_full_name}
-                      <Icon name='delete' />
+                      <Icon
+                        onClick={() => this.deleteUserTask(user_task)}
+                        name='delete' />
                     </Label>)
                   } )}
                 </Table.Cell>
@@ -485,7 +650,9 @@ export default class RACITable extends React.Component {
                     task.accountable.map((user_task, i) => {
                       return (<Label>
                         {user_task.user_full_name}
-                        <Icon name='delete' />
+                        <Icon
+                          onClick={() => this.deleteUserTask(user_task)}
+                          name='delete' />
                       </Label>)
                   } )}
                 </Table.Cell>
@@ -493,7 +660,9 @@ export default class RACITable extends React.Component {
                   task.consulted.map((user_task, i) => {
                     return (<Label>
                       {user_task.user_full_name}
-                      <Icon name='delete' />
+                      <Icon
+                        onClick={() => this.deleteUserTask(user_task)}
+                        name='delete' />
                     </Label>)
                   })}
                 </Table.Cell>
@@ -501,7 +670,9 @@ export default class RACITable extends React.Component {
                   task.informed.map((user_task, i) => {
                     return (<Label>
                       {user_task.user_full_name}
-                      <Icon name='delete' />
+                      <Icon 
+                        onClick={() => this.deleteUserTask(user_task)} 
+                        name='delete' />
                     </Label>)
                   })}
                 </Table.Cell>
@@ -514,19 +685,19 @@ export default class RACITable extends React.Component {
                   <TaskModal 
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
-                    createDropdowns={this.createDropdowns}
+                    createDropdowns={this.createDropdownsForCreateModal}
                     taskName={this.state.selectedTask.task_name}
                     handleTextFieldChange={this.handleTextFieldChange}
-                    handleDropdownChange={this.handleDropdownChange}
+                    handleDropdownChange={this.handleDropdownChangeForCreateModal}
                     onTriggerButtonClick={() => {
                       this.setState({
                         selectedTask: {
                           taskId: null,
-                          taskText: null,
-                          responsibleUserTasks: [],
-                          accountableUserTasks: [],
-                          consultedUserTasks: [],
-                          informedUserTasks: []
+                          task_name: null,
+                          responsible: [],
+                          accountable: [],
+                          consulted: [],
+                          informed: []
                         }
                       })}}
                     handleSubmit={this.handleSubmitOnTaskModal} />
@@ -562,3 +733,45 @@ document.querySelector("#poop").addEventListener("change", (event,poop, gu,sup, 
 })
 
 myFunciton(event) */}
+
+
+
+// const DropDown = (props) => {
+//   const handleOnChange = (e, data) => {
+//     props.onDropChange(`hello! ${data.value}`)
+//   }
+//   return (
+//     <select onChange={handleOnChange}>
+//       {props.options.map(option => <option value={option.value}>{option.text}</option>)}
+//     </select>
+//   )
+// }
+
+
+// <DropDown onDropChange={(alertMessage) => alert(alertMessage)} options={[{ text: 'hi', value: 2 }, { text: 'yo', value: 3 }]} />
+
+
+// Everytime you change the Dropdown, 
+// there should be an alert which alerts 
+// the third argument of your custom callback for onChange
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

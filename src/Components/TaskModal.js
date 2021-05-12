@@ -38,7 +38,9 @@ function TaskModal(props) {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='black' onClick={() => setOpen(false)}>
+        <Button 
+        // color='black' 
+        onClick={() => setOpen(false)}>
           Cancel
         </Button>
         <Button

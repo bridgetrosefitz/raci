@@ -40,12 +40,25 @@ function EditTaskModal(props) {
       </Modal.Description>
     </Modal.Content>
       <Modal.Actions>
-        <Button color='black' onClick={() => setOpen(false)}>
+        <Button
+          icon
+          labelPosition='right'
+          color='red'
+          floated='left'
+          onClick={() => {
+            const task = props.task
+            setOpen(false)
+            props.handleDelete(task)
+          }}
+        >
+          Delete task
+        <Icon name='trash alternate outline' />
+        </Button>
+        <Button  onClick={() => setOpen(false)}>
           Cancel
         </Button>
         <Button
           type='submit'
-          icon='checkmark'
           onClick={(event, data) => {
             const task = props.task
             setOpen(false)
@@ -54,6 +67,7 @@ function EditTaskModal(props) {
           positive>
           Update task
         </Button>
+        
       </Modal.Actions>
     </Modal>
   )
