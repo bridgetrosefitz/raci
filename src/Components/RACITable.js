@@ -111,7 +111,6 @@ export default class RACITable extends React.Component {
     return (
       this.state.functions.map(raciFunction => {
         const functionName = raciFunction.attributes.name.toLowerCase()
-        // const defaultValues = task ? task[functionName].map(userTask => userTask.user_id) : [];
         return (
           <Form.Field>
             <label>{raciFunction.attributes.name}</label>
@@ -119,7 +118,6 @@ export default class RACITable extends React.Component {
               placeholder='Select team member'
               fluid
               multiple={[3, 4].includes(parseInt(raciFunction.id))}
-              // defaultValue={[3, 4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
               selection
               options={this.createTeamMemberOptions()}
               onChange={(event, data) => { this.handleDropdownChangeForCreateModal(data, raciFunction) }}
@@ -166,37 +164,6 @@ export default class RACITable extends React.Component {
         }
       })
     }
-
-
-    // Create an array of userTask objects which gets a new objects every time the dropdown changes
-    // NOT USING THIS STRATEGY BECAUSE IT IS TOO HARD TO DEDUPLICATE WHEN IDENTICAL OBJECTS 
-    // ARE CREATED IN CASES WHERE THE DROPDOWN CHANGES MULTIPLE TIMES TO INCLUDE MORE THAN ONE USER
-    // if (raciFunctionId === 1 || raciFunctionId === 2) {
-    //   [data.value].forEach(userId => {
-    //       const newUserTask = {
-    //         task_id: null,
-    //         function_id: raciFunctionId,
-    //         user_id: userId
-    //       }
-    //     this.setState(previousState => ({
-    //       userTasksToCreate: [...previousState.userTasksToCreate, newUserTask]
-    //     }))
-    //   })
-    // }
-    // else if (raciFunctionId === 3 || raciFunctionId === 4) {
-    //   data.value.forEach(userId => {
-    //     const newUserTask = {
-    //       task_id: null,
-    //       function_id: raciFunctionId,
-    //       user_id: userId
-    //     }
-
-
-    //     this.setState(previousState => ({
-    //       userTasksToCreate: [...previousState.userTasksToCreate, newUserTask]
-    //     }))
-    //   })
-    // }
   }
 
   handleDropdownChangeForEditModal = (data, raciFunction) => {
@@ -490,7 +457,6 @@ export default class RACITable extends React.Component {
     })
 
     // Delete user tasks
-    
 
     deleteThesePuppiesFiltered.forEach((userTaskId, index) => {
       setTimeout(() => {
