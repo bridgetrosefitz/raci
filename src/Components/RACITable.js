@@ -316,7 +316,19 @@ export default class RACITable extends React.Component {
       informed: []
     }
 
-    const UserTaskIdsForUserTasksToDelete = []
+    const userIdsForUserTasksToDelete = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
+
+    const userTaskIdsForUserTasksToDelete = {
+      responsible: [],
+      accountable: [],
+      consulted: [],
+      informed: []
+    }
 
     const selectedTaskUserIds = {
       responsible: [],
@@ -351,10 +363,10 @@ export default class RACITable extends React.Component {
     // For each function, do a diff to find the user_ids which have been removed 
     // from selectedTask (i.e. those we need to delete)
 
-    // userIdsForUserTasksToDelete.responsible = selectedTaskUserIds.responsible.filter(n => !taskToEditUserIds.responsible.includes(n))
-    // userIdsForUserTasksToDelete.accountable = selectedTaskUserIds.accountable.filter(n => !taskToEditUserIds.accountable.includes(n))
-    // userIdsForUserTasksToDelete.consulted = selectedTaskUserIds.consulted.filter(n => !taskToEditUserIds.consulted.includes(n))
-    // userIdsForUserTasksToDelete.informed = selectedTaskUserIds.informed.filter(n => !taskToEditUserIds.informed.includes(n))
+    userIdsForUserTasksToDelete.responsible = selectedTaskUserIds.responsible.filter(n => !taskToEditUserIds.responsible.includes(n))
+    userIdsForUserTasksToDelete.accountable = selectedTaskUserIds.accountable.filter(n => !taskToEditUserIds.accountable.includes(n))
+    userIdsForUserTasksToDelete.consulted = selectedTaskUserIds.consulted.filter(n => !taskToEditUserIds.consulted.includes(n))
+    userIdsForUserTasksToDelete.informed = selectedTaskUserIds.informed.filter(n => !taskToEditUserIds.informed.includes(n))
 
     // For each function, do a diff to find the user_ids which have been added 
     // to selectedTask (i.e. those we need to create)
@@ -363,6 +375,38 @@ export default class RACITable extends React.Component {
     userIdsForUserTasksToCreate.accountable = taskToEditUserIds.accountable.filter(n => !selectedTaskUserIds.accountable.includes(n))
     userIdsForUserTasksToCreate.consulted = taskToEditUserIds.consulted.filter(n => !selectedTaskUserIds.consulted.includes(n))
     userIdsForUserTasksToCreate.informed = taskToEditUserIds.informed.filter(n => !selectedTaskUserIds.informed.includes(n))
+  
+    // Build array of user task IDs which need to be deleted
+
+    userTaskIdsForUserTasksToDelete.responsible = this.state.selectedTask.responsible.map(user_task => {
+      if (userIdsForUserTasksToDelete.responsible.includes(user_task.user_id)) {
+          return (user_task.user_task_id)
+        }
+      })
+
+    userTaskIdsForUserTasksToDelete.accountable = this.state.selectedTask.accountable.map(user_task => {
+      if (userIdsForUserTasksToDelete.accountable.includes(user_task.user_id)) {
+        return (user_task.user_task_id)
+      }
+    })
+
+    userTaskIdsForUserTasksToDelete.consulted = this.state.selectedTask.consulted.map(user_task => {
+      if (userIdsForUserTasksToDelete.consulted.includes(user_task.user_id)) {
+        return (user_task.user_task_id)
+      }
+    })
+
+    userTaskIdsForUserTasksToDelete.informed = this.state.selectedTask.informed.map(user_task => {
+      if (userIdsForUserTasksToDelete.informed.includes(user_task.user_id)) {
+        return (user_task.user_task_id)
+      }
+    })
+
+    const getKeys = Object.values(userTaskIdsForUserTasksToDelete)
+    const deleteThesePuppies = [].concat.apply([], getKeys)
+    const deleteThesePuppiesFiltered = deleteThesePuppies.filter((itemInArray) => {
+      return itemInArray !== undefined
+    })
 
     // Build user tasks to be created
 
@@ -413,6 +457,23 @@ export default class RACITable extends React.Component {
       )
     })
 
+    // Delete user tasks
+    
+
+    deleteThesePuppiesFiltered.forEach((userTaskId, index) => {
+      setTimeout(() => {
+        return fetch(`http://localhost:3001/api/v1/user_tasks/${userTaskId}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.token}`
+          }
+        })
+          .then(this.putProjectDataInState)
+      }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+
+    })
+
     // Send user tasks to the server for creation!
 
       userTasksToCreate.forEach((userTask, index) => {
@@ -430,9 +491,9 @@ export default class RACITable extends React.Component {
         }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
       })  
 
-      // Delete user tasks
 
-        // Update the task text
+
+      // Update the task text
 
 
   }
