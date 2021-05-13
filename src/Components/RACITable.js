@@ -44,7 +44,8 @@ export default class RACITable extends React.Component {
   }
 
   putProjectDataInState = () => {
-    fetch('http://localhost:3001/api/v1/projects/1', {
+    const projectId = this.props.match.params.id
+    fetch(`http://localhost:3001/api/v1/projects/${projectId}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.token}`
       }

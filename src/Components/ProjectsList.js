@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Button } from 'semantic-ui-react';
 
 export default class ProjectsList extends React.Component {
 
@@ -13,13 +13,6 @@ export default class ProjectsList extends React.Component {
 
   createProjectCards = () => {
     return this.state.projects.map(project => {
-      // return (
-      //   {
-      //     header: project.attributes.name,
-      //     description: 'Cool project',
-      //     meta: '24/04/1987',
-      //   }
-      // )
 
       return (
         <Card
@@ -27,8 +20,8 @@ export default class ProjectsList extends React.Component {
           description={'Cool project'}
           meta={'24/04/1987'}
           onClick={() => {
-            const taskId = 1
-            this.redirectToProjectPage(taskId)}
+            const projectId = project.id
+            this.redirectToProjectPage(projectId)}
            }>
         </Card>
       )
