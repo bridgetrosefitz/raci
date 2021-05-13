@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Button, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 
 function EditTaskModal(props) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
 
   const handleTriggerButtonClick = () => {
@@ -54,7 +54,8 @@ function EditTaskModal(props) {
           Delete task
         <Icon name='trash alternate outline' />
         </Button>
-        <Button  onClick={() => setOpen(false)}>
+        <Button  
+          onClick={() => setOpen(false)}>
           Cancel
         </Button>
         <Button

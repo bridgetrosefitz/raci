@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Button } from 'semantic-ui-react';
-
+import { Card, Button, Icon } from 'semantic-ui-react';
+import CreateProjectModal from './CreateProjectModal'
 export default class ProjectsList extends React.Component {
 
   constructor() {
@@ -66,6 +66,7 @@ export default class ProjectsList extends React.Component {
       {
         this.createCardGroup()
       }
+        <CreateProjectModal />
       </div>
     )
   }
