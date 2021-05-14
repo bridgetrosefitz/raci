@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Label, Table, Button, Form, Dropdown, Select, Message } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Select, Message } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,9 @@ export default class RACITable extends React.Component {
     super();
 
     this.state = {
+      allUsers: [],
+      newMembersToAdd: [],
+      showAddUsers: false,
       hideTopMessage: true,
       topMessage: {
         header: '',
@@ -69,6 +72,17 @@ export default class RACITable extends React.Component {
         functions: data.data
       }
       ))
+  }
+
+  putAllUsersDataInState = () => {
+    fetch(`http://localhost:3001/api/v1/users/`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => this.setState({allUsers: data.data}))
   }
 
   createTeamMemberOptions = () => {
@@ -540,6 +554,30 @@ export default class RACITable extends React.Component {
 
   }
 
+  handleNewMemberSelection = (event, data) => {
+    this.setState({newMembersToAdd: data.value})
+  }
+
+  createNewMembers = () => {
+    this.state.newMembersToAdd.forEach((memberId, index) => {
+      setTimeout(() => {
+        fetch(`http://localhost:3001/api/v1/memberships`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.token}`
+          },
+          body: JSON.stringify({ 
+            user_id: memberId, 
+            project_id: this.state.projectId 
+          })
+        }).then(this.putProjectDataInState)
+      }, 500 * index)
+    })
+    this.setState({ showAddUsers: false })
+  }
+
   deleteUserTask = (user_task) => {
     fetch(`http://localhost:3001/api/v1/user_tasks/${user_task.user_task_id}`, {
       method: 'DELETE',
@@ -555,10 +593,17 @@ export default class RACITable extends React.Component {
       // })
   }
 
+  mapAllUsersToDropdown = () => {
+    return this.state.allUsers
+    .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
+    .map(user => ({ key: user.id, text: user.attributes.full_name, value: user.id }))
+  }
+
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
         this.putProjectDataInState()
+        this.putAllUsersDataInState()
       } else {
         this.props.history.push('/login')
       }
@@ -578,6 +623,29 @@ export default class RACITable extends React.Component {
             floated='right'
           >Log out</Button>
           <h1>{this.state.projectName}</h1>
+          <Grid>
+          { this.state.showAddUsers ?
+            (
+              <Grid.Column width={8}>
+                  <div>
+                    <Dropdown placeholder='Add Users' onChange={this.handleNewMemberSelection} fluid multiple selection options={this.mapAllUsersToDropdown()} />
+                    <Button
+                      onClick={this.createNewMembers}
+                    >Add users</Button>
+                  </div>
+              </Grid.Column>
+            ) :(
+              <Grid.Column width={8}>
+                <Label.Group circular>
+                  {this.state.members.map(member => <Label>{member.initials}</Label>)}
+                  <Label color="blue" onClick={() => this.setState({ showAddUsers: true })} as='a'>+</Label>
+                </Label.Group>
+              </Grid.Column>
+            )
+          }
+          </Grid>
+          
+       
           <Table celled> 
             <Table.Header>
               <Table.Row>
