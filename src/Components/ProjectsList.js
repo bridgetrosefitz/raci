@@ -50,6 +50,10 @@ export default class ProjectsList extends React.Component {
       value: user.id }))
   }
 
+  clearProjectNameField = () => {
+    this.setState({projectName: ""})
+  }
+
   createNewMembers = (projectId) => {
     this.state.newMembersToAdd.forEach((memberId, index) => {
       setTimeout(() => {
@@ -142,6 +146,7 @@ export default class ProjectsList extends React.Component {
           onProjectNameChange={this.handleProjectNameChange}
           projectName={this.state.projectName}
           onSubmit={this.createNewProject}
+          onCancel={this.clearProjectNameField}
           />
       </div>
     )

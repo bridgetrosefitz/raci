@@ -49,7 +49,11 @@ export default (props) => {
       </Modal.Content>
       <Modal.Actions>
         <Button 
-          onClick={() => setOpen(false)}>
+          onClick={
+            () => {
+              setOpen(false)
+              props.onCancel()
+            }}>
           Cancel
         </Button>
         <Button
