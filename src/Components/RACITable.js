@@ -1,7 +1,8 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Select, Message } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
+import DeleteProjectWarningModal from './DeleteProjectWarningModal'
 import { Link } from 'react-router-dom';
 
 export default class RACITable extends React.Component {
@@ -59,7 +60,8 @@ export default class RACITable extends React.Component {
         projectName: data.data.attributes.name,
         tasks: data.data.attributes.tasks,
         creator: data.data.attributes.creator,
-        members: data.data.attributes.members
+        members: data.data.attributes.members,
+        user_tasks: data.data.attributes.user_tasks
       }))
 
     fetch('http://localhost:3001/api/v1/functions', {
@@ -589,15 +591,25 @@ export default class RACITable extends React.Component {
       // })
   }
 
+  deleteProject = (projectId) => {
+    fetch(`http://localhost:3001/api/v1/projects/${projectId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+  .then(this.redirectToProjectsIndexPage)
+  }
+
   mapAllUsersToDropdown = () => {
     return this.state.allUsers
     .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
     .map(user => ({ key: user.id, text: user.attributes.full_name, value: user.id }))
   }
 
-redirectToProjectsIndexPage = () => {
-  this.props.history.push(`/projects`)
-}
+  redirectToProjectsIndexPage = () => {
+    this.props.history.push(`/projects`)
+  }
 
   componentDidMount() {
       if (localStorage.token) {
@@ -621,7 +633,6 @@ redirectToProjectsIndexPage = () => {
           <Button
             onClick={this.props.logOut}
             floated='right'
-            color="black"
           >Log out</Button>
           <Button
             onClick={this.redirectToProjectsIndexPage}
@@ -720,9 +731,8 @@ redirectToProjectsIndexPage = () => {
             })}  
             <Table.Footer fullWidth>
               <Table.Row>
-                <Table.HeaderCell />
-                <Table.HeaderCell colSpan='4'>
-                  <TaskModal 
+                <Table.HeaderCell>
+                  <TaskModal
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
                     createDropdowns={this.createDropdownsForCreateModal}
@@ -739,8 +749,16 @@ redirectToProjectsIndexPage = () => {
                           consulted: [],
                           informed: []
                         }
-                      })}}
+                      })
+                    }}
                     handleSubmit={this.handleSubmitOnTaskModal} />
+                </Table.HeaderCell>
+                <Table.HeaderCell colSpan='4'>
+                  <DeleteProjectWarningModal
+                    projectName={this.state.projectName}
+                    projectId={this.state.projectId}
+                    deleteProject={this.deleteProject}
+                  />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

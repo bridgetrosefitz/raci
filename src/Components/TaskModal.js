@@ -11,7 +11,7 @@ function TaskModal(props) {
       open={open}
       trigger={
         <Button 
-          floated='right'
+          floated='left'
           icon
           labelPosition = 'left'
           primary
