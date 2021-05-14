@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Modal, Icon, Form } from 'semantic-ui-react'
+import { Button, Header, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 
 
 export default (props) => {
@@ -15,7 +15,6 @@ export default (props) => {
         icon
         labelPosition='left'
         primary
-        // onClick={props.onTriggerButtonClick}
         size='small'>
         <Icon name='plus square icon' /> Create Project
         </Button>}
@@ -28,12 +27,22 @@ export default (props) => {
           </p> */}
           <Form>
             <Form.Field>
-              <label>Project name</label>
+              <label>Project Name</label>
               <input
+                onChange={props.onProjectNameChange}
+                value={props.projectName}
                 placeholder='Describe the project'
-                // value={props.taskName}
-                // onChange={props.handleTextFieldChange}
               />
+            </Form.Field>
+            <Form.Field>
+              <label>Add Team Members</label>
+              <Dropdown 
+              placeholder='Add team members' 
+              onChange={props.onDropdownChange} 
+              fluid 
+              multiple 
+              selection 
+              options={props.dropdownOptions} />
             </Form.Field>
           </Form>
         </Modal.Description>
@@ -45,10 +54,9 @@ export default (props) => {
         </Button>
         <Button
           type='submit'
-          onClick={(event, data) => {
-            const task = props.task
+          onClick={(event) => {
             setOpen(false)
-            props.handleSubmit(event, task)
+            props.onSubmit(event)
           }}
           positive>
           Create Project

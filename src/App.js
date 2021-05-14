@@ -49,13 +49,13 @@ class App extends React.Component {
             render={routerProps => <SignUp {...routerProps}/>} />
           <Route 
             path="/projects/:id" 
-            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} logOut={this.logOut}/>} />
+            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut}/>} />
           <Route 
             path="/projects" 
-            render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} logOut={this.logOut} />} />
+            render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
           <Route 
             path="/" 
-            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} logOut={this.logOut} />} />
+          render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
         </Switch>
     )
 

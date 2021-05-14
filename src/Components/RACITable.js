@@ -86,15 +86,11 @@ export default class RACITable extends React.Component {
   }
 
   createTeamMemberOptions = () => {
-    return this.state.members.map(member => {
-      return (
-        {
+    return this.state.members.map(member => ({
           key: member.first_name,
           text: member.first_name,
           value: member.id
-        }
-      )
-    })   
+        }))   
   }
 
   createDropdownsForEditModal = (task) => {
@@ -599,6 +595,10 @@ export default class RACITable extends React.Component {
     .map(user => ({ key: user.id, text: user.attributes.full_name, value: user.id }))
   }
 
+redirectToProjectsIndexPage = () => {
+  this.props.history.push(`/projects`)
+}
+
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
@@ -621,7 +621,12 @@ export default class RACITable extends React.Component {
           <Button
             onClick={this.props.logOut}
             floated='right'
+            color="black"
           >Log out</Button>
+          <Button
+            onClick={this.redirectToProjectsIndexPage}
+            floated="right"
+          >Back to Projects</Button>
           <h1>{this.state.projectName}</h1>
           <Grid>
           { this.state.showAddUsers ?

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Icon } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal'
 export default class ProjectsList extends React.Component {
 
@@ -7,8 +7,87 @@ export default class ProjectsList extends React.Component {
     super();
 
     this.state = {
-      projects: []
+      projects: [],
+      allUsers: [],
+      projectName: '',
+      newMembersToAdd: [],
     }
+  }
+
+  putAllUsersDataInState = () => {
+    fetch(`http://localhost:3001/api/v1/users/`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ allUsers: data.data }))
+  }
+
+  putProjectsDataInState = () => {
+    return fetch('http://localhost:3001/api/v1/projects')
+      .then(res => res.json())
+      .then(data =>
+        this.setState({
+          projects: data.data
+        })
+      )
+  }
+
+  handleNewMemberSelection = (event, data) => {
+    this.setState({ newMembersToAdd: data.value })
+  }
+
+  handleProjectNameChange = (event) => {
+    this.setState({ projectName: event.target.value })
+  }
+
+  mapAllUsersToDropdownOptions = () => {
+    return this.state.allUsers.map(user => ({ 
+      key: user.id, 
+      text: user.attributes.full_name, 
+      value: user.id }))
+  }
+
+  createNewMembers = (projectId) => {
+    this.state.newMembersToAdd.forEach((memberId, index) => {
+      setTimeout(() => {
+        fetch(`http://localhost:3001/api/v1/memberships`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.token}`
+          },
+          body: JSON.stringify({
+            user_id: memberId,
+            project_id: projectId
+          })
+        })
+      }, 500 * index)
+    })
+  }
+
+  createNewProject = () => {
+    return fetch(`http://localhost:3001/api/v1/projects`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}`
+      },
+      body: JSON.stringify({
+        name: this.state.projectName,
+        creator_id: this.props.userId
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const projectId = data.data.id
+      this.createNewMembers(projectId)
+    })
+    .then(this.putProjectsDataInState)
   }
 
   createProjectCards = () => {
@@ -32,20 +111,11 @@ export default class ProjectsList extends React.Component {
     this.props.history.push(`/projects/${projectId}`)
   }
 
-  loadProjectsData = () => {
-    return fetch('http://localhost:3001/api/v1/projects')
-      .then(res => res.json())
-      .then(data =>
-        this.setState({
-          projects: data.data
-        })
-      )
-  }
-
   componentDidMount() {
     if (localStorage.token) {
       this.props.authenticateMe()
-      this.loadProjectsData()
+      this.putProjectsDataInState()
+      this.putAllUsersDataInState()
     } else {
       this.props.history.push('/login')
     }
@@ -66,7 +136,13 @@ export default class ProjectsList extends React.Component {
       {
         this.createCardGroup()
       }
-        <CreateProjectModal />
+        <CreateProjectModal 
+          onDropdownChange={this.handleNewMemberSelection} 
+          dropdownOptions={this.mapAllUsersToDropdownOptions()} 
+          onProjectNameChange={this.handleProjectNameChange}
+          projectName={this.state.projectName}
+          onSubmit={this.createNewProject}
+          />
       </div>
     )
   }
