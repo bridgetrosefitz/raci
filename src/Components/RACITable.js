@@ -61,7 +61,6 @@ export default class RACITable extends React.Component {
         tasks: data.data.attributes.tasks,
         creator: data.data.attributes.creator,
         members: data.data.attributes.members,
-        user_tasks: data.data.attributes.user_tasks
       }))
 
     fetch('http://localhost:3001/api/v1/functions', {
@@ -673,8 +672,12 @@ export default class RACITable extends React.Component {
               </Table.Row>
             </Table.Header>
             {this.state.tasks.map(task => {
-              return (<Table.Row>
-                <Table.Cell>{task.task_name}
+              return (<Table.Row error={task.flags.length > 0}>
+                <Table.Cell>
+                  {task.task_name}
+                  <Label.Group circular>
+                    {task.flags.map(flag => <Label color="red">{flag.user_initials}</Label>)}
+                  </Label.Group>
                 <EditTaskModal
                   task={task}
                   projectId={this.state.projectId}
