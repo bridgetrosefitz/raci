@@ -38,7 +38,7 @@ export default class SignUp extends React.Component {
       if(data.token) {
         localStorage.token = data.token
 
-        this.props.history.push('/projects/1')
+        this.props.history.push('/projects')
       }
     })
   }
@@ -74,7 +74,7 @@ export default class SignUp extends React.Component {
         <br />
         <Input
           placeholder='Password'
-          type='text'
+          type='password'
           name='password'
           value={this.state.password}
           onChange={this.handleChange}
@@ -85,7 +85,7 @@ export default class SignUp extends React.Component {
           >Create account</Button>
         </Form>
         <br />
-        <Link to="/login">Login</Link>
+        <span>Already have an account?  <Link to="/login">Login</Link></span>
       </div>
     )
   }

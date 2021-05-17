@@ -3,7 +3,6 @@ import React from 'react';
 import RACITable from './Components/RACITable';
 import Login from './Components/Login';
 import SignUp from './Components/SignUp';
-import Profile from './Components/Profile';
 import ProjectsList from './Components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom'
