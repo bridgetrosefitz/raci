@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Button, Header } from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal'
 export default class ProjectsList extends React.Component {
 
@@ -141,6 +141,14 @@ export default class ProjectsList extends React.Component {
   render() {
     return (
       <div>
+        <Button
+          onClick={this.props.logOut}
+          floated='right'
+        >Log out</Button>
+        <Header
+          as="h4"
+          floated='right'
+        >{`Logged in as ${this.props.userFullName}`}</Header>
       {
         this.createCardGroup()
       }

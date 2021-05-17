@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import DeleteProjectWarningModal from './DeleteProjectWarningModal'
@@ -674,7 +674,11 @@ export default class RACITable extends React.Component {
             onClick={this.redirectToProjectsIndexPage}
             floated="right"
           >Back to Projects</Button>
-          <h1>{this.state.projectName}</h1>
+          <Header 
+            as="h4"
+            floated='right'
+          >{`Logged in as ${this.props.userFullName}`}</Header>
+          <Header as="h1">{this.state.projectName}</Header>
           <Grid>
           { this.state.showAddUsers ?
             (

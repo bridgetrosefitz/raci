@@ -12,6 +12,7 @@ class App extends React.Component {
 
   state = {
     user_id: null,
+    full_name: null
 
   }
 
@@ -23,7 +24,10 @@ class App extends React.Component {
     })
       .then(res => res.json())
       .then(data => {
-        this.setState({ user_id: parseInt(data.data.id) })})
+        this.setState({ 
+          user_id: parseInt(data.data.id), 
+          full_name: data.data.attributes.full_name
+        })})
   }
 
   logOut = () => {
@@ -50,13 +54,13 @@ class App extends React.Component {
             render={routerProps => <SignUp {...routerProps}/>} />
           <Route 
             path="/projects/:id" 
-            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut}/>} />
+            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut}/>} />
           <Route 
             path="/projects" 
-            render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
+            render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut} />} />
           <Route 
             path="/" 
-            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
+            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut} />} />
         </Switch>
     )
 
