@@ -26,7 +26,11 @@ export default class ProjectsList extends React.Component {
   }
 
   putProjectsDataInState = () => {
-    return fetch('http://localhost:3001/api/v1/projects')
+    return fetch('http://localhost:3001/api/v1/projects', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      }
+    })
       .then(res => res.json())
       .then(data =>
         this.setState({
