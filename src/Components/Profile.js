@@ -13,7 +13,6 @@ export default class Profile extends React.Component {
       }
     })
     .then(res => res.json())
-    // .then(data => console.log(data))
     .then(data => this.setState({first_name: data.first_name}))
   }
   render() {

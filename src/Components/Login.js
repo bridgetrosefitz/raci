@@ -12,7 +12,7 @@ export default class Login extends React.Component {
       password: ''
     }
   }
-
+ 
   handleSubmit = (e) => {
     e.preventDefault()
     fetch(`http://localhost:3001/api/v1/login`, {
@@ -27,7 +27,7 @@ export default class Login extends React.Component {
     .then(data => {
       if(data.token) {
       localStorage.token = data.token
-      this.props.history.push('/projects/1')
+      this.props.history.push('/projects')
       } 
     })
   }

@@ -555,6 +555,42 @@ export default class RACITable extends React.Component {
     this.setState({newMembersToAdd: data.value})
   }
 
+  handleFlagging = (task) => {
+    let flagToDeleteId = null
+    const flagUserIds = task.flags.map(flag => flag.user_id)
+
+    if (flagUserIds.includes(this.props.userId)) {
+      task.flags.forEach(flag => {
+        if(flag.user_id === this.props.userId) {
+          flagToDeleteId = flag.flag_id
+          fetch(`http://localhost:3001/api/v1/flags/${flagToDeleteId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${localStorage.token}`
+            }
+          })
+          .then(this.putProjectDataInState)
+        }
+      })
+    }
+    else {
+      fetch(`http://localhost:3001/api/v1/flags`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${localStorage.token}`
+
+        },
+        body: JSON.stringify({
+          user_id: this.props.userId,
+          task_id: task.id
+        })
+      })
+        .then(this.putProjectDataInState)
+    }
+  }
+
   createNewMembers = () => {
     this.state.newMembersToAdd.forEach((memberId, index) => {
       setTimeout(() => {
@@ -609,6 +645,7 @@ export default class RACITable extends React.Component {
   redirectToProjectsIndexPage = () => {
     this.props.history.push(`/projects`)
   }
+
 
   componentDidMount() {
       if (localStorage.token) {
@@ -689,6 +726,15 @@ export default class RACITable extends React.Component {
                   handleSubmit={this.handleSubmitOnEditTaskModal} 
                   handleDelete={this.handleDelete}  
                   />
+                <Button 
+                  icon 
+                  onClick={() => {this.handleFlagging(task)}}
+                  inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
+                  floated="right">
+                  <Icon 
+                  color="grey"
+                  name="flag outline"></Icon>
+                </Button>
                 </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {

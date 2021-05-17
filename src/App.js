@@ -22,7 +22,8 @@ class App extends React.Component {
       }
     })
       .then(res => res.json())
-      .then(data => this.setState({ user_id: data.id }))
+      .then(data => {
+        this.setState({ user_id: parseInt(data.data.id) })})
   }
 
   logOut = () => {
@@ -55,7 +56,7 @@ class App extends React.Component {
             render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
           <Route 
             path="/" 
-          render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
+            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} logOut={this.logOut} />} />
         </Switch>
     )
 
