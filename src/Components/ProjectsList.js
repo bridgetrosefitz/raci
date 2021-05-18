@@ -61,7 +61,6 @@ export default class ProjectsList extends React.Component {
 
   createNewMembers = (projectId) => {
     this.state.newMembersToAdd.forEach((memberId, index) => {
-      setTimeout(() => {  
         fetch(`http://localhost:3001/api/v1/memberships`, {
           method: 'POST',
           headers: {
@@ -74,7 +73,6 @@ export default class ProjectsList extends React.Component {
             project_id: projectId
           })
         })
-      }, 500 * index)
     })
   }
 

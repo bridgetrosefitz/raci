@@ -265,11 +265,9 @@ export default class RACITable extends React.Component {
     })
       // Send the now-complete userTasks to the server for creation
       
-    userTasksToCreate.forEach((userTask, index) => {
-      setTimeout(() => {
+    userTasksToCreate.forEach((userTask) => {
         API.UserTask.create(userTask)
-          .then(this.putProjectDataInState)}
-      , index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+          .then(this.putProjectDataInState)
     })
 
       this.setState({
@@ -438,21 +436,16 @@ export default class RACITable extends React.Component {
 
     // Delete user tasks
 
-    deleteThesePuppiesFiltered.forEach((userTaskId, index) => {
-      setTimeout(() => {
+    deleteThesePuppiesFiltered.forEach((userTaskId) => {
         API.UserTask.destroy(userTaskId)
           .then(this.putProjectDataInState)
-      }, index * 500) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
-
     })
 
     // Send user tasks to the server for creation!
 
-      userTasksToCreate.forEach((userTask, index) => {
-        setTimeout(() => {
+      userTasksToCreate.forEach((userTask) => {
           API.UserTask.create(userTask)
           .then(this.putProjectDataInState)
-        }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
       })  
 
       // Update the task text
@@ -526,8 +519,7 @@ export default class RACITable extends React.Component {
   }
 
   createNewMembers = () => {
-    this.state.newMembersToAdd.forEach((memberId, index) => {
-      setTimeout(() => {
+    this.state.newMembersToAdd.forEach((memberId) => {
         fetch(`http://localhost:3001/api/v1/memberships`, {
           method: 'POST',
           headers: {
@@ -540,7 +532,6 @@ export default class RACITable extends React.Component {
             project_id: this.state.projectId 
           })
         }).then(this.putProjectDataInState)
-      }, 500 * index)
     })
     this.setState({ showAddUsers: false })
   }
