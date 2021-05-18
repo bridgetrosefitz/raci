@@ -1,7 +1,7 @@
 import {API_HOST, AUTH_HEADERS} from './helper.js'
 
 export const index = () => {
-  const fetchPromise = fetch(`${API_HOST}/api/v1/projects`, AUTH_HEADERS)
+  const fetchPromise = fetch(`${API_HOST}/projects`, AUTH_HEADERS)
   const parsedFetchPromise = fetchPromise.then(res => res.json())
   return parsedFetchPromise;
 }

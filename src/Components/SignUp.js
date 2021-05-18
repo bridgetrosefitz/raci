@@ -3,6 +3,8 @@
 import React from 'react'
 import { Input, Button, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
+import { API_HOST } from '../api/helper';
+import API from '../api'
 
 export default class SignUp extends React.Component {
 
@@ -25,15 +27,7 @@ export default class SignUp extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    fetch('http://localhost:3001/api/v1/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(this.state)
-    })
-    .then(res => res.json())
+    API.User.signup(this.state)
     .then(data => {
       if(data.token) {
         localStorage.token = data.token

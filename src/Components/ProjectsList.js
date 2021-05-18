@@ -17,27 +17,17 @@ export default class ProjectsList extends React.Component {
   }
 
   putAllUsersDataInState = () => {
-    fetch(`http://localhost:3001/api/v1/users`, {
-      headers: {
-        'Authorization' : `Bearer ${localStorage.token}`
-      }
-    })
-    .then(res => res.json())
+    API.User.index()
     .then(data => this.setState({ allUsers: data.data }))
   }
 
   putProjectsDataInState = () => {
-    return fetch('http://localhost:3001/api/v1/projects', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
-      .then(data =>
-        this.setState({
-          projects: data.data
-        })
-      )
+    API.Project.index()
+    .then(data => {
+      this.setState({
+        projects: data.data
+      })}
+    )
   }
 
   handleNewMemberSelection = (event, data) => {
@@ -61,18 +51,7 @@ export default class ProjectsList extends React.Component {
 
   createNewMembers = (projectId) => {
     this.state.newMembersToAdd.forEach((memberId, index) => {
-        fetch(`http://localhost:3001/api/v1/memberships`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.token}`
-          },
-          body: JSON.stringify({
-            user_id: memberId,
-            project_id: projectId
-          })
-        })
+      API.Membership.create(memberId, projectId)
     })
   }
 

@@ -522,13 +522,7 @@ export default class RACITable extends React.Component {
   }
 
   deleteUserTask = (user_task) => {
-    fetch(`http://localhost:3001/api/v1/user_tasks/${user_task.user_task_id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
+    API.UserTask.destroy(user_task.user_task_id)
       .then(this.putProjectDataInState)
       // .then(() => {
       //   this.setState({ hideTopMessage: false, topMessage: { header: `successfully deleted ${user_task.full_name} from task`, message: 'woooh!'}})

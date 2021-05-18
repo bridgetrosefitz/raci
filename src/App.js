@@ -6,6 +6,7 @@ import SignUp from './Components/SignUp';
 import ProjectsList from './Components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom'
+import API from './api'
 
 class App extends React.Component {
 
@@ -16,12 +17,7 @@ class App extends React.Component {
   }
 
   authenticateMe = () => {
-    fetch(`http://localhost:3001/api/v1/profile`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
+    API.User.profile()
       .then(data => {
         this.setState({ 
           user_id: parseInt(data.data.id), 
