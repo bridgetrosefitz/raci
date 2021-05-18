@@ -3,5 +3,8 @@
 import * as Project from './Project.js'
 import * as UserTask from './UserTask.js'
 import * as Flag from './Flag.js'
+import * as Function from './Function.js'
+import * as User from './User.js'
+import * as Task from './Task.js'
 
-export default {Project, UserTask, Flag}
+export default {Project, UserTask, Flag, Function, User, Task}

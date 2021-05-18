@@ -6,4 +6,11 @@ export const create = (userTask) => {
     method: 'POST',
     body: JSON.stringify(userTask)
   })
+  .then(res => res.json())
+}
+
+export const destroy = (userTaskId) => {
+  return fetch(`${API_HOST}/user_tasks/${userTaskId}`, {
+    method: 'DELETE',
+    ...AUTH_HEADERS})
 }

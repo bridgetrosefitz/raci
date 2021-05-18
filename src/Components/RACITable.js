@@ -60,12 +60,7 @@ export default class RACITable extends React.Component {
         members: data.data.attributes.members,
       }))
 
-    fetch('http://localhost:3001/api/v1/functions', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
+    API.Function.index()
       .then(data => this.setState({
         functions: data.data
       }
@@ -73,13 +68,7 @@ export default class RACITable extends React.Component {
   }
 
   putAllUsersDataInState = () => {
-    fetch(`http://localhost:3001/api/v1/users/`, {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-    .then(res => res.json())
+    API.User.index()
     .then(data => this.setState({allUsers: data.data}))
   }
 
@@ -278,7 +267,6 @@ export default class RACITable extends React.Component {
       
     userTasksToCreate.forEach((userTask, index) => {
       setTimeout(() => {
-        console.log("API.UserTask", API.UserTask)
         API.UserTask.create(userTask)
           .then(this.putProjectDataInState)}
       , index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
@@ -293,19 +281,7 @@ export default class RACITable extends React.Component {
     event.preventDefault()
     const projectId = this.state.projectId
     const text = this.state.selectedTask.task_name
-    return fetch(`http://localhost:3001/api/v1/tasks/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      },
-      body: JSON.stringify({
-        "text": text,
-        "project_id": projectId
-      })
-    })
-      .then(res => res.json())
+    API.Task.create(text, projectId)
       .then(data => this.createUserTasks(data))
   }
 
@@ -464,15 +440,9 @@ export default class RACITable extends React.Component {
 
     deleteThesePuppiesFiltered.forEach((userTaskId, index) => {
       setTimeout(() => {
-        return fetch(`http://localhost:3001/api/v1/user_tasks/${userTaskId}`, {
-          method: 'DELETE',
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.token}`
-          }
-        })
+        API.UserTask.destroy(userTaskId)
           .then(this.putProjectDataInState)
-      }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+      }, index * 500) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
 
     })
 
@@ -480,20 +450,10 @@ export default class RACITable extends React.Component {
 
       userTasksToCreate.forEach((userTask, index) => {
         setTimeout(() => {
-          return fetch(`http://localhost:3001/api/v1/user_tasks`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': `Bearer ${localStorage.token}`
-            },
-            body: JSON.stringify(userTask)
-          })
+          API.UserTask.create(userTask)
           .then(this.putProjectDataInState)
         }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
       })  
-
-
 
       // Update the task text
 
