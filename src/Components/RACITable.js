@@ -4,6 +4,7 @@ import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import DeleteProjectWarningModal from './DeleteProjectWarningModal'
 import { Link } from 'react-router-dom';
+import API from '../api';
 
 export default class RACITable extends React.Component {
   constructor() {
@@ -49,12 +50,8 @@ export default class RACITable extends React.Component {
 
   putProjectDataInState = () => {
     const projectId = this.props.match.params.id
-    fetch(`http://localhost:3001/api/v1/projects/${projectId}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-      .then(res => res.json())
+
+    API.Project.show(projectId)
       .then(data => this.setState({
         projectId: data.data.id,
         projectName: data.data.attributes.name,
@@ -97,11 +94,12 @@ export default class RACITable extends React.Component {
   createDropdownsForEditModal = (task) => {
 
     return (
-      this.state.functions.map(raciFunction => {
+      this.state.functions.map((raciFunction, index) => {
         const functionName = raciFunction.attributes.name.toLowerCase()
         const defaultValues = task ? task[functionName].map(userTask => userTask.user_id) : [];
         return (
-          <Form.Field>
+          <Form.Field
+            key={index}>
             <label>{raciFunction.attributes.name}</label>
             <Dropdown
               placeholder='Select team member'
@@ -121,10 +119,11 @@ export default class RACITable extends React.Component {
   createDropdownsForCreateModal = (task) => {
 
     return (
-      this.state.functions.map(raciFunction => {
+      this.state.functions.map((raciFunction, index) => {
         const functionName = raciFunction.attributes.name.toLowerCase()
         return (
-          <Form.Field>
+          <Form.Field
+            key={index}>
             <label>{raciFunction.attributes.name}</label>
             <Dropdown
               placeholder='Select team member'
@@ -276,22 +275,15 @@ export default class RACITable extends React.Component {
       )
     })
       // Send the now-complete userTasks to the server for creation
-
-    userTasksToCreate.forEach((userTask, index) => {
-        setTimeout(() => {
-          fetch('http://localhost:3001/api/v1/user_tasks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': `Bearer ${localStorage.token}`
-            },
-            body: JSON.stringify(userTask)
-          })
-            .then(this.putProjectDataInState)
-        }, index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
-      })
       
+    userTasksToCreate.forEach((userTask, index) => {
+      setTimeout(() => {
+        console.log("API.UserTask", API.UserTask)
+        API.UserTask.create(userTask)
+          .then(this.putProjectDataInState)}
+      , index * 1000) // setTimeout is here because SQLite doesn't like handling multiple entries concurrently. I could update to Postgres or other DB at a later time
+    })
+
       this.setState({
         userTasksToCreate: []
       })
@@ -562,31 +554,13 @@ export default class RACITable extends React.Component {
     if (flagUserIds.includes(this.props.userId)) {
       task.flags.forEach(flag => {
         if(flag.user_id === this.props.userId) {
-          flagToDeleteId = flag.flag_id
-          fetch(`http://localhost:3001/api/v1/flags/${flagToDeleteId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${localStorage.token}`
-            }
-          })
+          API.Flag.destroy(flag.flag_id)
           .then(this.putProjectDataInState)
         }
       })
     }
     else {
-      fetch(`http://localhost:3001/api/v1/flags`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${localStorage.token}`
-
-        },
-        body: JSON.stringify({
-          user_id: this.props.userId,
-          task_id: task.id
-        })
-      })
+      API.Flag.create(this.props.userId, task.id)
         .then(this.putProjectDataInState)
     }
   }
@@ -627,19 +601,17 @@ export default class RACITable extends React.Component {
   }
 
   deleteProject = (projectId) => {
-    fetch(`http://localhost:3001/api/v1/projects/${projectId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
-  .then(this.redirectToProjectsIndexPage)
+    API.Project.destroy(projectId)
+    .then(this.redirectToProjectsIndexPage)
   }
 
   mapAllUsersToDropdown = () => {
     return this.state.allUsers
     .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
-    .map(user => ({ key: user.id, text: user.attributes.full_name, value: user.id }))
+    .map(user => ({ 
+      key: user.id, 
+      text: user.attributes.full_name, 
+      value: user.id }))
   }
 
   redirectToProjectsIndexPage = () => {
@@ -693,7 +665,7 @@ export default class RACITable extends React.Component {
             ) :(
               <Grid.Column width={8}>
                 <Label.Group circular>
-                  {this.state.members.map(member => <Label>{member.initials}</Label>)}
+                  {this.state.members.map((member, index) => <Label key={index}>{member.initials}</Label>)}
                   <Label color="blue" onClick={() => this.setState({ showAddUsers: true })} as='a'>+</Label>
                 </Label.Group>
               </Grid.Column>
@@ -712,12 +684,15 @@ export default class RACITable extends React.Component {
                 <Table.HeaderCell width='two'>Informed</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            {this.state.tasks.map(task => {
-              return (<Table.Row error={task.flags.length > 0}>
+            <Table.Body>
+            {this.state.tasks.map((task, index) => {
+              return (<Table.Row 
+                error={task.flags.length > 0}
+                key={index}>
                 <Table.Cell>
                   {task.task_name}
                   <Label.Group circular>
-                    {task.flags.map(flag => <Label color="red">{flag.user_initials}</Label>)}
+                    {task.flags.map((flag, index) => <Label key={index} color="red">{flag.user_initials}</Label>)}
                   </Label.Group>
                 <EditTaskModal
                   task={task}
@@ -742,7 +717,7 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                   task.responsible.map((user_task, i) => {
-                    return (<Label>
+                    return (<Label key={i}>
                       {user_task.user_full_name}
                       <Icon
                         onClick={() => this.deleteUserTask(user_task)}
@@ -752,7 +727,7 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                     task.accountable.map((user_task, i) => {
-                      return (<Label>
+                      return (<Label key={i}>
                         {user_task.user_full_name}
                         <Icon
                           onClick={() => this.deleteUserTask(user_task)}
@@ -762,7 +737,7 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                   task.consulted.map((user_task, i) => {
-                    return (<Label>
+                    return (<Label key={i}>
                       {user_task.user_full_name}
                       <Icon
                         onClick={() => this.deleteUserTask(user_task)}
@@ -772,7 +747,7 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                   task.informed.map((user_task, i) => {
-                    return (<Label>
+                    return (<Label key={i}>
                       {user_task.user_full_name}
                       <Icon 
                         onClick={() => this.deleteUserTask(user_task)} 
@@ -782,6 +757,7 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
               </Table.Row>)
             })}  
+            </Table.Body>
             <Table.Footer fullWidth>
               <Table.Row>
                 <Table.HeaderCell>

@@ -17,7 +17,7 @@ function TaskModal(props) {
           primary
           onClick={props.onTriggerButtonClick}
           size='small'>
-            <Icon name='plus square icon' /> Add Task
+            <Icon name='plus square' /> Add Task
         </Button>
       }
     >

@@ -16,7 +16,7 @@ export default (props) => {
         labelPosition='left'
         primary
         size='small'>
-        <Icon name='plus square icon' /> Create Project
+        <Icon name='plus square' /> Create Project
         </Button>}
     >
       <Modal.Header>Create Project</Modal.Header>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, Button, Header } from 'semantic-ui-react';
-import CreateProjectModal from './CreateProjectModal'
+import CreateProjectModal from './CreateProjectModal';
+import API from '../api';
+
 export default class ProjectsList extends React.Component {
 
   constructor() {
@@ -15,14 +17,13 @@ export default class ProjectsList extends React.Component {
   }
 
   putAllUsersDataInState = () => {
-    fetch(`http://localhost:3001/api/v1/users/`, {
+    fetch(`http://localhost:3001/api/v1/users`, {
       headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
+        'Authorization' : `Bearer ${localStorage.token}`
       }
     })
-      .then(res => res.json())
-      .then(data => this.setState({ allUsers: data.data }))
+    .then(res => res.json())
+    .then(data => this.setState({ allUsers: data.data }))
   }
 
   putProjectsDataInState = () => {
@@ -60,7 +61,7 @@ export default class ProjectsList extends React.Component {
 
   createNewMembers = (projectId) => {
     this.state.newMembersToAdd.forEach((memberId, index) => {
-      setTimeout(() => {
+      setTimeout(() => {  
         fetch(`http://localhost:3001/api/v1/memberships`, {
           method: 'POST',
           headers: {
@@ -78,31 +79,20 @@ export default class ProjectsList extends React.Component {
   }
 
   createNewProject = () => {
-    return fetch(`http://localhost:3001/api/v1/projects`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      },
-      body: JSON.stringify({
-        name: this.state.projectName,
-        creator_id: this.props.userId
+    API.Project.create({name: this.state.projectName, creator_id: this.props.userId})
+      .then(data => {
+        const projectId = data.data.id
+        this.createNewMembers(projectId)
       })
-    })
-    .then(res => res.json())
-    .then(data => {
-      const projectId = data.data.id
-      this.createNewMembers(projectId)
-    })
-    .then(this.putProjectsDataInState)
+      .then(this.putProjectsDataInState)
   }
 
   createProjectCards = () => {
-    return this.state.projects.map(project => {
+    return this.state.projects.map((project, index) => {
 
       return (
         <Card
+          key={index}
           header={project.attributes.name}
           description={'Cool project'}
           meta={'24/04/1987'}
