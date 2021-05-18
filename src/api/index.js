@@ -6,5 +6,6 @@ import * as Flag from './Flag.js'
 import * as Function from './Function.js'
 import * as User from './User.js'
 import * as Task from './Task.js'
+import * as Membership from './Membership'
 
-export default {Project, UserTask, Flag, Function, User, Task}
+export default {Project, UserTask, Flag, Function, User, Task, Membership}

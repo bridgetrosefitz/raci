@@ -11,3 +11,10 @@ export const create = (text, projectId) => {
   })
   .then(res => res.json())
 }
+
+export const destroy = (taskId) => {
+  return fetch(`${API_HOST}/tasks/${taskId}`, {
+    ...AUTH_HEADERS,
+    method: 'DELETE'
+  })
+}

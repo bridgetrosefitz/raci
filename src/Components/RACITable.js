@@ -485,13 +485,7 @@ export default class RACITable extends React.Component {
   }
 
   handleDelete = (task) => {
-    fetch(`http://localhost:3001/api/v1/tasks/${task.id}`,{
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.token}`
-      }
-    })
+    API.Task.destroy(task.id)
     .then(this.putProjectDataInState)
 
   }
@@ -520,18 +514,9 @@ export default class RACITable extends React.Component {
 
   createNewMembers = () => {
     this.state.newMembersToAdd.forEach((memberId) => {
-        fetch(`http://localhost:3001/api/v1/memberships`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.token}`
-          },
-          body: JSON.stringify({ 
-            user_id: memberId, 
-            project_id: this.state.projectId 
-          })
-        }).then(this.putProjectDataInState)
+      API.Membership.create(memberId, this.state.projectId)  
+      
+        .then(this.putProjectDataInState)
     })
     this.setState({ showAddUsers: false })
   }
