@@ -1,8 +1,9 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import DeleteProjectWarningModal from './DeleteProjectWarningModal'
+import Nav from './Nav'
 import { Link } from 'react-router-dom';
 import API from '../api';
 
@@ -561,25 +562,14 @@ export default class RACITable extends React.Component {
 
     render() {
       return(
-        <div>
+        <Container>
           <Message positive hidden={this.state.hideTopMessage}>
             <Message.Header>{this.state.topMessage.header}</Message.Header>
             <p>
               {this.state.topMessage.message}
             </p>
           </Message>
-          <Button
-            onClick={this.props.logOut}
-            floated='right'
-          >Log out</Button>
-          <Button
-            onClick={this.redirectToProjectsIndexPage}
-            floated="right"
-          >Back to Projects</Button>
-          <Header 
-            as="h4"
-            floated='right'
-          >{`Logged in as ${this.props.userFullName}`}</Header>
+          <Nav logOut={this.props.logOut} onBack={this.redirectToProjectsIndexPage} backText={'Back to Projects'} userFullName={this.props.userFullName}/>
           <Header as="h1">{this.state.projectName}</Header>
           <Grid>
           { this.state.showAddUsers ?
@@ -722,7 +712,7 @@ export default class RACITable extends React.Component {
               </Table.Row>
             </Table.Footer>
           </Table>
-        </div>
+        </Container>
       )
     }
 

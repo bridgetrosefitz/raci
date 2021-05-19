@@ -1,9 +1,9 @@
 import './App.css';
 import React from 'react';
-import RACITable from './Components/RACITable';
-import Login from './Components/Login';
-import SignUp from './Components/SignUp';
-import ProjectsList from './Components/ProjectsList';
+import RACITable from './components/RACITable';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
+import ProjectsList from './components/ProjectsList';
 import 'semantic-ui-css/semantic.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom'
 import API from './api'
@@ -31,15 +31,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if(localStorage.token) {
+    if (localStorage.token) {
       this.authenticateMe()
     } else {
-      this.props.history.push('/login')
+      if (this.props.location.pathname !== '/signup') {
+        this.props.history.push('/login')
+      }
     }
+
   }
 
   render () {
     return (
+      <div>
         <Switch>
           <Route 
             path="/login" 
@@ -54,9 +58,10 @@ class App extends React.Component {
             path="/projects" 
             render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut} />} />
           <Route 
-            path="/" 
-            render={routerProps => <RACITable {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut} />} />
+            path="/"
+            render={routerProps => <ProjectsList {...routerProps} authenticateMe={this.authenticateMe} userId={this.state.user_id} userFullName={this.state.full_name} logOut={this.logOut} />} />
         </Switch>
+      </div>
     )
 
   }

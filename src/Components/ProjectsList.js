@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Button, Header } from 'semantic-ui-react';
+import { Card, Button, Header, Icon, Container, Menu } from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal';
+import Nav from './Nav'
 import API from '../api';
 
 export default class ProjectsList extends React.Component {
@@ -99,35 +100,27 @@ export default class ProjectsList extends React.Component {
  
   createCardGroup = () => {
     return(
-      <Card.Group>
+      <Card.Group itemsPerRow={3} style={{ marginTop: 20 }}>
       {this.createProjectCards()}
+        <CreateProjectModal
+          trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
+          onDropdownChange={this.handleNewMemberSelection}
+          dropdownOptions={this.mapAllUsersToDropdownOptions()}
+          onProjectNameChange={this.handleProjectNameChange}
+          projectName={this.state.projectName}
+          onSubmit={this.createNewProject}
+          onCancel={this.clearProjectNameField}
+        />
       </Card.Group>
     )
   }
 
   render() {
     return (
-      <div>
-        <Button
-          onClick={this.props.logOut}
-          floated='right'
-        >Log out</Button>
-        <Header
-          as="h4"
-          floated='right'
-        >{`Logged in as ${this.props.userFullName}`}</Header>
-      {
-        this.createCardGroup()
-      }
-        <CreateProjectModal 
-          onDropdownChange={this.handleNewMemberSelection} 
-          dropdownOptions={this.mapAllUsersToDropdownOptions()} 
-          onProjectNameChange={this.handleProjectNameChange}
-          projectName={this.state.projectName}
-          onSubmit={this.createNewProject}
-          onCancel={this.clearProjectNameField}
-          />
-      </div>
+      <Container>
+        <Nav logOut={this.props.logOut} userFullName={this.props.userFullName}/>
+        {this.createCardGroup()}
+      </Container>
     )
   }
 }

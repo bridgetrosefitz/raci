@@ -10,14 +10,7 @@ export default (props) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={<Button
-        floated='left'
-        icon
-        labelPosition='left'
-        primary
-        size='small'>
-        <Icon name='plus square' /> Create Project
-        </Button>}
+      trigger={props.trigger}
     >
       <Modal.Header>Create Project</Modal.Header>
       <Modal.Content>
