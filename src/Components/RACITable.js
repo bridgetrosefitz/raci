@@ -515,11 +515,16 @@ export default class RACITable extends React.Component {
 
   createNewMembers = () => {
     this.state.newMembersToAdd.forEach((memberId) => {
+
       API.Membership.create(memberId, this.state.projectId)  
-      
         .then(this.putProjectDataInState)
+        // .catch((data) => {
+        //   console.log(data)
+        // })
     })
-    this.setState({ showAddUsers: false })
+    this.setState({ 
+      showAddUsers: false,
+      newMembersToAdd: [] })
   }
 
   deleteUserTask = (user_task) => {

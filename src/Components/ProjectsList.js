@@ -14,6 +14,7 @@ export default class ProjectsList extends React.Component {
       allUsers: [],
       projectName: '',
       newMembersToAdd: [],
+      newProjectNameHasError: false,
     }
   }
 
@@ -36,7 +37,14 @@ export default class ProjectsList extends React.Component {
   }
 
   handleProjectNameChange = (event) => {
-    this.setState({ projectName: event.target.value })
+
+    const projectName = event.target.value;
+    if (projectName.length < 2) {
+      this.setState({newProjectNameHasError: true})
+    } else {
+      this.setState({ newProjectNameHasError: false })
+    }
+    this.setState({ projectName: projectName})
   }
 
   mapAllUsersToDropdownOptions = () => {
@@ -103,6 +111,7 @@ export default class ProjectsList extends React.Component {
       <Card.Group itemsPerRow={3} style={{ marginTop: 20 }}>
       {this.createProjectCards()}
         <CreateProjectModal
+          projectNameHasError={this.state.newProjectNameHasError}
           trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
           onDropdownChange={this.handleNewMemberSelection}
           dropdownOptions={this.mapAllUsersToDropdownOptions()}

@@ -4,7 +4,6 @@ import { Button, Header, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 
 export default (props) => {
   const [open, setOpen] = React.useState(false)
-
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -21,7 +20,8 @@ export default (props) => {
           <Form>
             <Form.Field>
               <label>Project Name</label>
-              <input
+              <Form.Input
+                error={props.projectNameHasError ? { content: 'Please enter your first name', pointing: 'below' } : null}
                 onChange={props.onProjectNameChange}
                 value={props.projectName}
                 placeholder='Describe the project'
