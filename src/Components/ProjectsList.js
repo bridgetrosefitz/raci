@@ -24,7 +24,7 @@ export default class ProjectsList extends React.Component {
   }
 
   putProjectsDataInState = () => {
-    API.Project.index()
+    API.User.available_projects()
     .then(data => {
       this.setState({
         projects: data.data

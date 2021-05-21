@@ -50,4 +50,16 @@ export const profile = () => {
   .then(res => res.json())
 }
 
+export const available_projects = () => {
+  return fetch (`${API_HOST}/available_projects`, AUTH_HEADERS)
+  .then(async (res) => {
+    const data = await res.json();
+    if (res.ok) {
+      return data
+    } else {
+      return Promise.reject(data)
+    }
+  })
+}
+
   
