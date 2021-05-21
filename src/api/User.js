@@ -14,7 +14,23 @@ export const login = ({email, password}) => {
       password: password
     })
   })
-    .then(res => res.json())
+    .then(async (res) => {
+      const data = await res.json();
+      if (res.ok) {
+        return data
+      } else {
+        return Promise.reject(data)
+      }
+    })
+  //   .then(async (res) => {
+  //   const data = await res.json();
+  //   if (res.ok) {
+  //     return data
+  //   } else {
+  //     return Promise.reject(data)
+  //     debugger
+  //   }
+  // })
 }
 
 export const signup = ({first_name, last_name, email, password}) => {

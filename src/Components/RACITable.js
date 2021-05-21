@@ -518,13 +518,23 @@ export default class RACITable extends React.Component {
 
       API.Membership.create(memberId, this.state.projectId)  
         .then(this.putProjectDataInState)
-        // .catch((data) => {
-        //   console.log(data)
-        // })
+        .catch((data) => {
+          this.setState({
+            topMessage: {
+              header: 'Error',
+              message: data.errors
+            },
+            hideTopMessage: false
+          })
+          setTimeout(() => this.setState({ 
+            hideTopMessage: true, 
+            topMessage: { header: ``, message: '' } }), 2000)
+        })
     })
     this.setState({ 
       showAddUsers: false,
-      newMembersToAdd: [] })
+      // newMembersToAdd: [] 
+    })
   }
 
   deleteUserTask = (user_task) => {
@@ -568,7 +578,7 @@ export default class RACITable extends React.Component {
     render() {
       return(
         <Container>
-          <Message positive hidden={this.state.hideTopMessage}>
+          <Message hidden={this.state.hideTopMessage}>
             <Message.Header>{this.state.topMessage.header}</Message.Header>
             <p>
               {this.state.topMessage.message}

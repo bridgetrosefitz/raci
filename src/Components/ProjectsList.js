@@ -39,11 +39,11 @@ export default class ProjectsList extends React.Component {
   handleProjectNameChange = (event) => {
 
     const projectName = event.target.value;
-    if (projectName.length < 2) {
-      this.setState({newProjectNameHasError: true})
-    } else {
-      this.setState({ newProjectNameHasError: false })
-    }
+    // if (projectName.length < 2) {
+    //   this.setState({newProjectNameHasError: true})
+    // } else {
+    //   this.setState({ newProjectNameHasError: false })
+    // }
     this.setState({ projectName: projectName})
   }
 

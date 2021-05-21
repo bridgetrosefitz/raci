@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button, Form, Card, Container, Grid } from 'semantic-ui-react';
+import { Input, Button, Form, Card, Container, Grid, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
 import { API_HOST } from '../api/helper';
 import API from '../api'
@@ -10,48 +10,67 @@ export default class Login extends React.Component {
     super()
 
     this.state = {
-      email: '',
-      password: ''
+      loginInfo: {
+        email: '',
+        password: ''
+      },
+      error: null
     }
   }
  
   handleSubmit = (e) => {
     e.preventDefault()
-    API.User.login(this.state)
+    API.User.login(this.state.loginInfo)
     .then(data => {
       if(data.token) {
       localStorage.token = data.token
       this.props.history.push('/projects')
       } 
     })
-  }
-
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
+    .catch((data) => {
+      this.setState({
+        error: data.errors[0]
+        })
+      console.log(this.state)
+      setTimeout(() => this.setState({
+        error: null,
+       }), 2000)
     })
   }
 
+  handleChange = (e) => {
+    this.setState(prevState => ({
+        loginInfo: {
+        ...prevState.loginInfo,
+        [e.target.name]: e.target.value
+        }
+    }))
+  }
 
   render(){
     return(
       <Container style={{height: '100vh', marginTop: '10%'}}textAlign="center">
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Login</h2>
-          <Form>
-            <Input
+          <Form error={this.state.error ? true : false}>
+            <Form.Input
               placeholder='Email'
               type='text'
               name='email'
               value={this.state.email}
               onChange={this.handleChange} />
             <br />
-            <Input
+            <Form.Input
               placeholder='Password'
               type='password'
               name='password'
               value={this.state.password}
               onChange={this.handleChange} />
+              <Message
+                error
+                header={'Error'}
+                content={this.state.error}  
+                ></Message>
             <br />
             <br />
             <Button
