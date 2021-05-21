@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Header, Icon, Container, Menu } from 'semantic-ui-react';
+import { Card, Button, Header, Icon, Container, Menu} from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal';
 import Nav from './Nav'
 import API from '../api';
@@ -80,8 +80,9 @@ export default class ProjectsList extends React.Component {
         <Card
           key={index}
           header={project.attributes.name}
-          // description={'Cool project'}
-          // meta={'24/04/1987'}
+          style={{ height: '15vh' }}
+          // description={''}
+          // meta={''}
           onClick={() => {
             const projectId = project.id
             this.redirectToProjectPage(projectId)}
