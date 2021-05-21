@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/raci/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/raci/static/js/main.cea917f4.chunk.js",
-    "main.js.map": "/raci/static/js/main.cea917f4.chunk.js.map",
+    "main.js": "/raci/static/js/main.b3d6c882.chunk.js",
+    "main.js.map": "/raci/static/js/main.b3d6c882.chunk.js.map",
     "runtime-main.js": "/raci/static/js/runtime-main.2f8976bc.js",
     "runtime-main.js.map": "/raci/static/js/runtime-main.2f8976bc.js.map",
     "static/css/2.640a932a.chunk.css": "/raci/static/css/2.640a932a.chunk.css",
-    "static/js/2.d4faf927.chunk.js": "/raci/static/js/2.d4faf927.chunk.js",
-    "static/js/2.d4faf927.chunk.js.map": "/raci/static/js/2.d4faf927.chunk.js.map",
+    "static/js/2.fdcebe0a.chunk.js": "/raci/static/js/2.fdcebe0a.chunk.js",
+    "static/js/2.fdcebe0a.chunk.js.map": "/raci/static/js/2.fdcebe0a.chunk.js.map",
     "static/js/3.934ef532.chunk.js": "/raci/static/js/3.934ef532.chunk.js",
     "static/js/3.934ef532.chunk.js.map": "/raci/static/js/3.934ef532.chunk.js.map",
     "index.html": "/raci/index.html",
     "static/css/2.640a932a.chunk.css.map": "/raci/static/css/2.640a932a.chunk.css.map",
     "static/css/main.8c8b27cf.chunk.css.map": "/raci/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.d4faf927.chunk.js.LICENSE.txt": "/raci/static/js/2.d4faf927.chunk.js.LICENSE.txt",
+    "static/js/2.fdcebe0a.chunk.js.LICENSE.txt": "/raci/static/js/2.fdcebe0a.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/raci/static/media/outline-icons.ddae9b1b.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.2f8976bc.js",
     "static/css/2.640a932a.chunk.css",
-    "static/js/2.d4faf927.chunk.js",
+    "static/js/2.fdcebe0a.chunk.js",
     "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.cea917f4.chunk.js"
+    "static/js/main.b3d6c882.chunk.js"
   ]
 }
