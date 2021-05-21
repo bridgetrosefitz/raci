@@ -47,7 +47,7 @@ class App extends React.Component {
         <Switch>
           <Route 
             path="/login" 
-            render={routerProps => <Login {...routerProps} user_id={this.state.user_id}/> } />
+            render={routerProps => <Login {...routerProps} authenticateMe={this.authenticateMe} user_id={this.state.user_id}/> } />
           <Route 
             path="/signup" 
             render={routerProps => <SignUp {...routerProps}/>} />

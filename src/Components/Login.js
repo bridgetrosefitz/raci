@@ -46,6 +46,12 @@ export default class Login extends React.Component {
     }))
   }
 
+  componentDidMount() {
+    if (localStorage.token) {
+      this.props.history.push('/projects')
+    }
+  }
+
   render(){
     return(
       <Container style={{height: '100vh', marginTop: '10%'}}textAlign="center">
