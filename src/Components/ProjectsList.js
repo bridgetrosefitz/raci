@@ -80,8 +80,8 @@ export default class ProjectsList extends React.Component {
         <Card
           key={index}
           header={project.attributes.name}
-          description={'Cool project'}
-          meta={'24/04/1987'}
+          // description={'Cool project'}
+          // meta={'24/04/1987'}
           onClick={() => {
             const projectId = project.id
             this.redirectToProjectPage(projectId)}
