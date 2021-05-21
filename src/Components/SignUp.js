@@ -1,7 +1,7 @@
 // do componentDidMount wiht same fetch request etc as login but post to signup not login
 
 import React from 'react'
-import { Input, Button, Form, Container, Card } from 'semantic-ui-react';
+import { Input, Button, Form, Container, Card, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
 import { API_HOST } from '../api/helper';
 import API from '../api'
@@ -12,27 +12,48 @@ export default class SignUp extends React.Component {
     super()
 
     this.state = {
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: ''
+      signupInfo: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: ''
+      },
+      errors: null
     }
   }
 
   handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    this.setState(prevState => ({
+      signupInfo: {
+        ...prevState.signupInfo,
+        [e.target.name]: e.target.value
+      }
+    }))
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    API.User.signup(this.state)
+    API.User.signup(this.state.signupInfo)
     .then(data => {
       if(data.token) {
         localStorage.token = data.token
-
         this.props.history.push('/projects')
+      }
+    })
+    .catch((data) => {
+      if(data) {
+        this.setState({
+          errors: data.errors[0]
+        })
+        setTimeout(() => {
+          this.setState({
+            errors: null
+          })}, 2000)
+      }
+      else {
+        this.setState({
+          errors: 'There was a problem creating your account. Please try again'
+        })
       }
     })
   }
@@ -42,8 +63,8 @@ export default class SignUp extends React.Component {
       <Container style={{height: '100vh', marginTop: '10%'}} textAlign="center">
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Sign up</h2>
-          <Form>
-            <Input
+          <Form error={this.state.errors}>
+            <Form.Input
               placeholder='First name'
               type='text'
               name='first_name'
@@ -51,7 +72,7 @@ export default class SignUp extends React.Component {
               onChange={this.handleChange}
             />
             <br />
-            <Input
+            <Form.Input
               placeholder='Last name'
               type='text'
               name='last_name'
@@ -59,7 +80,7 @@ export default class SignUp extends React.Component {
               onChange={this.handleChange}
             />
             <br />
-            <Input
+            <Form.Input
               placeholder='Email'
               type='text'
               name='email'
@@ -67,13 +88,18 @@ export default class SignUp extends React.Component {
               onChange={this.handleChange}
             />
             <br />
-            <Input
+            <Form.Input
               placeholder='Password'
               type='password'
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
             />
+            <Message 
+              error
+              header={'Error'}
+              content={this.state.errors}
+            ></Message>
             <br />
             <br />
             <Button

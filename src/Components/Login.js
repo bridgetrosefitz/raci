@@ -14,7 +14,7 @@ export default class Login extends React.Component {
         email: '',
         password: ''
       },
-      error: null
+      errors: null
     }
   }
  
@@ -29,10 +29,10 @@ export default class Login extends React.Component {
     })
     .catch((data) => {
       this.setState({
-        error: data.errors[0]
+        errors: data.errors[0]
         })
       setTimeout(() => this.setState({
-        error: null,
+        errors: null,
        }), 2000)
     })
   }
@@ -68,7 +68,7 @@ export default class Login extends React.Component {
               <Message
                 error
                 header={'Error'}
-                content={this.state.error}  
+                content={this.state.errors}  
                 ></Message>
             <br />
             <br />
