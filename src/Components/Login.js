@@ -31,7 +31,6 @@ export default class Login extends React.Component {
       this.setState({
         error: data.errors[0]
         })
-      console.log(this.state)
       setTimeout(() => this.setState({
         error: null,
        }), 2000)
