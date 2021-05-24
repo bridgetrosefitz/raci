@@ -52,7 +52,6 @@ export default (props) => {
           onClick={
             () => {
               setOpen(false)
-              props.onCancel()
             }}>
           Cancel
         </Button>

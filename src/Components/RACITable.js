@@ -77,22 +77,32 @@ export default class RACITable extends React.Component {
 
   createTeamMemberOptions = () => {
     return this.state.members.map(member => ({
-          key: member.first_name,
+          key: member.id,
           text: member.first_name,
           value: member.id
-        }))   
+        }))
+  }
+
+  mapAllUsersToDropdown = () => {
+    return this.state.allUsers
+      // .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
+      .map(user => ({
+        key: parseInt(user.id),
+        text: user.attributes.full_name,
+        value: parseInt(user.id)
+      }))
   }
 
   createDropdownForEditProjectModal = () => {
     const defaultValues = this.state.members ? this.state.members.map((member) => member.id) : []
-
-    return(
+    
+    return (
       <Dropdown
         placeholder='Add team members'
         fluid
         multiple
         selection
-        options={this.createTeamMemberOptions()}
+        options={this.mapAllUsersToDropdown()}
         defaultValue={defaultValues}
         onChange={(event, data) => { this.handleDropdownChangeForEditProjectModal(data) }}
 
@@ -146,14 +156,6 @@ export default class RACITable extends React.Component {
         )
       })
     )
-  }
-
-  mapAllUsersToDropdownOptions = () => {
-    return this.state.allUsers.map(user => ({
-      key: user.id,
-      text: user.attributes.full_name,
-      value: user.id
-    }))
   }
 
   handleDropdownChangeForCreateModal = (data, raciFunction) => {
@@ -233,11 +235,10 @@ export default class RACITable extends React.Component {
   }
 
   handleDropdownChangeForEditProjectModal = (data) => {
-    console.log("data", data)
       this.setState({
-        projectToEditMembers: [data.value]
+        projectToEditMembers: data.value
       })
-    }
+  }
 
   handleTextFieldChange = event => {
     this.setState({
@@ -496,27 +497,51 @@ export default class RACITable extends React.Component {
     const projectToEditUserIds = this.state.projectToEditMembers
     const membersToDeleteIds = []
     const membersToCreateIds = []
+    const membershipIdsForMembershipsToDelete = []
 
     // Check if there are any IDs in projectToEditUserIds which are not in existingMembers, 
     // and add them to membersToCreate
-    debugger
+    
     projectToEditUserIds.forEach(id => {
-      debugger
       if(existingMemberIds.includes(id)) {
         return
       } else {
-        membersToCreateIds.push(id) }
+        membersToCreateIds.push(id) 
       }
-    )
+    })
+
+    // Check if there are any IDs which have been removed, when compared with existing Members
+    // and add them to membersToDelete
+    
+    existingMemberIds.forEach(id => {
+      if (projectToEditUserIds.includes(id)) {
+        return
+      } else {
+        membersToDeleteIds.push(id) 
+      }
+    })
+
+    // Create Memberships
+
+    membersToCreateIds.forEach(memberId => {
+      API.Membership.create(memberId, projectId)
+    })
+
+    // Delete Memberships
+
+    // membersToDeleteIds.forEach(memberId => {
+    //   API.Membership.destroy()
+    // })
+
   }
       
 
     // API.Project.update(text, projectId)
 
   putSelectedProjectMembersDataInState = () => {
-    const membersToShoveInState = []
+    let membersToShoveInState = []
     this.state.members.forEach(member => {
-      membersToShoveInState.push(member.id)
+      membersToShoveInState = [...membersToShoveInState, member.id]
       })
     this.setState({
       projectToEditMembers: membersToShoveInState
@@ -618,15 +643,6 @@ export default class RACITable extends React.Component {
   deleteProject = (projectId) => {
     API.Project.destroy(projectId)
     .then(this.redirectToProjectsIndexPage)
-  }
-
-  mapAllUsersToDropdown = () => {
-    return this.state.allUsers
-    .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
-    .map(user => ({ 
-      key: user.id, 
-      text: user.attributes.full_name, 
-      value: user.id }))
   }
 
   redirectToProjectsIndexPage = () => {
