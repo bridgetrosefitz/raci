@@ -717,7 +717,6 @@ export default class RACITable extends React.Component {
               <Grid.Column width={8}>
                 <Label.Group circular>
                   {this.state.members.map((member, index) => <Label key={index}>{member.initials}</Label>)}
-                  <Label color="blue" onClick={() => this.setState({ showAddUsers: true })} as='a'>+</Label>
                 </Label.Group>
               </Grid.Column>
             )

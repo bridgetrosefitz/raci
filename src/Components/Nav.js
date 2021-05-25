@@ -5,7 +5,7 @@ export default (props) => (
   <Menu borderless attached='top' style={{ border: 'none'}}>
     <Menu.Menu position='right'>
       <Menu.Item>
-      {`Logged in as ${props.userFullName}`}
+      {props.userFullName ? `Logged in as ${props.userFullName}` : ''}
       </Menu.Item>
       {props.onBack && 
       <Menu.Item>
