@@ -37,6 +37,7 @@ export default class RACITable extends React.Component {
         consulted: [],
         informed: []
       },
+      taskNameForUpdating: '',
       taskToCreateUserIds: {
         responsible: [],
         accountable: [],
@@ -244,9 +245,10 @@ export default class RACITable extends React.Component {
 
   handleTextFieldChange = event => {
     this.setState({
-      selectedTask: {
-        ...this.state.selectedTask,
-      task_name: event.target.value}
+      // selectedTask: {
+      //   ...this.state.selectedTask,
+      // task_name: event.target.value}
+      taskNameForUpdating: event.target.value
     })
   }
 
@@ -323,6 +325,8 @@ export default class RACITable extends React.Component {
 
   handleSubmitOnEditTaskModal = (event, task) => {
     event.preventDefault()
+
+    const projectId = this.state.projectId
 
     const userIdsForUserTasksToCreate = {
       responsible: [],
@@ -472,29 +476,39 @@ export default class RACITable extends React.Component {
       )
     })
 
+    // Create an empty array for all the returned promises that are about to be made
+
+    const apiPromises = []
+
     // Delete user tasks
 
     deleteThesePuppiesFiltered.forEach((userTaskId) => {
-        API.UserTask.destroy(userTaskId)
-          .then(this.putProjectDataInState)
+        apiPromises.push(API.UserTask.destroy(userTaskId))
     })
 
     // Send user tasks to the server for creation!
 
       userTasksToCreate.forEach((userTask) => {
-          API.UserTask.create(userTask)
-          .then(this.putProjectDataInState)
+          apiPromises.push(API.UserTask.create(userTask))
       })  
 
       // Update the task text
 
+      if (this.state.taskNameForUpdating !== this.state.selectedTask.taskName) {
+        if (this.state.taskNameForUpdating !== '') {
+          apiPromises.push(API.Task.update(taskId, this.state.taskNameForUpdating, projectId))
+        } else {
+          // do error thing here
+        }
+      }
+
+      Promise.allSettled(apiPromises).then(this.putProjectDataInState)
 
   }
 
   handleSubmitOnEditProjectModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
-    const name = this.state.projectName
     const existingMemberIds = this.state.members.map(member => member.id)
     const projectToEditUserIds = this.state.projectToEditMembers
     const membersToDeleteIds = []
@@ -523,8 +537,11 @@ export default class RACITable extends React.Component {
       }
     })
 
-    // Create Memberships
+    // Create an empty array for all the returned promises that are about to be made
+
     const apiPromises = []
+
+    // Create Memberships
     membersToCreateIds.forEach(memberId => {
      apiPromises.push(API.Membership.create(memberId, projectId))
     })
@@ -567,6 +584,7 @@ export default class RACITable extends React.Component {
 
   putSelectedTaskDataInState = (id) => {
     let taskToPutInState = null
+    let taskName = null
 
     const taskToEditUserIds = {
       responsible: [],
@@ -580,6 +598,7 @@ export default class RACITable extends React.Component {
         // Get the task / user task data to put into state
 
         taskToPutInState = task
+        taskName = task.task_name
 
         // Get an array of IDs for the user tasks, organized by function
 
@@ -592,6 +611,7 @@ export default class RACITable extends React.Component {
 
     this.setState({
       selectedTask: taskToPutInState,
+      taskNameForUpdating: taskName,
       taskToEditUserIds: taskToEditUserIds
     })
   }
@@ -749,7 +769,7 @@ export default class RACITable extends React.Component {
                   projectId={this.state.projectId}
                   createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskName={this.state.selectedTask.task_name}
+                  taskName={this.state.taskNameForUpdating}
                   handleTextFieldChange={this.handleTextFieldChange}
                   handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
                   handleSubmit={this.handleSubmitOnEditTaskModal} 

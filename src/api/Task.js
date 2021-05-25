@@ -12,6 +12,17 @@ export const create = (text, projectId) => {
   .then(res => res.json())
 }
 
+export const update = (taskId, taskName, projectId) => {
+  return fetch(`${API_HOST}/tasks/${taskId}`, {
+    ...AUTH_HEADERS,
+    method: 'PUT',
+    body: JSON.stringify({
+    text: taskName,
+    projectId: projectId
+    })
+  })
+}
+
 export const destroy = (taskId) => {
   return fetch(`${API_HOST}/tasks/${taskId}`, {
     ...AUTH_HEADERS,
