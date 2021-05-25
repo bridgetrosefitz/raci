@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody, Popup } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import DeleteProjectWarningModal from './DeleteProjectWarningModal'
@@ -736,11 +736,16 @@ export default class RACITable extends React.Component {
             ) :(
               <Grid.Column width={8}>
                 <Label.Group circular>
-                  {this.state.members.map((member, index) => <Label key={index}>{member.initials}</Label>)}
+                    {this.state.members.map((member, index) => <Popup size='tiny' position='bottom center' style={{ padding: 6}} content={member.full_name} trigger={<Label key={index}>{member.initials}</Label>}></Popup>)}
                 </Label.Group>
               </Grid.Column>
             )
           }
+
+            {/* <Popup content='Add users to your feed' trigger={<Button icon='add' />} /> */}
+
+
+
           </Grid>
           
        
@@ -762,7 +767,7 @@ export default class RACITable extends React.Component {
                 <Table.Cell>
                   {task.task_name}
                   <Label.Group circular>
-                    {task.flags.map((flag, index) => <Label key={index} color="red">{flag.user_initials}</Label>)}
+                    {task.flags.map((flag, index) => <Popup size='tiny' position='bottom center' style={{ padding: 6 }} content={flag.user_full_name} trigger={<Label key={index} color="red">{flag.user_initials}</Label>}></Popup>)}
                   </Label.Group>
                 <EditTaskModal
                   task={task}

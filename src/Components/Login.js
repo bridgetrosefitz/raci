@@ -57,7 +57,7 @@ export default class Login extends React.Component {
       <Container style={{height: '100vh', marginTop: '10%'}}textAlign="center">
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Login</h2>
-          <Form error={this.state.error ? true : false}>
+          <Form error={this.state.errors}>
             <Form.Input
               placeholder='Email'
               type='text'
