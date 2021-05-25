@@ -23,6 +23,7 @@ export default class RACITable extends React.Component {
       },
       projectId: '',
       projectName: '',
+      projectNameForUpdating: '',
       functions: [],
       tasks: [],
       creator: {},
@@ -58,6 +59,7 @@ export default class RACITable extends React.Component {
       .then(data => this.setState({
         projectId: data.data.id,
         projectName: data.data.attributes.name,
+        projectNameForUpdating: data.data.attributes.name,
         tasks: data.data.attributes.tasks,
         creator: data.data.attributes.creator,
         members: data.data.attributes.members,
@@ -522,22 +524,37 @@ export default class RACITable extends React.Component {
     })
 
     // Create Memberships
-
+    const apiPromises = []
     membersToCreateIds.forEach(memberId => {
-      API.Membership.create(memberId, projectId)
+     apiPromises.push(API.Membership.create(memberId, projectId))
     })
 
     // Delete Memberships
 
-    // membersToDeleteIds.forEach(memberId => {
-    //   API.Membership.destroy()
-    // })
+    this.state.members.forEach(member => {
+      if(membersToDeleteIds.includes(member.id)) {
+        membershipIdsForMembershipsToDelete.push(member.membership_id)
+      }
+    })
+
+    membershipIdsForMembershipsToDelete.forEach(membershipId => {
+      apiPromises.push(API.Membership.destroy(membershipId))
+    })
+
+    // Update the text on the project, if it has changed
+
+    if (this.state.projectName !== this.state.projectNameForUpdating) {
+      if (this.state.projectNameForUpdating !== '') {
+        apiPromises.push(API.Project.update(projectId, this.state.projectNameForUpdating))
+      } else {
+        // do error thing here
+      }
+    }
+
+    Promise.allSettled(apiPromises).then(this.putProjectDataInState)
 
   }
       
-
-    // API.Project.update(text, projectId)
-
   putSelectedProjectMembersDataInState = () => {
     let membersToShoveInState = []
     this.state.members.forEach(member => {
@@ -651,7 +668,7 @@ export default class RACITable extends React.Component {
 
   handleProjectNameChange = (event) => {
     const projectName = event.target.value;
-    this.setState({ projectName: projectName })
+    this.setState({ projectNameForUpdating: projectName })
   }
 
   componentDidMount() {
@@ -678,7 +695,7 @@ export default class RACITable extends React.Component {
             <EditProjectModal 
               populateMembersToEdit={this.putSelectedProjectMembersDataInState}
               onProjectNameChange={this.handleProjectNameChange}
-              projectName={this.state.projectName}
+              projectName={this.state.projectNameForUpdating}
               createDropdown={this.createDropdownForEditProjectModal()}
               handleDropdownChange={this.handleDropdownChangeForEditProjectModal}
               onSubmit={this.handleSubmitOnEditProjectModal}

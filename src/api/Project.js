@@ -25,6 +25,17 @@ export const destroy = (projectId) => {
   })
 }
 
+export const update = (projectId, projectName, projectStartDate) => {
+  return fetch(`${API_HOST}/projects/${projectId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      name: projectName,
+      // start_date: projectStartDate
+    }),
+    ...AUTH_HEADERS
+  }).then(res => res.json())
+}
+
 // export const AUTH_HEADERS = 
 // {
 //   headers: {
