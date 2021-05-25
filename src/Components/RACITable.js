@@ -785,20 +785,22 @@ export default class RACITable extends React.Component {
                   name="flag outline"></Icon>
                 </Button>
                 </Table.Cell>
-                <Table.Cell>{
-                  task.responsible.map((user_task, i) => {
-                    return (<Label key={i}>
-                      {user_task.user_full_name}
-                      <Icon
-                        onClick={() => this.deleteUserTask(user_task)}
-                        name='delete' />
-                    </Label>)
-                  } )}
+                <Table.Cell>
+                  {
+                    task.responsible.map((user_task, i) => {
+                      return (<Label key={i}>
+                        {user_task.user_first_name}
+                        <Icon
+                          onClick={() => this.deleteUserTask(user_task)}
+                          name='delete' />
+                      </Label>)
+                    })
+                      }
                 </Table.Cell>
                 <Table.Cell>{
                     task.accountable.map((user_task, i) => {
                       return (<Label key={i}>
-                        {user_task.user_full_name}
+                        {user_task.user_first_name}
                         <Icon
                           onClick={() => this.deleteUserTask(user_task)}
                           name='delete' />
@@ -808,7 +810,7 @@ export default class RACITable extends React.Component {
                 <Table.Cell>{
                   task.consulted.map((user_task, i) => {
                     return (<Label key={i}>
-                      {user_task.user_full_name}
+                      {user_task.user_first_name}
                       <Icon
                         onClick={() => this.deleteUserTask(user_task)}
                         name='delete' />
@@ -818,7 +820,7 @@ export default class RACITable extends React.Component {
                 <Table.Cell>{
                   task.informed.map((user_task, i) => {
                     return (<Label key={i}>
-                      {user_task.user_full_name}
+                      {user_task.user_first_name}
                       <Icon 
                         onClick={() => this.deleteUserTask(user_task)} 
                         name='delete' />
