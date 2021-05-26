@@ -7,7 +7,15 @@ export const index = () => {
 }
 
 export const show = (projectId) => {
-  return fetch(`${API_HOST}/projects/${projectId}`, AUTH_HEADERS).then(res => res.json());
+  return fetch(`${API_HOST}/projects/${projectId}`, AUTH_HEADERS)
+    .then(async (res) => {
+      const data = await res.json();
+      if (res.ok) {
+        return data
+      } else {
+        return Promise.reject(data)
+      }
+    })
 }
 
 export const create = (body) => {

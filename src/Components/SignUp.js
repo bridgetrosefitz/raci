@@ -1,9 +1,8 @@
 // do componentDidMount wiht same fetch request etc as login but post to signup not login
 
 import React from 'react'
-import { Input, Button, Form, Container, Card, Message } from 'semantic-ui-react';
+import { Button, Form, Container, Card, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
-import { API_HOST } from '../api/helper';
 import API from '../api'
 
 export default class SignUp extends React.Component {
@@ -22,6 +21,14 @@ export default class SignUp extends React.Component {
     }
   }
 
+  isValidEmailAddress = (address) => {
+    return !!address.match(/.+@.+/);
+  }
+
+  signupInfoIsFull = () => {
+   return (this.state.signupInfo.first_name.length > 1 && this.state.signupInfo.last_name.length > 1 && this.state.signupInfo.password.length > 1 ? true : false)
+  }
+
   handleChange = (e) => {
     this.setState(prevState => ({
       signupInfo: {
@@ -33,32 +40,33 @@ export default class SignUp extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    API.User.signup(this.state.signupInfo)
-    .then(data => {
-      if(data.token) {
-        localStorage.token = data.token
-        this.props.history.push('/projects')
-      }
-    })
-    .catch((data) => {
-      if(data) {
-        this.setState({
-          errors: data.errors[0]
-        })
-        setTimeout(() => {
+      API.User.signup(this.state.signupInfo)
+      .then(data => {
+        if(data.token) {
+          localStorage.token = data.token
+          this.props.history.push('/projects')
+        }
+      })
+      .catch((data) => {
+        if(data) {
           this.setState({
-            errors: null
-          })}, 2000)
-      }
-      else {
-        this.setState({
-          errors: 'There was a problem creating your account. Please try again'
-        })
-      }
-    })
+            errors: data.errors[0]
+          })
+          setTimeout(() => {
+            this.setState({
+              errors: null
+            })}, 2000)
+        }
+        else {
+          this.setState({
+            errors: 'There was a problem creating your account. Please try again'
+          })
+        }
+      })
   }
 
   render () {
+    
     return (
       <Container style={{height: '100vh', marginTop: '10%'}} textAlign="center">
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
@@ -82,7 +90,7 @@ export default class SignUp extends React.Component {
             <br />
             <Form.Input
               placeholder='Email'
-              type='text'
+              type='email'
               name='email'
               value={this.state.email}
               onChange={this.handleChange}
@@ -104,6 +112,7 @@ export default class SignUp extends React.Component {
             <br />
             <Button
               onClick={this.handleSubmit}
+              color={this.isValidEmailAddress(this.state.signupInfo.email) && this.signupInfoIsFull() ? 'blue' : false}
               type='submit'>
               Create account
             </Button>

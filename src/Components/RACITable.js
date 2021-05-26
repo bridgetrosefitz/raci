@@ -2,7 +2,6 @@ import React from "react";
 import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody, Popup } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
-import DeleteProjectWarningModal from './DeleteProjectWarningModal'
 import EditProjectModal from './EditProjectModal';
 import Nav from './Nav'
 import { Link } from 'react-router-dom';
@@ -65,6 +64,7 @@ export default class RACITable extends React.Component {
         creator: data.data.attributes.creator,
         members: data.data.attributes.members,
       }))
+      .catch(() => this.props.history.push('/projects'))
 
     API.Function.index()
       .then(data => this.setState({
@@ -318,7 +318,7 @@ export default class RACITable extends React.Component {
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
-    const text = this.state.selectedTask.task_name
+    const text = this.state.taskNameForUpdating
     API.Task.create(text, projectId)
       .then(data => this.createUserTasks(data))
   }
@@ -694,8 +694,8 @@ export default class RACITable extends React.Component {
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
-        this.putProjectDataInState()
         this.putAllUsersDataInState()
+        this.putProjectDataInState()
       } else {
         this.props.history.push('/login')
       }
@@ -713,12 +713,14 @@ export default class RACITable extends React.Component {
           <Nav logOut={this.props.logOut} onBack={this.redirectToProjectsIndexPage} backText={'Back to Projects'} userFullName={this.props.userFullName}/>
           <Header as="h1">{this.state.projectName}
             <EditProjectModal 
+              projectId={this.state.projectId}
               populateMembersToEdit={this.putSelectedProjectMembersDataInState}
               onProjectNameChange={this.handleProjectNameChange}
               projectName={this.state.projectNameForUpdating}
               createDropdown={this.createDropdownForEditProjectModal()}
               handleDropdownChange={this.handleDropdownChangeForEditProjectModal}
               onSubmit={this.handleSubmitOnEditProjectModal}
+              deleteProject={this.deleteProject}
             />
           </Header>
           
@@ -765,56 +767,71 @@ export default class RACITable extends React.Component {
                 error={task.flags.length > 0}
                 key={index}>
                 <Table.Cell>
+                  <Grid>
+                  <Grid.Column width={11}>
                   {task.task_name}
                   <Label.Group circular>
                     {task.flags.map((flag, index) => <Popup size='tiny' position='bottom center' style={{ padding: 6 }} content={flag.user_full_name} trigger={<Label key={index} color="red">{flag.user_initials}</Label>}></Popup>)}
                   </Label.Group>
-                <EditTaskModal
-                  task={task}
-                  projectId={this.state.projectId}
-                  createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
-                  putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskName={this.state.taskNameForUpdating}
-                  handleTextFieldChange={this.handleTextFieldChange}
-                  handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
-                  handleSubmit={this.handleSubmitOnEditTaskModal} 
-                  handleDelete={this.handleDelete}  
-                  />
-                <Button 
-                  icon 
-                  onClick={() => {this.handleFlagging(task)}}
-                  inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
-                  floated="right">
-                  <Icon 
-                  color="grey"
-                  name="flag outline"></Icon>
-                </Button>
+                    </Grid.Column>
+                    <Grid.Column width={5}>
+                      <EditTaskModal
+                        task={task}
+                        projectId={this.state.projectId}
+                        createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
+                        putSelectedTaskDataInState={this.putSelectedTaskDataInState}
+                        taskName={this.state.taskNameForUpdating}
+                        handleTextFieldChange={this.handleTextFieldChange}
+                        handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
+                        handleSubmit={this.handleSubmitOnEditTaskModal}
+                        handleDelete={this.handleDelete}
+                      />
+                      <Button
+                        icon
+                        onClick={() => { this.handleFlagging(task) }}
+                        inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
+                        floated="right">
+                        <Icon
+                          color="grey"
+                          name="flag outline"></Icon>
+                      </Button>
+                    </Grid.Column>
+                  </Grid>
                 </Table.Cell>
                 <Table.Cell>
                   {
                     task.responsible.map((user_task, i) => {
-                      return (<Label key={i}>
-                        {user_task.user_first_name}
-                        <Icon
-                          onClick={() => this.deleteUserTask(user_task)}
-                          name='delete' />
-                      </Label>)
+                      return (<Label 
+                                key={i}
+                                  style={{ marginTop: 2, marginBottom: 2 }}
+                                color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                                  {user_task.user_first_name}
+                                  <Icon
+                                    onClick={() => this.deleteUserTask(user_task)}
+                                    name='delete' />
+                                </Label>)
                     })
                       }
                 </Table.Cell>
                 <Table.Cell>{
                     task.accountable.map((user_task, i) => {
-                      return (<Label key={i}>
-                        {user_task.user_first_name}
-                        <Icon
-                          onClick={() => this.deleteUserTask(user_task)}
-                          name='delete' />
-                      </Label>)
+                      return (<Label
+                                key={i}
+                                style={{ marginTop: 2, marginBottom: 2 }}
+                                color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                                {user_task.user_first_name}
+                                <Icon
+                                  onClick={() => this.deleteUserTask(user_task)}
+                                  name='delete' />
+                              </Label>)
                   } )}
                 </Table.Cell>
                 <Table.Cell>{
                   task.consulted.map((user_task, i) => {
-                    return (<Label key={i}>
+                    return (<Label
+                      key={i}
+                      style={{ marginTop: 2, marginBottom: 2 }}
+                      color={user_task.user_id === this.props.userId ? 'grey' : false} >
                       {user_task.user_first_name}
                       <Icon
                         onClick={() => this.deleteUserTask(user_task)}
@@ -824,10 +841,13 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                   task.informed.map((user_task, i) => {
-                    return (<Label key={i}>
+                    return (<Label
+                      key={i}
+                      style={{ marginTop: 2, marginBottom: 2 }}
+                      color={user_task.user_id === this.props.userId ? 'grey' : false} >
                       {user_task.user_first_name}
-                      <Icon 
-                        onClick={() => this.deleteUserTask(user_task)} 
+                      <Icon
+                        onClick={() => this.deleteUserTask(user_task)}
                         name='delete' />
                     </Label>)
                   })}
@@ -860,11 +880,6 @@ export default class RACITable extends React.Component {
                     handleSubmit={this.handleSubmitOnTaskModal} />
                 </Table.HeaderCell>
                 <Table.HeaderCell colSpan='4'>
-                  <DeleteProjectWarningModal
-                    projectName={this.state.projectName}
-                    projectId={this.state.projectId}
-                    deleteProject={this.deleteProject}
-                  />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

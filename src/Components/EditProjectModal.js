@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Header, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
+import deleteProjectWarningModal from './DeleteProjectWarningModal'
 
 export default (props) => {
   const [open, setOpen] = React.useState(false)
@@ -11,10 +12,10 @@ export default (props) => {
   return (
     <Modal
       onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onOpen={() => {setOpen(true)}}
+
       open={open}
       trigger={<span><Button
-        // style={{color: "white"}}
         style={{ marginLeft: '1.5vh', backgroundColor: "white" }}
         icon
         color='white'
@@ -48,11 +49,15 @@ export default (props) => {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
+        {deleteProjectWarningModal(
+          {
+            projectName: props.projectName, 
+            projectId: props.projectId, 
+            deleteProject: props.deleteProject
+          }
+        )}
         <Button
-          onClick={
-            () => {
-              setOpen(false)
-            }}>
+          onClick={() => {setOpen(false)}}>
           Cancel
         </Button>
         <Button

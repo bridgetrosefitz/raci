@@ -13,14 +13,14 @@ export default (props) => {
       size='small'
       trigger={<Button
       color='red'
-      floated='right'>
+      floated='left'>
       <Icon name='trash alternate outline'/>
       Delete project</Button>}
     >
       <Header icon>
         <Icon name='trash alternate outline' />
         <br/>
-        Are you sure you want to delete this Project?
+        Are you sure you want to delete this project?
       </Header>
       <Modal.Content>
       <Grid>
