@@ -54,7 +54,7 @@ export default class RACITable extends React.Component {
 
   putProjectDataInState = () => {
     this.props.toggleLoader(true)
-    
+
     const projectId = this.props.match.params.id
 
     API.Function.index()
@@ -793,10 +793,11 @@ export default class RACITable extends React.Component {
                         icon
                         onClick={() => { this.handleFlagging(task) }}
                         inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
+                        style={(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? { backgroundColor: 'white' } : null)}
                         floated="right">
                         <Icon
-                          color="grey"
-                          name="flag outline"></Icon>
+                          color={task.flags.length > 0 ? 'red' : 'grey'}
+                          name={task.flags.length > 0 ? 'flag' : 'flag outline'}></Icon>
                       </Button>
                     </Grid.Column>
                   </Grid>
