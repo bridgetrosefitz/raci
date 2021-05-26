@@ -53,24 +53,27 @@ export default class RACITable extends React.Component {
   }
 
   putProjectDataInState = () => {
+    this.props.toggleLoader(true)
+    
     const projectId = this.props.match.params.id
 
-    API.Project.show(projectId)
+    API.Function.index()
       .then(data => this.setState({
+        functions: data.data
+      }))
+
+    API.Project.show(projectId)
+      .then(data => {this.setState({
         projectId: data.data.id,
         projectName: data.data.attributes.name,
         projectNameForUpdating: data.data.attributes.name,
         tasks: data.data.attributes.tasks,
         creator: data.data.attributes.creator,
         members: data.data.attributes.members,
-      }))
+        })
+        this.props.toggleLoader(false)
+      })
       .catch(() => this.props.history.push('/projects'))
-
-    API.Function.index()
-      .then(data => this.setState({
-        functions: data.data
-      }
-      ))
   }
 
   putAllUsersDataInState = () => {
