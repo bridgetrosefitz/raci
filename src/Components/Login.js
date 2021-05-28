@@ -56,6 +56,7 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
+    this.props.toggleLoader(false)
     if (localStorage.token) {
       this.props.history.push('/projects')
     }

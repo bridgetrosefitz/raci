@@ -57,11 +57,15 @@ class App extends React.Component {
             render={routerProps => <Login 
                                       {...routerProps} 
                                       authenticateMe={this.authenticateMe} 
+                                      loaderIsActive={this.state.loaderIsActive}
+                                      toggleLoader={this.toggleLoader}
                                       user_id={this.state.user_id}/>} />
           <Route 
             path="/signup" 
             render={routerProps => <SignUp 
-                                    {...routerProps}/>} />
+                                    {...routerProps}
+                                    loaderIsActive={this.state.loaderIsActive}
+                                    toggleLoader={this.toggleLoader}/>} />
           <Route 
             path="/projects/:id" 
             render={routerProps => <RACITable 

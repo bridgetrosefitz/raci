@@ -65,6 +65,10 @@ export default class SignUp extends React.Component {
       })
   }
 
+  componentDidMount() {
+    this.props.toggleLoader(false)
+  }
+  
   render () {
     
     return (
