@@ -47,7 +47,7 @@ The app is currently an MVP with full CRUD of projects and tasks, and the abilit
 * Add media queries for mobile and larger screens
 * Offer the ability to add team members who do not already have an account
 
-Beyond these key pieces of functionality, it would be cool to:
+Beyond these next-up priorities, it would be cool to:
 * Add a 'manager' authorization for certain CRUD actions
 * Add a 'department' or 'role' for each team member, e.g. customer service, engineer, product designer, engineering manager
 * Enable authorized users to set pre-requisites for the number of users who should be selected for each RACI “function”, e.g. as a manager, I would like to stipulate that 15 customer service people must be informed for updates on a given task; or, that 2 engineering managers must be consulted on a given task
