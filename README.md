@@ -53,5 +53,5 @@ Beyond these key pieces of functionality, it would be cool to:
 * Enable authorized users to set pre-requisites for the number of users who should be selected for each RACI “function”, e.g. as a manager, I would like to stipulate that 15 customer service people must be informed for updates on a given task; or, that 2 engineering managers must be consulted on a given task
 * Add a way for the people who must be Consulted (C) or Informed (I) to attest that they have indeed been consulted or informed
 * Add a way to alert the C or I people that there is new material for their input or information
-* A few other ideas in my "Nice to have" section [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e)
+* Implement the other ideas in my "Nice to have" section [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e)
 
