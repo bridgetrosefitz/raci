@@ -1,7 +1,8 @@
 # RACI Project Management 
 
 '·..·''·..·''·..·' View it at [https://bridgetro.se/raci](https://bridgetro.se/raci) '·..·''·..·''·..·'
-,-*~'`^`'~*-,._.,-*~'`^`'~*-,._., View the API at this repo ,-*~'`^`'~*-,._.,-*~'`^`'~*-,._., 
+
+,-*~'^'~*-,._.,-*~'^'~*-,._., View the API at this repo ,-*~'^'~*-,._.,-*~'^'~*-,._., 
 
 <p float="left">
   <img alt='landing-page' width='500' src="https://bridgetro.se/project-snapshots/personal-website/personal-website-1-landing-page.png" />
