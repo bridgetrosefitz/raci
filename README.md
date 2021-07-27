@@ -13,15 +13,27 @@
 
 ## Why I made it
 
-A simple and standardized app for teams to designate who is Responsible, Accountable, Consulted and Informed on a given task. It helps reduce the risk of low quality work due to murky or pooled accountability, and prompts conversations about capacity, through the ability to flag tasks.
+I built this app to help solve the problem of managing roles on a team.
+
+'RACI' stands for Responsible, Accountable, Consulted, Informed. From my experience, the RACI (or DACI) framework provides a helpful level of detail to make clear who is responsible for getting a job done well. It reduces the risk of low quality work arising from murky or pooled accountability, it helps make sure the right people have input on tasks (and conversely, gives team members explicit authority to make decisions without input!), and it prompts conversations about workload and capacity.
+
+On past projects, I used Google Sheets to build my own RACI frameworks. This app has the advantage of being a standardized process which is simple to use, and of supporting functionality such as flags and alerts, issue-tracking and workflow tools.
 
 ## How it's made
 
 ### Technology
 
+#### Front end
 * [React.js](https://reactjs.org/)
-* XXX
-* XXX
+* [Semantic UI React](https://react.semantic-ui.com/)
+
+
+#### Back end
+* [Rails](https://rubyonrails.org/)
+* [JSON API](https://jsonapi.org/)
+* [PostgreSQL](https://www.postgresql.org/)
+* [JWT](https://jwt.io/)
+
 
 ### User Stories
 
