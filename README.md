@@ -5,9 +5,9 @@
 ,-*~'^'~*-,._.,-*~'^'~*-,._., View the API at this repo ,-*~'^'~*-,._.,-*~'^'~*-,._., 
 
 <p float="left">
-  <img alt='projects-page' width='500' src="https://bridgetro.se/project-snapshots/raci/raci-5-projects-page.png" />
+  <img alt='projects-page' src="https://bridgetro.se/project-snapshots/raci/raci-5-projects-page.png" width='500' />
   <img alt="exploding-spheres" src="https://bridgetro.se/project-snapshots/raci/raci-5-projects-page.png" width='500'/>
-  <img alt="edit-project" src="https://bridgetro.se/public/project-snapshots/raci/raci-6-edit-project.png" width='500'/>
+  <img alt="edit-project" src="https://bridgetro.se/project-snapshots/raci/raci-6-edit-project.png" width='500'/>
   <img alt="login" src="https://bridgetro.se/project-snapshots/raci/raci-3-login.png" width='500'/>
 </p>
 
