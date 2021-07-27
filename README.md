@@ -34,6 +34,13 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 * [PostgreSQL](https://www.postgresql.org/)
 * [JWT](https://jwt.io/)
 
+| Front end  | Back end |
+| ------------- | ------------- |
+| [React.js](https://reactjs.org/)  | [Rails](https://rubyonrails.org/) |
+| [Semantic UI React](https://react.semantic-ui.com/)  | [JSON API](https://jsonapi.org/)  |
+| | [PostgreSQL](https://www.postgresql.org/) |
+| | [JWT](https://jwt.io/) |
+
 
 ### User Stories
 
