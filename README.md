@@ -2,7 +2,7 @@
 
 '·..·''·..·''·..·' View it at [https://bridgetro.se/raci](https://bridgetro.se/raci) '·..·''·..·''·..·'
 
-,-*~'^'~*-,._.,-*~'^'~*-,._., The API is at this repo: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api) ,-*~'^'~*-,._.,-*~'^'~*-,._., 
+,-*~'^'~*-,._.,-*~'^'~*-,._., Code for the API is here: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api) ,-*~'^'~*-,._.,-*~'^'~*-,._., 
 
 <p float="left">
   <img alt='projects-page' src="https://bridgetro.se/project-snapshots/raci/raci-5-projects-page.png" width='500' />
@@ -23,17 +23,6 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 
 ### Technology
 
-#### Front end
-* [React.js](https://reactjs.org/)
-* [Semantic UI React](https://react.semantic-ui.com/)
-
-
-#### Back end
-* [Rails](https://rubyonrails.org/)
-* [JSON API](https://jsonapi.org/)
-* [PostgreSQL](https://www.postgresql.org/)
-* [JWT](https://jwt.io/)
-
 | Front end  | Back end |
 | ------------- | ------------- |
 | [React.js](https://reactjs.org/)  | [Rails](https://rubyonrails.org/) |
@@ -41,19 +30,28 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 | | [PostgreSQL](https://www.postgresql.org/) |
 | | [JWT](https://jwt.io/) |
 
+### ERD
+
+XXX
 
 ### User Stories
 
 I kept myself organized with user stories, available [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e).
 
-### I couldn't have made it without the help of...
-
-* XXX
-* XXX
-
 
 ## What's next
 
-* Major next-up priorities (as of 07/27/21) are:
-  * XXX
-  * XXX
+The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 07/27/21) are:
+* Implement authorization for viewing projects, based on whether the user is a team member or not
+* Create a landing page which explains the app, and doesn't require you to sign up immediately
+* Add media queries for mobile and larger screens
+* Offer the ability to add team members who do not already have an account
+
+Beyond these key pieces of functionality, it would be cool to:
+* Add a 'manager' authorization for certain CRUD actions
+* Add a 'department' or 'role' for each team member, e.g. customer service, engineer, product designer, engineering manager
+* Enable authorized users to set pre-requisites for the number of users who should be selected for each RACI “function”, e.g. as a manager, I would like to stipulate that 15 customer service people must be informed for updates on a given task; or, that 2 engineering managers must be consulted on a given task
+* Add a way for the people who must be Consulted (C) or Informed (I) to attest that they have indeed been consulted or informed
+* Add a way to alert the C or I people that there is new material for their input or information
+* A few other ideas in my "Nice to have" section [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e)
+
