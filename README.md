@@ -1,6 +1,6 @@
 # RACI Project Management 
 
-'·..·''·..·''·..·' View it at [https://bridgetro.se/raci](https://bridgetro.se/raci) '·..·''·..·''·..·'
+'·..·''·..·''·..·' View it at [https://raci.team/](https://raci.team/) (use login test@test.com; password: test'·..·''·..·''·..·'
 
 Code for the API is here: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api)
 
