@@ -1,8 +1,9 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import DeleteProjectWarningModal from './DeleteProjectWarningModal'
+import EditProjectModal from './EditProjectModal';
 import Nav from './Nav'
 import { Link } from 'react-router-dom';
 import API from '../api';
@@ -26,6 +27,7 @@ export default class RACITable extends React.Component {
       tasks: [],
       creator: {},
       members: [],
+      projectToEditMembers: [],
       selectedTask: {
         taskId: null,
         taskText: null,
@@ -81,7 +83,24 @@ export default class RACITable extends React.Component {
         }))   
   }
 
-  createDropdownsForEditModal = (task) => {
+  createDropdownForEditProjectModal = () => {
+    const defaultValues = this.state.members ? this.state.members.map((member) => member.id) : []
+
+    return(
+      <Dropdown
+        placeholder='Add team members'
+        fluid
+        multiple
+        selection
+        options={this.createTeamMemberOptions()}
+        defaultValue={defaultValues}
+        onChange={(event, data) => { this.handleDropdownChangeForEditProjectModal(data) }}
+
+      />
+    )
+  }
+
+  createDropdownsForEditTaskModal = (task) => {
 
     return (
       this.state.functions.map((raciFunction, index) => {
@@ -98,7 +117,7 @@ export default class RACITable extends React.Component {
               defaultValue={[3,4].includes(parseInt(raciFunction.id)) ? defaultValues : defaultValues[0]}
               selection
               options={this.createTeamMemberOptions()}
-              onChange={(event, data) => {this.handleDropdownChangeForEditModal(data, raciFunction)}}
+              onChange={(event, data) => {this.handleDropdownChangeForEditTaskModal(data, raciFunction)}}
             />
           </Form.Field>
         )
@@ -106,7 +125,7 @@ export default class RACITable extends React.Component {
     )
   }
 
-  createDropdownsForCreateModal = (task) => {
+  createDropdownsForCreateTaskModal = (task) => {
 
     return (
       this.state.functions.map((raciFunction, index) => {
@@ -127,6 +146,14 @@ export default class RACITable extends React.Component {
         )
       })
     )
+  }
+
+  mapAllUsersToDropdownOptions = () => {
+    return this.state.allUsers.map(user => ({
+      key: user.id,
+      text: user.attributes.full_name,
+      value: user.id
+    }))
   }
 
   handleDropdownChangeForCreateModal = (data, raciFunction) => {
@@ -167,7 +194,7 @@ export default class RACITable extends React.Component {
     }
   }
 
-  handleDropdownChangeForEditModal = (data, raciFunction) => {
+  handleDropdownChangeForEditTaskModal = (data, raciFunction) => {
 
     const raciFunctionId = parseInt(raciFunction.id)
 
@@ -204,6 +231,13 @@ export default class RACITable extends React.Component {
       })
     }
   }
+
+  handleDropdownChangeForEditProjectModal = (data) => {
+    console.log("data", data)
+      this.setState({
+        projectToEditMembers: [data.value]
+      })
+    }
 
   handleTextFieldChange = event => {
     this.setState({
@@ -454,6 +488,19 @@ export default class RACITable extends React.Component {
 
   }
 
+  putSelectedProjectMembersDataInState = () => {
+    
+    this.state.members.forEach(member => {
+      this.setState({
+        projectToEditMembers: [
+          ...this.state.projectToEditMembers,
+          member.id
+        ]
+      })
+
+    })
+  }
+
   putSelectedTaskDataInState = (id) => {
     let taskToPutInState = null
 
@@ -564,6 +611,10 @@ export default class RACITable extends React.Component {
     this.props.history.push(`/projects`)
   }
 
+  handleProjectNameChange = (event) => {
+    const projectName = event.target.value;
+    this.setState({ projectName: projectName })
+  }
 
   componentDidMount() {
       if (localStorage.token) {
@@ -585,7 +636,16 @@ export default class RACITable extends React.Component {
             </p>
           </Message>
           <Nav logOut={this.props.logOut} onBack={this.redirectToProjectsIndexPage} backText={'Back to Projects'} userFullName={this.props.userFullName}/>
-          <Header as="h1">{this.state.projectName}</Header>
+          <Header as="h1">{this.state.projectName}
+            <EditProjectModal 
+              onProjectNameChange={this.handleProjectNameChange}
+              projectName={this.state.projectName}
+              createDropdown={this.createDropdownForEditProjectModal()}
+              handleDropdownChange={this.handleDropdownChangeForEditProjectModal}
+              handleSubmit={this.handleSubmitOnEditTaskModal}
+            />
+          </Header>
+          
           <Grid>
           { this.state.showAddUsers ?
             (
@@ -632,11 +692,11 @@ export default class RACITable extends React.Component {
                 <EditTaskModal
                   task={task}
                   projectId={this.state.projectId}
-                  createDropdowns={() => this.createDropdownsForEditModal(task)}
+                  createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
                   putSelectedTaskDataInState={this.putSelectedTaskDataInState}
                   taskName={this.state.selectedTask.task_name}
                   handleTextFieldChange={this.handleTextFieldChange}
-                  handleDropdownChange={this.handleDropdownChangeForEditModal}
+                  handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
                   handleSubmit={this.handleSubmitOnEditTaskModal} 
                   handleDelete={this.handleDelete}  
                   />
@@ -699,7 +759,7 @@ export default class RACITable extends React.Component {
                   <TaskModal
                     projectId={this.state.projectId}
                     raciFunctions={this.state.functions}
-                    createDropdowns={this.createDropdownsForCreateModal}
+                    createDropdowns={this.createDropdownsForCreateTaskModal}
                     taskName={this.state.selectedTask.task_name}
                     handleTextFieldChange={this.handleTextFieldChange}
                     handleDropdownChange={this.handleDropdownChangeForCreateModal}

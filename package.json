@@ -1,7 +1,7 @@
 {
   "name": "raci",
   "version": "0.1.0",
-  "homepage": "https://bridgetro.se/raci/",
+  "homepage": "https://raci.team",
   "private": true,
   "dependencies": {
     "@artsy/fresnel": "^1.5.0",
