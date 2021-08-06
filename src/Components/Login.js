@@ -17,6 +17,15 @@ export default class Login extends React.Component {
       errors: null
     }
   }
+
+  isValidEmailAddress = (address) => {
+    return !!address.match(/.+@.+/);
+  }
+
+  loginInfoIsFull = () => {
+
+    return (this.state.loginInfo.password.length > 1 ? true : false)
+  }
  
   handleSubmit = (e) => {
     e.preventDefault()
@@ -47,6 +56,7 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
+    this.props.toggleLoader(false)
     if (localStorage.token) {
       this.props.history.push('/projects')
     }
@@ -57,10 +67,10 @@ export default class Login extends React.Component {
       <Container style={{height: '100vh', marginTop: '10%'}}textAlign="center">
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Login</h2>
-          <Form error={this.state.error ? true : false}>
+          <Form error={this.state.errors}>
             <Form.Input
               placeholder='Email'
-              type='text'
+              type='email'
               name='email'
               value={this.state.email}
               onChange={this.handleChange} />
@@ -80,6 +90,7 @@ export default class Login extends React.Component {
             <br />
             <Button
               onClick={this.handleSubmit}
+              color={this.isValidEmailAddress(this.state.loginInfo.email) && this.loginInfoIsFull() ? 'blue' : false}
               type='submit'>
               Log in
             </Button>

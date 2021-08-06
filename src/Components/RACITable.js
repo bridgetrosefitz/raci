@@ -1,8 +1,8 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody } from 'semantic-ui-react';
+import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody, Popup } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
-import DeleteProjectWarningModal from './DeleteProjectWarningModal'
+// import DeleteProjectWarningModal from './DeleteProjectWarningModal'
 import EditProjectModal from './EditProjectModal';
 import Nav from './Nav'
 import { Link } from 'react-router-dom';
@@ -23,6 +23,7 @@ export default class RACITable extends React.Component {
       },
       projectId: '',
       projectName: '',
+      projectNameForUpdating: '',
       functions: [],
       tasks: [],
       creator: {},
@@ -36,6 +37,7 @@ export default class RACITable extends React.Component {
         consulted: [],
         informed: []
       },
+      taskNameForUpdating: '',
       taskToCreateUserIds: {
         responsible: [],
         accountable: [],
@@ -52,22 +54,27 @@ export default class RACITable extends React.Component {
   }
 
   putProjectDataInState = () => {
-    const projectId = this.props.match.params.id
+    this.props.toggleLoader(true)
 
-    API.Project.show(projectId)
-      .then(data => this.setState({
-        projectId: data.data.id,
-        projectName: data.data.attributes.name,
-        tasks: data.data.attributes.tasks,
-        creator: data.data.attributes.creator,
-        members: data.data.attributes.members,
-      }))
+    const projectId = this.props.match.params.id
 
     API.Function.index()
       .then(data => this.setState({
         functions: data.data
-      }
-      ))
+      }))
+
+    API.Project.show(projectId)
+      .then(data => {this.setState({
+        projectId: data.data.id,
+        projectName: data.data.attributes.name,
+        projectNameForUpdating: data.data.attributes.name,
+        tasks: data.data.attributes.tasks,
+        creator: data.data.attributes.creator,
+        members: data.data.attributes.members,
+        })
+        this.props.toggleLoader(false)
+      })
+      .catch(() => this.props.history.push('/projects'))
   }
 
   putAllUsersDataInState = () => {
@@ -77,22 +84,32 @@ export default class RACITable extends React.Component {
 
   createTeamMemberOptions = () => {
     return this.state.members.map(member => ({
-          key: member.first_name,
+          key: member.id,
           text: member.first_name,
           value: member.id
-        }))   
+        }))
+  }
+
+  mapAllUsersToDropdown = () => {
+    return this.state.allUsers
+      // .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
+      .map(user => ({
+        key: parseInt(user.id),
+        text: user.attributes.full_name,
+        value: parseInt(user.id)
+      }))
   }
 
   createDropdownForEditProjectModal = () => {
     const defaultValues = this.state.members ? this.state.members.map((member) => member.id) : []
-
-    return(
+    
+    return (
       <Dropdown
         placeholder='Add team members'
         fluid
         multiple
         selection
-        options={this.createTeamMemberOptions()}
+        options={this.mapAllUsersToDropdown()}
         defaultValue={defaultValues}
         onChange={(event, data) => { this.handleDropdownChangeForEditProjectModal(data) }}
 
@@ -233,17 +250,18 @@ export default class RACITable extends React.Component {
   }
 
   handleDropdownChangeForEditProjectModal = (data) => {
-    console.log("data", data)
       this.setState({
-        projectToEditMembers: [data.value]
+        projectToEditMembers: data.value
       })
-    }
+  }
+
 
   handleTextFieldChange = event => {
     this.setState({
-      selectedTask: {
-        ...this.state.selectedTask,
-      task_name: event.target.value}
+      // selectedTask: {
+      //   ...this.state.selectedTask,
+      // task_name: event.target.value}
+      taskNameForUpdating: event.target.value
     })
   }
 
@@ -313,13 +331,15 @@ export default class RACITable extends React.Component {
   handleSubmitOnTaskModal = (event) => {
     event.preventDefault()
     const projectId = this.state.projectId
-    const text = this.state.selectedTask.task_name
+    const text = this.state.taskNameForUpdating
     API.Task.create(text, projectId)
       .then(data => this.createUserTasks(data))
   }
 
   handleSubmitOnEditTaskModal = (event, task) => {
     event.preventDefault()
+
+    const projectId = this.state.projectId
 
     const userIdsForUserTasksToCreate = {
       responsible: [],
@@ -469,40 +489,115 @@ export default class RACITable extends React.Component {
       )
     })
 
+    // Create an empty array for all the returned promises that are about to be made
+
+    const apiPromises = []
+
     // Delete user tasks
 
     deleteThesePuppiesFiltered.forEach((userTaskId) => {
-        API.UserTask.destroy(userTaskId)
-          .then(this.putProjectDataInState)
+        apiPromises.push(API.UserTask.destroy(userTaskId))
     })
 
     // Send user tasks to the server for creation!
 
       userTasksToCreate.forEach((userTask) => {
-          API.UserTask.create(userTask)
-          .then(this.putProjectDataInState)
+          apiPromises.push(API.UserTask.create(userTask))
       })  
 
       // Update the task text
 
+      if (this.state.taskNameForUpdating !== this.state.selectedTask.taskName) {
+        if (this.state.taskNameForUpdating !== '') {
+          apiPromises.push(API.Task.update(taskId, this.state.taskNameForUpdating, projectId))
+        } else {
+          // do error thing here
+        }
+      }
+
+      Promise.allSettled(apiPromises).then(this.putProjectDataInState)
 
   }
 
-  putSelectedProjectMembersDataInState = () => {
-    
-    this.state.members.forEach(member => {
-      this.setState({
-        projectToEditMembers: [
-          ...this.state.projectToEditMembers,
-          member.id
-        ]
-      })
+  handleSubmitOnEditProjectModal = (event) => {
+    event.preventDefault()
+    const projectId = this.state.projectId
+    const existingMemberIds = this.state.members.map(member => member.id)
+    const projectToEditUserIds = this.state.projectToEditMembers
+    const membersToDeleteIds = []
+    const membersToCreateIds = []
+    const membershipIdsForMembershipsToDelete = []
 
+    // Check if there are any IDs in projectToEditUserIds which are not in existingMembers, 
+    // and add them to membersToCreate
+    
+    projectToEditUserIds.forEach(id => {
+      if(existingMemberIds.includes(id)) {
+        return
+      } else {
+        membersToCreateIds.push(id) 
+      }
+    })
+
+    // Check if there are any IDs which have been removed, when compared with existing Members
+    // and add them to membersToDelete
+    
+    existingMemberIds.forEach(id => {
+      if (projectToEditUserIds.includes(id)) {
+        return
+      } else {
+        membersToDeleteIds.push(id) 
+      }
+    })
+
+    // Create an empty array for all the returned promises that are about to be made
+
+    const apiPromises = []
+
+    // Create Memberships
+    membersToCreateIds.forEach(memberId => {
+     apiPromises.push(API.Membership.create(memberId, projectId))
+    })
+
+    // Delete Memberships
+
+    this.state.members.forEach(member => {
+      if(membersToDeleteIds.includes(member.id)) {
+        membershipIdsForMembershipsToDelete.push(member.membership_id)
+      }
+    })
+
+    membershipIdsForMembershipsToDelete.forEach(membershipId => {
+      apiPromises.push(API.Membership.destroy(membershipId))
+    })
+
+    // Update the text on the project, if it has changed
+
+    if (this.state.projectName !== this.state.projectNameForUpdating) {
+      if (this.state.projectNameForUpdating !== '') {
+        apiPromises.push(API.Project.update(projectId, this.state.projectNameForUpdating))
+      } else {
+        // do error thing here
+      }
+    }
+
+    Promise.allSettled(apiPromises).then(this.putProjectDataInState)
+
+  }
+      
+  putSelectedProjectMembersDataInState = () => {
+    let membersToShoveInState = []
+    this.state.members.forEach(member => {
+      membersToShoveInState = [...membersToShoveInState, member.id]
+      })
+    this.setState({
+      projectToEditMembers: membersToShoveInState
     })
   }
 
   putSelectedTaskDataInState = (id) => {
     let taskToPutInState = null
+    let taskName = null
 
     const taskToEditUserIds = {
       responsible: [],
@@ -516,6 +611,7 @@ export default class RACITable extends React.Component {
         // Get the task / user task data to put into state
 
         taskToPutInState = task
+        taskName = task.task_name
 
         // Get an array of IDs for the user tasks, organized by function
 
@@ -528,6 +624,7 @@ export default class RACITable extends React.Component {
 
     this.setState({
       selectedTask: taskToPutInState,
+      taskNameForUpdating: taskName,
       taskToEditUserIds: taskToEditUserIds
     })
   }
@@ -598,29 +695,20 @@ export default class RACITable extends React.Component {
     .then(this.redirectToProjectsIndexPage)
   }
 
-  mapAllUsersToDropdown = () => {
-    return this.state.allUsers
-    .filter(user => (!this.state.members.map(member => member.id).includes(parseInt(user.id))))
-    .map(user => ({ 
-      key: user.id, 
-      text: user.attributes.full_name, 
-      value: user.id }))
-  }
-
   redirectToProjectsIndexPage = () => {
     this.props.history.push(`/projects`)
   }
 
   handleProjectNameChange = (event) => {
     const projectName = event.target.value;
-    this.setState({ projectName: projectName })
+    this.setState({ projectNameForUpdating: projectName })
   }
 
   componentDidMount() {
       if (localStorage.token) {
         this.props.authenticateMe()
-        this.putProjectDataInState()
         this.putAllUsersDataInState()
+        this.putProjectDataInState()
       } else {
         this.props.history.push('/login')
       }
@@ -638,11 +726,14 @@ export default class RACITable extends React.Component {
           <Nav logOut={this.props.logOut} onBack={this.redirectToProjectsIndexPage} backText={'Back to Projects'} userFullName={this.props.userFullName}/>
           <Header as="h1">{this.state.projectName}
             <EditProjectModal 
+              projectId={this.state.projectId}
+              populateMembersToEdit={this.putSelectedProjectMembersDataInState}
               onProjectNameChange={this.handleProjectNameChange}
-              projectName={this.state.projectName}
+              projectName={this.state.projectNameForUpdating}
               createDropdown={this.createDropdownForEditProjectModal()}
               handleDropdownChange={this.handleDropdownChangeForEditProjectModal}
-              handleSubmit={this.handleSubmitOnEditTaskModal}
+              onSubmit={this.handleSubmitOnEditProjectModal}
+              deleteProject={this.deleteProject}
             />
           </Header>
           
@@ -660,12 +751,16 @@ export default class RACITable extends React.Component {
             ) :(
               <Grid.Column width={8}>
                 <Label.Group circular>
-                  {this.state.members.map((member, index) => <Label key={index}>{member.initials}</Label>)}
-                  <Label color="blue" onClick={() => this.setState({ showAddUsers: true })} as='a'>+</Label>
+                    {this.state.members.map((member, index) => <Popup size='tiny' position='bottom center' style={{ padding: 6}} content={member.full_name} trigger={<Label key={index}>{member.initials}</Label>}></Popup>)}
                 </Label.Group>
               </Grid.Column>
             )
           }
+
+            {/* <Popup content='Add users to your feed' trigger={<Button icon='add' />} /> */}
+
+
+
           </Grid>
           
        
@@ -685,55 +780,73 @@ export default class RACITable extends React.Component {
                 error={task.flags.length > 0}
                 key={index}>
                 <Table.Cell>
+                  <Grid>
+                  <Grid.Column width={11}>
                   {task.task_name}
                   <Label.Group circular>
-                    {task.flags.map((flag, index) => <Label key={index} color="red">{flag.user_initials}</Label>)}
+                    {task.flags.map((flag, index) => <Popup size='tiny' position='bottom center' style={{ padding: 6 }} content={flag.user_full_name} trigger={<Label key={index} color="red">{flag.user_initials}</Label>}></Popup>)}
                   </Label.Group>
-                <EditTaskModal
-                  task={task}
-                  projectId={this.state.projectId}
-                  createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
-                  putSelectedTaskDataInState={this.putSelectedTaskDataInState}
-                  taskName={this.state.selectedTask.task_name}
-                  handleTextFieldChange={this.handleTextFieldChange}
-                  handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
-                  handleSubmit={this.handleSubmitOnEditTaskModal} 
-                  handleDelete={this.handleDelete}  
-                  />
-                <Button 
-                  icon 
-                  onClick={() => {this.handleFlagging(task)}}
-                  inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
-                  floated="right">
-                  <Icon 
-                  color="grey"
-                  name="flag outline"></Icon>
-                </Button>
+                    </Grid.Column>
+                    <Grid.Column width={5}>
+                      <EditTaskModal
+                        task={task}
+                        projectId={this.state.projectId}
+                        createDropdowns={() => this.createDropdownsForEditTaskModal(task)}
+                        putSelectedTaskDataInState={this.putSelectedTaskDataInState}
+                        taskName={this.state.taskNameForUpdating}
+                        handleTextFieldChange={this.handleTextFieldChange}
+                        handleDropdownChange={this.handleDropdownChangeForEditTaskModal}
+                        handleSubmit={this.handleSubmitOnEditTaskModal}
+                        handleDelete={this.handleDelete}
+                      />
+                      <Button
+                        icon
+                        onClick={() => { this.handleFlagging(task) }}
+                        inverted={!(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? true : false)}
+                        style={(task.flags.map(flag => flag.user_id).includes(this.props.userId) ? { backgroundColor: 'white' } : null)}
+                        floated="right">
+                        <Icon
+                          color={task.flags.length > 0 ? 'red' : 'grey'}
+                          name={task.flags.length > 0 ? 'flag' : 'flag outline'}></Icon>
+                      </Button>
+                    </Grid.Column>
+                  </Grid>
                 </Table.Cell>
-                <Table.Cell>{
-                  task.responsible.map((user_task, i) => {
-                    return (<Label key={i}>
-                      {user_task.user_full_name}
-                      <Icon
-                        onClick={() => this.deleteUserTask(user_task)}
-                        name='delete' />
-                    </Label>)
-                  } )}
+                <Table.Cell>
+                  {
+                    task.responsible.map((user_task, i) => {
+                      return (<Label 
+                                key={i}
+                                  style={{ marginTop: 2, marginBottom: 2 }}
+                                color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                                  {user_task.user_first_name}
+                                  <Icon
+                                    onClick={() => this.deleteUserTask(user_task)}
+                                    name='delete' />
+                                </Label>)
+                    })
+                      }
                 </Table.Cell>
                 <Table.Cell>{
                     task.accountable.map((user_task, i) => {
-                      return (<Label key={i}>
-                        {user_task.user_full_name}
-                        <Icon
-                          onClick={() => this.deleteUserTask(user_task)}
-                          name='delete' />
-                      </Label>)
+                      return (<Label
+                                key={i}
+                                style={{ marginTop: 2, marginBottom: 2 }}
+                                color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                                {user_task.user_first_name}
+                                <Icon
+                                  onClick={() => this.deleteUserTask(user_task)}
+                                  name='delete' />
+                              </Label>)
                   } )}
                 </Table.Cell>
                 <Table.Cell>{
                   task.consulted.map((user_task, i) => {
-                    return (<Label key={i}>
-                      {user_task.user_full_name}
+                    return (<Label
+                      key={i}
+                      style={{ marginTop: 2, marginBottom: 2 }}
+                      color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                      {user_task.user_first_name}
                       <Icon
                         onClick={() => this.deleteUserTask(user_task)}
                         name='delete' />
@@ -742,10 +855,13 @@ export default class RACITable extends React.Component {
                 </Table.Cell>
                 <Table.Cell>{
                   task.informed.map((user_task, i) => {
-                    return (<Label key={i}>
-                      {user_task.user_full_name}
-                      <Icon 
-                        onClick={() => this.deleteUserTask(user_task)} 
+                    return (<Label
+                      key={i}
+                      style={{ marginTop: 2, marginBottom: 2 }}
+                      color={user_task.user_id === this.props.userId ? 'grey' : false} >
+                      {user_task.user_first_name}
+                      <Icon
+                        onClick={() => this.deleteUserTask(user_task)}
                         name='delete' />
                     </Label>)
                   })}
@@ -778,11 +894,6 @@ export default class RACITable extends React.Component {
                     handleSubmit={this.handleSubmitOnTaskModal} />
                 </Table.HeaderCell>
                 <Table.HeaderCell colSpan='4'>
-                  <DeleteProjectWarningModal
-                    projectName={this.state.projectName}
-                    projectId={this.state.projectId}
-                    deleteProject={this.deleteProject}
-                  />
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

@@ -1,20 +1,22 @@
 import React from 'react'
 import { Button, Header, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
+import deleteProjectWarningModal from './DeleteProjectWarningModal'
 
-export default (props) => {
+
+const EditProjectModal = (props) => {
   const [open, setOpen] = React.useState(false)
 
   const handleTriggerButtonClick = () => {
     // props.putSelectedProjectDataInState(props.project.id)
+    props.populateMembersToEdit()
   }
 
   return (
     <Modal
       onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onOpen={() => {setOpen(true)}}
       open={open}
       trigger={<span><Button
-        // style={{color: "white"}}
         style={{ marginLeft: '1.5vh', backgroundColor: "white" }}
         icon
         color='white'
@@ -48,12 +50,18 @@ export default (props) => {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
+        {deleteProjectWarningModal(
+          {
+            projectName: props.projectName, 
+            projectId: props.projectId, 
+            deleteProject: props.deleteProject
+          }
+        )}
         <Button
-          onClick={
-            () => {
-              setOpen(false)
-              props.onCancel()
-            }}>
+          onClick={() => {
+            setOpen(false)               
+          // props.onCancel()
+          }}>
           Cancel
         </Button>
         <Button
@@ -69,3 +77,5 @@ export default (props) => {
     </Modal>
   )
 }
+
+export default EditProjectModal

@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# RACI Project Management 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+'·..·''·..·''·..·' View it at [https://bridgetro.se/raci](https://bridgetro.se/raci) '·..·''·..·''·..·'
 
-## Available Scripts
+Code for the API is here: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api)
 
-In the project directory, you can run:
+<p float="left">
+  <img alt='projects-page' src="https://bridgetro.se/project-snapshots/raci/raci-5-projects-page.png" width='400' />
+  <img alt="project-and-tasks-page" src="https://bridgetro.se/project-snapshots/raci/raci-1-project-and-tasks-page.png" width='400'/>
+  <img alt="edit-project" src="https://bridgetro.se/project-snapshots/raci/raci-6-edit-project.png" width='400'/>
+  <img alt="login" src="https://bridgetro.se/project-snapshots/raci/raci-3-login.png" width='400'/>
+</p>
 
-### `yarn start`
+## Why I made it
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+I built this app to help solve the problem of managing roles on a team.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+'RACI' stands for Responsible, Accountable, Consulted, Informed. From my experience, the RACI (or DACI) framework provides a helpful level of detail to make clear who is responsible for getting a job done well. It reduces the risk of low quality work arising from murky or pooled accountability, it helps make sure the right people have input on tasks (and conversely, gives team members explicit authority to make decisions without input!), and it prompts conversations about workload and capacity.
 
-### `yarn test`
+On past projects, I used Google Sheets to build my own RACI frameworks. This app has the advantage of being a standardized process which is simple to use, and of supporting functionality such as flags and alerts, issue-tracking and workflow tools.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How it's made
 
-### `yarn build`
+### Technology
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Front end  | Back end |
+| ------------- | ------------- |
+| [React.js](https://reactjs.org/)  | [Rails](https://rubyonrails.org/) |
+| [Semantic UI React](https://react.semantic-ui.com/)  | [JSON API](https://jsonapi.org/)  |
+| | [PostgreSQL](https://www.postgresql.org/) |
+| | [JWT](https://jwt.io/) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### ERD
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+XXX
 
-### `yarn eject`
+### User Stories
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+I kept myself organized with user stories, available [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## What's next
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 07/27/21) are:
+* Create a landing page which explains the app, and doesn't require you to sign up immediately
+* Create an onboarding experience
+* Implement authorization for viewing projects, based on whether the user is a team member or not
+* Add media queries for mobile and larger screens
+* Offer the ability to add team members who do not already have an account
 
-## Learn More
+Beyond these next-up priorities, it would be cool to:
+* Add a 'manager' authorization for certain CRUD actions
+* Add a 'department' or 'role' for each team member, e.g. customer service, engineer, product designer, engineering manager
+* Enable authorized users to set pre-requisites for the number of users who should be selected for each RACI “function”, e.g. as a manager, I would like to stipulate that 15 customer service people must be informed for updates on a given task; or, that 2 engineering managers must be consulted on a given task
+* Add a way for the people who must be Consulted (C) or Informed (I) to attest that they have indeed been consulted or informed
+* Add a way to alert the C or I people that there is new material for their input or information
+* Implement the other ideas under the "Nice to have" category in my [user stories](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

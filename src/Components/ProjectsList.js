@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Header, Icon, Container, Menu} from 'semantic-ui-react';
+import { Card, Header, Icon, Container} from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal';
 import Nav from './Nav'
 import API from '../api';
@@ -19,16 +19,19 @@ export default class ProjectsList extends React.Component {
   }
 
   putAllUsersDataInState = () => {
-    API.User.index()
+    return API.User.index()
     .then(data => this.setState({ allUsers: data.data }))
   }
 
   putProjectsDataInState = () => {
+    this.props.toggleLoader(true)
     API.User.available_projects()
     .then(data => {
+      this.props.toggleLoader(false)
       this.setState({
         projects: data.data
-      })}
+      })
+    }
     )
   }
 
@@ -105,10 +108,10 @@ export default class ProjectsList extends React.Component {
       this.props.history.push('/login')
     }
   }
-  
+
  
   createCardGroup = () => {
-    return(
+    return (
       <Card.Group itemsPerRow={3} style={{ marginTop: 20 }}>
       {this.createProjectCards()}
         <CreateProjectModal

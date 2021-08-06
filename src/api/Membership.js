@@ -18,3 +18,18 @@ export const create = (memberId, projectId) => {
     }
   })
 }
+
+export const destroy = (membershipId) => {
+  return fetch(`${API_HOST}/memberships/${membershipId}`, {
+    ...AUTH_HEADERS,
+    method: 'DELETE',
+  })
+    .then(async (res) => {
+      const data = await res.json();
+      if (res.ok) {
+        return data
+      } else {
+        return Promise.reject(data)
+      }
+    })
+}
