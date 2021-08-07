@@ -4,6 +4,7 @@ import RACITable from './components/RACITable';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import ProjectsList from './components/ProjectsList';
+import LandingPage from './components/LandingPage'; 
 import { Dimmer, Loader } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { Switch, Route, withRouter } from 'react-router-dom'
@@ -88,7 +89,7 @@ class App extends React.Component {
                                       logOut={this.logOut} />} />
           <Route 
             path="/"
-            render={routerProps => <ProjectsList 
+            render={routerProps => <LandingPage
                                       {...routerProps} 
                                       authenticateMe={this.authenticateMe} 
                                       loaderIsActive={this.state.loaderIsActive}
