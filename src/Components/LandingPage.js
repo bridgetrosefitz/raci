@@ -1,4 +1,5 @@
 import { createMedia } from '@artsy/fresnel'
+import PhotoSlideshow from './PhotoSlideshow'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import {
@@ -15,6 +16,8 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react'
+
+const appScreenshots = ['/app-screenshots/raci-1-project-and-tasks-page.png', '/app-screenshots/raci-2-signup.png', '/app-screenshots/raci-3-login.png', '/app-screenshots/raci-4-login-error.png', '/app-screenshots/raci-5-projects-page.png', '/app-screenshots/raci-6-edit-project.png', '/app-screenshots/raci-7-new-task.png']
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -237,12 +240,16 @@ export default class LandingPage extends React.Component  {
                 </p>
               </Grid.Column>
               <Grid.Column floated='right' width={6}>
-                <Image bordered rounded size='large' src='/images/wireframe/white-image.png' />
+                <PhotoSlideshow photos={appScreenshots} />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row>
               <Grid.Column textAlign='center'>
-                <Button size='huge'>Get started</Button>
+                <Button  
+                  style={{ marginTop: '2em' }}
+                  size='huge'>
+                  Get started
+                </Button>
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -251,31 +258,12 @@ export default class LandingPage extends React.Component  {
           <Container>
             <Grid divided inverted stackable>
               <Grid.Row>
-                <Grid.Column width={3}>
-                  <Header inverted as='h4' content='About' />
+                <Grid.Column width={8}>
+                  <Header inverted as='h4' content='© 2021 Bridget Fitzgerald. I ♥ RACI.' />
                   <List link inverted>
-                    <List.Item as='a'>Sitemap</List.Item>
-                    <List.Item as='a'>Contact Us</List.Item>
-                    <List.Item as='a'>Religious Ceremonies</List.Item>
-                    <List.Item as='a'>Gazebo Plans</List.Item>
+                    <List.Item as='a'>View the code</List.Item>
+                    <List.Item as='a'>Contact</List.Item>
                   </List>
-                </Grid.Column>
-                <Grid.Column width={3}>
-                  <Header inverted as='h4' content='Services' />
-                  <List link inverted>
-                    <List.Item as='a'>Banana Pre-Order</List.Item>
-                    <List.Item as='a'>DNA FAQ</List.Item>
-                    <List.Item as='a'>How To Access</List.Item>
-                    <List.Item as='a'>Favorite X-Men</List.Item>
-                  </List>
-                </Grid.Column>
-                <Grid.Column width={7}>
-                  <Header as='h4' inverted>
-                    Footer Header
-                  </Header>
-                  <p>
-                    Extra space for a call to action inside the footer that could help re-engage users.
-                  </p>
                 </Grid.Column>
               </Grid.Row>
             </Grid>

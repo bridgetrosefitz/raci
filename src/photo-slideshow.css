@@ -1,0 +1,33 @@
+.photo-slideshow-container {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.slideshow-panel-left {
+  position: absolute;
+  height: 100%;
+  width: 8%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  /* background-color: white;
+  opacity: 0.4; */
+}
+
+.slideshow-panel-right {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 8%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  /* background-color: white;
+  opacity: 0.4; */
+}
+
+.photo-slideshow-container img {
+  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 2880/1656;
+  border-radius: 4px;
+  border: 1px solid #d3d3d3;
+}
+

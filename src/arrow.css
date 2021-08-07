@@ -1,0 +1,122 @@
+.nav-arrow {
+  position: absolute;
+  z-index: 2;
+  margin: 0 auto;
+  cursor: pointer;
+  /* outline: solid green 2px; */
+}
+
+.down.nav-arrow-left-tip, 
+.down.nav-arrow-right-tip, 
+.left.nav-arrow-left-tip, 
+.left.nav-arrow-right-tip,
+.right.nav-arrow-left-tip, 
+.right.nav-arrow-right-tip {
+  position: absolute;
+  z-index: 2;
+  width: 1px;
+  height: 15px;
+  background-color: black;
+}
+
+/* For downwards-pointing arrow */
+
+.down.nav-arrow {
+  position: absolute;
+  height: 30px;
+  width: 51px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  /* outline: 2px solid rebeccapurple; */
+}
+
+.down.nav-arrow-left-tip {
+  position: absolute;
+  transform: rotate(-55deg);
+  left: 19px;
+  bottom: 7px;
+}
+
+.down.nav-arrow-right-tip {
+  position: absolute;
+  transform: rotate(55deg);
+  right: 19px;
+  bottom: 7px;
+}
+
+.left.nav-arrow,
+.right.nav-arrow {
+  width: 40%;
+  aspect-ratio: 1 / 1.5;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.left.nav-arrow:hover,
+.right.nav-arrow:hover {
+  opacity: 1;
+} 
+
+/* For left-pointing arrow */
+
+.left.nav-arrow-left-tip {
+  transform: translate(3px, 10px) rotate(-45deg);
+  left: 20px;
+  bottom: 50%;
+}
+
+.left.nav-arrow-right-tip {
+  transform: translate(3px, 0px) rotate(45deg);
+  left: 20px;
+  bottom: 50%;
+}
+
+/* For right-pointing arrow */
+
+.right.nav-arrow-left-tip {
+  transform: translate(-3px, 0px) rotate(-45deg);
+  right: 20px;
+  bottom: 50%;
+}
+
+.right.nav-arrow-right-tip {
+  transform: translate(-3px, 10px) rotate(45deg);
+  right: 20px;
+  bottom: 50%;
+}
+
+/* For arrow color */
+
+.white-arrow.nav-arrow-left-tip, 
+.white-arrow.nav-arrow-right-tip {
+  background-color: white;
+}
+
+.black-arrow.nav-arrow-left-tip, 
+.black-arrow.nav-arrow-right-tip {
+  background-color: black;
+}
+
+.grey-arrow.nav-arrow-left-tip, 
+.grey-arrow.nav-arrow-right-tip {
+  background-color: grey;
+}
+
+.transparent-arrow.nav-arrow-left-tip, 
+.transparent-arrow.nav-arrow-right-tip {
+  background-color: transparent;
+}
+
+/* For slideshow arrows */
+
+/* IMPORTANT: You must put this class inside an element with a positioning context */
+
+.slideshow-arrow-left {
+  /* background: linear-gradient(90deg, #00000059, transparent 50%) */
+}
+
+.slideshow-arrow-right {
+  right: 0;
+  /* background: linear-gradient(-90deg, #00000059, transparent 50%) */
+}
