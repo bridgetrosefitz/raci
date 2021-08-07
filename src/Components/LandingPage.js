@@ -5,11 +5,9 @@ import React, { Component } from 'react'
 import {
   Button,
   Container,
-  Divider,
   Grid,
   Header,
   Icon,
-  Image,
   List,
   Menu,
   Segment,
@@ -27,51 +25,47 @@ const { MediaContextProvider, Media } = createMedia({
   },
 })
 
-const HomepageHeading = ({ mobile }) => (
-  <Container text>
-    <Header
-      as='h1'
-      content='RACI'
-      inverted
-      style={{
-        fontSize: mobile ? '2em' : '4em',
-        fontWeight: 'bold',
-        marginBottom: 0,
-        marginTop: mobile ? '1em' : '2em',
-        color: '#2185d0'
-      }}
-    />
-    <Header
-      as='h1'
-      content='Do only what you need to. Know the rest is getting done.'
-      inverted
-      style={{
-        fontSize: mobile ? '1.5em' : '3em',
-        fontWeight: 'normal',
-        marginBottom: 0,
-        marginTop: mobile ? '0.2em' : '0.5em',
-      }}
-    />
-    {/* <Header
-      as='h2'
-      content='Use the Responsible-Accountable-Consulted-Informed framework to make team roles extremely clear.'
-      inverted
-      style={{
-        fontSize: mobile ? '1.2em' : '1.5em',
-        fontWeight: 'normal',
-        marginTop: mobile ? '0.8em' : '1.2em',
-      }}
-    /> */}
-    <Button 
-      style={{
-        marginTop: mobile ? '2em' : '2.2em'
-      }}
-      primary size={mobile ? 'medium' : 'huge'}>
-      Get Started
-      <Icon name='right arrow' />
-    </Button>
-  </Container>
-)
+const HomepageHeading = (props, {mobile}) => {
+  return(
+    <Container text>
+      <Header
+        as='h1'
+        content='RACI'
+        inverted
+        style={{
+          fontSize: mobile ? '2em' : '4em',
+          fontWeight: 'bold',
+          marginBottom: 0,
+          marginTop: mobile ? '1em' : '2em',
+          color: '#2185d0'
+        }}
+      />
+      <Header
+        as='h1'
+        content='Do only what you need to. Know the rest is getting done.'
+        inverted
+        style={{
+          fontSize: mobile ? '1.5em' : '3em',
+          fontWeight: 'normal',
+          marginBottom: 0,
+          marginTop: mobile ? '0.2em' : '0.5em',
+        }}
+      />
+      <Button 
+        onClick={() => {
+          props.history.push('/signup')
+          }
+        }
+        style={{
+          marginTop: mobile ? '2em' : '2.2em'
+        }}
+        primary size={mobile ? 'medium' : 'huge'}>
+        Get Started
+        <Icon name='right arrow' />
+      </Button>
+    </Container>
+  )
+}
 
 HomepageHeading.propTypes = {
   mobile: PropTypes.bool,
@@ -118,7 +112,7 @@ class DesktopContainer extends Component {
                 </Menu.Item>
               </Container>
             </Menu>
-            <HomepageHeading />
+            <HomepageHeading {...this.props}/>
           </Segment>
         </Visibility>
 
@@ -186,7 +180,7 @@ class MobileContainer extends Component {
                   </Menu.Item>
                 </Menu>
               </Container>
-              <HomepageHeading mobile />
+              <HomepageHeading {...this.props} mobile />
             </Segment>
 
             {children}
@@ -201,13 +195,15 @@ MobileContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const ResponsiveContainer = ({ children }) => (
+const ResponsiveContainer = (props, { children }) => {
 
-  <MediaContextProvider>
-    <DesktopContainer>{children}</DesktopContainer>
-    <MobileContainer>{children}</MobileContainer>
-  </MediaContextProvider>
-)
+  return(
+    <MediaContextProvider>
+      <DesktopContainer {...props}>{children}</DesktopContainer>
+      <MobileContainer {...props}>{children}</MobileContainer>
+    </MediaContextProvider>
+  )
+}
 
 ResponsiveContainer.propTypes = {
   children: PropTypes.node,
@@ -220,8 +216,9 @@ export default class LandingPage extends React.Component  {
   }
 
   render() {
+
     return(
-      <ResponsiveContainer>
+      <ResponsiveContainer {...this.props}>
         <Segment style={{ padding: '8em 0em' }} vertical>
           <Grid container stackable verticalAlign='middle'>
             <Grid.Row>
@@ -249,6 +246,7 @@ export default class LandingPage extends React.Component  {
                   style={{ marginTop: '2em' }}
                   size='huge'>
                   Get started
+                  <Icon name='right arrow' />
                 </Button>
               </Grid.Column>
             </Grid.Row>
