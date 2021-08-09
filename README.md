@@ -1,6 +1,6 @@
 # RACI Project Management 
 
-'·..·''·..·''·..·' View it at [https://raci.team/](https://raci.team/) ... you can use login test@test.com; password: test'·..·''·..·''·..·'
+'·..·''·..·''·..·' View it at [https://raci.team/](https://raci.team/)'·..·''·..·''·..·'
 
 Code for the API is here: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api)
 
