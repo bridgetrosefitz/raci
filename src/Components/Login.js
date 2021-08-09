@@ -68,21 +68,22 @@ export default class Login extends React.Component {
       <Container style={{height: '100vh', marginTop: '1%'}}textAlign="center">
         <div style={{
           position: 'relative',
-          marginTop: '1em',
+          marginTop: '2em',
           marginBottom: '3em'}}>
-          <Header 
-            as='h1' 
-            style={{ 
+          <Button 
+            as='h1'
+            onClick={() => this.props.history.push('/')}
+            style={{
               margin: '0 auto',
-              width: '50px',
+              width: '80px',
               height: '30px',
-              lineHeight: '2em',
+              lineHeight: '0.5em',
               fontSize: '1em',
               borderRadius: '4px',
               backgroundColor: '#2185d0',
               color: '#fff'
-            }}>RACI
-          </Header>
+            }}
+            >RACI</Button>
         </div>
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Login</h2>

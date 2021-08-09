@@ -72,7 +72,27 @@ export default class SignUp extends React.Component {
   render () {
     
     return (
-      <Container style={{height: '100vh', marginTop: '10%'}} textAlign="center">
+      <Container style={{height: '100vh', marginTop: '1%'}} textAlign="center">
+        <div style={{
+          position: 'relative',
+          marginTop: '2em',
+          marginBottom: '3em'
+        }}>
+          <Button
+            as='h1'
+            onClick={() => this.props.history.push('/')}
+            style={{
+              margin: '0 auto',
+              width: '80px',
+              height: '30px',
+              lineHeight: '0.5em',
+              fontSize: '1em',
+              borderRadius: '4px',
+              backgroundColor: '#2185d0',
+              color: '#fff'
+            }}
+          >RACI</Button>
+        </div>
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Sign up</h2>
           <Form error={this.state.errors}>

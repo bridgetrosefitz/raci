@@ -81,7 +81,8 @@ class DesktopContainer extends Component {
     const { children } = this.props
     const { fixed } = this.state
 
-    return (
+ 
+  return (
       <Media greaterThan='mobile'>
         <Visibility
           once={false}
@@ -242,6 +243,9 @@ export default class LandingPage extends React.Component  {
             <Grid.Row>
               <Grid.Column textAlign='center'>
                 <Button  
+                  onClick={() => {
+                    this.props.history.push('/signup')
+                  }}
                   style={{ marginTop: '2em' }}
                   size='huge'>
                   Get started

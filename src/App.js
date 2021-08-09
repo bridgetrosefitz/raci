@@ -39,12 +39,10 @@ class App extends React.Component {
   componentDidMount() {
     if (localStorage.token) {
       this.authenticateMe()
-    } else {
-      if (this.props.location.pathname !== '/' || this.props.location.pathname === '/signup' ) {
-        this.props.history.push('/login')
+    } else if (this.props.location.pathname !== '/' || this.props.location.pathname === '/signup' ) {
+      this.props.history.push('/login')
       }
     }
-  }
 
   render () {
     return (
