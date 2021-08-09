@@ -40,7 +40,7 @@ class App extends React.Component {
     if (localStorage.token) {
       this.authenticateMe()
     } else {
-      if (this.props.location.pathname !== '/signup') {
+      if (this.props.location.pathname !== '/' || this.props.location.pathname === '/signup' ) {
         this.props.history.push('/login')
       }
     }
