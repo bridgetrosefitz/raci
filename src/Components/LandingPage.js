@@ -263,8 +263,8 @@ export default class LandingPage extends React.Component  {
                 <Grid.Column width={8}>
                   <Header inverted as='h4' content='© 2021 Bridget Fitzgerald. I ♥ RACI.' />
                   <List link inverted>
-                    <List.Item as='a'>View the code</List.Item>
-                    <List.Item as='a'>Contact</List.Item>
+                    <List.Item as='a' href='https://github.com/bridgetrosefitz/raci' target='_blank'>View the code</List.Item>
+                    <List.Item as='a' href='mailto:bridgetrosefitz@gmail.com' target='_blank'>Contact</List.Item>
                   </List>
                 </Grid.Column>
               </Grid.Row>
