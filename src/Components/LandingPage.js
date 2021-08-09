@@ -25,7 +25,7 @@ const { MediaContextProvider, Media } = createMedia({
   },
 })
 
-const HomepageHeading = (props, {mobile}) => {
+const HomepageHeading = (props) => {
   return(
     <Container text>
       <Header
@@ -33,10 +33,10 @@ const HomepageHeading = (props, {mobile}) => {
         content='RACI'
         inverted
         style={{
-          fontSize: mobile ? '2em' : '4em',
+          fontSize: props.mobile ? '2em' : '4em',
           fontWeight: 'bold',
           marginBottom: 0,
-          marginTop: mobile ? '1em' : '2em',
+          marginTop: props.mobile ? '1em' : '2em',
           color: '#2185d0'
         }}
       />
@@ -45,10 +45,10 @@ const HomepageHeading = (props, {mobile}) => {
         content='Do only what you need to. Know the rest is getting done.'
         inverted
         style={{
-          fontSize: mobile ? '1.5em' : '3em',
+          fontSize: props.mobile ? '1.5em' : '3em',
           fontWeight: 'normal',
           marginBottom: 0,
-          marginTop: mobile ? '0.2em' : '0.5em',
+          marginTop: props.mobile ? '0.2em' : '0.5em',
         }}
       />
       <Button 
@@ -57,9 +57,9 @@ const HomepageHeading = (props, {mobile}) => {
           }
         }
         style={{
-          marginTop: mobile ? '2em' : '2.2em'
+          marginTop: props.mobile ? '2em' : '2.2em'
         }}
-        primary size={mobile ? 'medium' : 'huge'}>
+        primary size={props.mobile ? 'medium' : 'huge'}>
         Get Started
         <Icon name='right arrow' />
       </Button>
@@ -194,12 +194,12 @@ MobileContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const ResponsiveContainer = (props, { children }) => {
+const ResponsiveContainer = (props) => {
 
   return(
     <MediaContextProvider>
-      <DesktopContainer {...props}>{children}</DesktopContainer>
-      <MobileContainer {...props}>{children}</MobileContainer>
+      <DesktopContainer {...props}>{props.children}</DesktopContainer>
+      <MobileContainer {...props}>{props.children}</MobileContainer>
     </MediaContextProvider>
   )
 }
