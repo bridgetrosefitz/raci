@@ -182,7 +182,6 @@ class MobileContainer extends Component {
               </Container>
               <HomepageHeading {...this.props} mobile />
             </Segment>
-
             {children}
           </Sidebar.Pusher>
         </Sidebar.Pushable>
@@ -252,6 +251,7 @@ export default class LandingPage extends React.Component  {
             </Grid.Row>
           </Grid>
         </Segment>
+        {/* Footer */}
         <Segment inverted vertical style={{ padding: '5em 0em' }}>
           <Container>
             <Grid divided inverted stackable>

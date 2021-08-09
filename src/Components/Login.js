@@ -1,7 +1,6 @@
 import React from 'react';
-import { Input, Button, Form, Card, Container, Grid, Message } from 'semantic-ui-react';
+import { Button, Form, Card, Container, Header, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
-import { API_HOST } from '../api/helper';
 import API from '../api'
 
 export default class Login extends React.Component {
@@ -62,9 +61,29 @@ export default class Login extends React.Component {
     }
   }
 
+
+
   render(){
     return(
-      <Container style={{height: '100vh', marginTop: '10%'}}textAlign="center">
+      <Container style={{height: '100vh', marginTop: '1%'}}textAlign="center">
+        <div style={{
+          position: 'relative',
+          marginTop: '1em',
+          marginBottom: '3em'}}>
+          <Header 
+            as='h1' 
+            style={{ 
+              margin: '0 auto',
+              width: '50px',
+              height: '30px',
+              lineHeight: '2em',
+              fontSize: '1em',
+              borderRadius: '4px',
+              backgroundColor: '#2185d0',
+              color: '#fff'
+            }}>RACI
+          </Header>
+        </div>
         <Card centered style={{ paddingTop: 50, paddingBottom: 50, paddingLeft: 20, paddingRight: 20}}>
           <h2>Login</h2>
           <Form error={this.state.errors}>
