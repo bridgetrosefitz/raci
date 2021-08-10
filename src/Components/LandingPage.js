@@ -135,7 +135,7 @@ class DesktopContainer extends Component {
                   <Button onClick={() => { this.props.history.push('/login') }} as='a' inverted={!fixed}>
                     Log in
                   </Button>
-                <Button onClick={() => { this.props.history.push('/signup') }} as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                  <Button onClick={() => { this.props.history.push('/signup') }} as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button>
                 </Menu.Item>
@@ -177,14 +177,8 @@ class MobileContainer extends Component {
             vertical
             visible={sidebarOpened}
           >
-            <Menu.Item as='a' active>
-              Home
-            </Menu.Item>
-            <Menu.Item as='a'>Work</Menu.Item>
-            <Menu.Item as='a'>Company</Menu.Item>
-            <Menu.Item as='a'>Careers</Menu.Item>
-            <Menu.Item as='a'>Log in</Menu.Item>
-            <Menu.Item as='a'>Sign Up</Menu.Item>
+            <Menu.Item as='a' onClick={() => { this.props.history.push('/login') }}>Log in</Menu.Item>
+            <Menu.Item as='a' onClick={() => { this.props.history.push('/signup') }}>Sign Up</Menu.Item>
           </Sidebar>
 
           <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -194,22 +188,7 @@ class MobileContainer extends Component {
               style={{ minHeight: 350, padding: '1em 0em' }}
               vertical
             >
-              <Container>
-                <Menu inverted pointing secondary size='large'>
-                  <Menu.Item onClick={this.handleToggle}>
-                    <Icon name='sidebar' />
-                  </Menu.Item>
-                  <Menu.Item position='right'>
-                    <Button as='a' inverted>
-                      Log in
-                    </Button>
-                    <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
-                      Sign Up
-                    </Button>
-                  </Menu.Item>
-                </Menu>
-              </Container>
-              <HomepageHeading {...this.props} mobile />
+            <HomepageHeading {...this.props} mobile />
             </Segment>
             {children}
           </Sidebar.Pusher>
