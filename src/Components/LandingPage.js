@@ -61,10 +61,10 @@ const HomepageHeading = (props) => {
         content='RACI'
         inverted
         style={{
-          fontSize: props.mobile ? '2em' : '3em',
+          fontSize: props.mobile ? '2em' : '4em',
           fontWeight: 'bold',
           marginBottom: 0,
-          marginTop: props.mobile ? '1em' : '2em',
+          marginTop: props.mobile ? '0.5em' : '1em',
           color: '#2185d0'
         }}
       />

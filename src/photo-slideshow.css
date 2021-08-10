@@ -1,6 +1,7 @@
 .photo-slideshow-container {
   position: relative;
   overflow: hidden;
+  width: 32em;
 }
 
 
