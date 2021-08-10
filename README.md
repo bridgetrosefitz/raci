@@ -37,11 +37,10 @@ I kept myself organized with user stories, available [here](https://bridgetrosef
 
 ## What's next
 
-The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 07/27/21) are:
-* Create a landing page which explains the app, and doesn't require you to sign up immediately
+The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 08/09/21) are:
+* Add media queries for mobile and larger screens
 * Create an onboarding experience
 * Implement authorization for viewing projects, based on whether the user is a team member or not
-* Add media queries for mobile and larger screens
 * Offer the ability to add team members who do not already have an account
 
 Beyond these next-up priorities, it would be cool to:
