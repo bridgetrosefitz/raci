@@ -13,6 +13,7 @@ import {
   Segment,
   Sidebar,
   Visibility,
+  Card
 } from 'semantic-ui-react'
 
 const appScreenshots = ['/app-screenshots/raci-1-project-and-tasks-page.png', '/app-screenshots/raci-2-signup.png', '/app-screenshots/raci-3-login.png', '/app-screenshots/raci-4-login-error.png', '/app-screenshots/raci-5-projects-page.png', '/app-screenshots/raci-6-edit-project.png', '/app-screenshots/raci-7-new-task.png']
@@ -25,15 +26,42 @@ const { MediaContextProvider, Media } = createMedia({
   },
 })
 
+const raciDefinitions = [
+  {
+    header: 'Responsible',
+    description:
+      'You are hands-on doing the work',
+    color: 'blue',
+  },
+  {
+    header: 'Accountable',
+    description:
+      'You are answerable for timing and quality',
+    color: 'blue'
+  },
+  {
+    header: 'Consulted',
+    description:
+      'Your input is necessary',
+    color: 'blue'
+  },
+  {
+    header: 'Informed',
+    description:
+      'You need updates to do your own work well',
+    color: 'blue'
+  },
+]
+
 const HomepageHeading = (props) => {
   return(
-    <Container text>
+    <Container text >
       <Header
         as='h1'
         content='RACI'
         inverted
         style={{
-          fontSize: props.mobile ? '2em' : '4em',
+          fontSize: props.mobile ? '2em' : '3em',
           fontWeight: 'bold',
           marginBottom: 0,
           marginTop: props.mobile ? '1em' : '2em',
@@ -92,7 +120,7 @@ class DesktopContainer extends Component {
           <Segment
             inverted
             textAlign='center'
-            style={{ minHeight: 700, padding: '1em 0em' }}
+            style={{ minHeight: 600, padding: '1em 0em' }}
             vertical
           >
             <Menu
@@ -219,21 +247,35 @@ export default class LandingPage extends React.Component  {
 
     return(
       <ResponsiveContainer {...this.props}>
-        <Segment style={{ padding: '8em 0em' }} vertical>
+        <Segment style={{ padding: '2em 0em' }} vertical>
           <Grid container stackable verticalAlign='middle'>
-            <Grid.Row>
-              <Grid.Column width={8}>
-                <Header as='h3' style={{ fontSize: '2em' }}>
+            <Segment style={{ padding: '0em' }} vertical>
+              <Grid.Row>
+                <Card.Group centered items={raciDefinitions} style={{ flexWrap: 'nowrap', margin: '3em auto 3em auto', maxWidth: '70%'}} />
+              </Grid.Row>
+            </Segment>
+              <Grid.Row>              
+              <Grid.Column width={9}>
+                <Header as='h3' style={{ fontSize: '2em', marginTop: '2em' }}>
                   The RACI Framework
                 </Header>
                 <p style={{ fontSize: '1.33em' }}>
-                  Use the Responsible-Accountable-Consulted-Informed framework to make team roles extremely clear.
+                  RACI helps:
+                  <ol>
+                    <li>reduce the risk of low quality work due to murky accountability</li>
+                    <li>make sure the right people have input on tasks (and gives team members authority to make decisions without input!)</li>
+                    <li>prompt conversations about workload and capacity</li>
+                  </ol>
                 </p>
                 <Header as='h3' style={{ fontSize: '2em' }}>
                   How it works
                 </Header>
                 <p style={{ fontSize: '1.33em' }}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  <ul>
+                    <li>Create a projects, and define tasks on each project</li>
+                    <li>Show which team members are R, A, C and / or I for each task</li>
+                    <li>Team members can flag tasks when a scoping or workload issue arises</li>
+                  </ul>
                 </p>
               </Grid.Column>
               <Grid.Column floated='right' width={6}>
@@ -246,7 +288,7 @@ export default class LandingPage extends React.Component  {
                   onClick={() => {
                     this.props.history.push('/signup')
                   }}
-                  style={{ marginTop: '2em' }}
+                  style={{ margin: '3em 0' }}
                   size='huge'>
                   Get started
                   <Icon name='right arrow' />
