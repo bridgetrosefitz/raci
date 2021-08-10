@@ -135,7 +135,7 @@ class DesktopContainer extends Component {
                   <Button onClick={() => { this.props.history.push('/login') }} as='a' inverted={!fixed}>
                     Log in
                   </Button>
-                  <Button onClick={() => {this.props.history.push('/signup')}} as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                <Button onClick={() => { this.props.history.push('/signup') }} as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button>
                 </Menu.Item>
