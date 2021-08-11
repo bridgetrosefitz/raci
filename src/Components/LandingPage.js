@@ -273,8 +273,8 @@ export default class LandingPage extends React.Component  {
                 </Header>
                 <p style={{ fontSize: '1.33em' }}>
                   <ul>
-                    <li>Create a projects, and define tasks on each project</li>
-                    <li>Show which team members are R, A, C and / or I for each task</li>
+                    <li>Create a project, and define tasks for that project</li>
+                    <li>Show which team members are R, A, C, or I for each task</li>
                     <li>Team members can flag tasks when a scoping or workload issue arises</li>
                   </ul>
                 </p>
