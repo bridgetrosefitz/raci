@@ -64,7 +64,7 @@ const HomepageHeading = (props) => {
           fontSize: props.mobile ? '2em' : '4em',
           fontWeight: 'bold',
           marginBottom: 0,
-          marginTop: props.mobile ? '0.5em' : '1em',
+          marginTop: props.mobile ? '1em' : '1em',
           color: '#2185d0'
         }}
       />
@@ -114,8 +114,6 @@ class DesktopContainer extends Component {
       <Media greaterThan='mobile'>
         <Visibility
           once={false}
-          onBottomPassed={this.showFixedMenu}
-          onBottomPassedReverse={this.hideFixedMenu}
         >
           <Segment
             inverted
@@ -144,7 +142,6 @@ class DesktopContainer extends Component {
             <HomepageHeading {...this.props}/>
           </Segment>
         </Visibility>
-
         {children}
       </Media>
     )
@@ -188,6 +185,13 @@ class MobileContainer extends Component {
               style={{ minHeight: 350, padding: '1em 0em' }}
               vertical
             >
+            <Container>
+              <Menu inverted pointing secondary size='large'>
+                <Menu.Item onClick={this.handleToggle}>
+                  <Icon name='sidebar' />
+                </Menu.Item>
+              </Menu>
+            </Container>
             <HomepageHeading {...this.props} mobile />
             </Segment>
             {children}
@@ -230,7 +234,25 @@ export default class LandingPage extends React.Component  {
           <Grid container stackable verticalAlign='middle'>
             <Segment style={{ padding: '0em' }} vertical>
               <Grid.Row>
-                <Card.Group centered items={raciDefinitions} style={{ flexWrap: 'nowrap', margin: '3em auto 3em auto', maxWidth: '70%'}} />
+                <Media at='mobile'>
+                  <Card.Group 
+                    centered 
+                    items={raciDefinitions} 
+                    style={{ 
+                      flexWrap: 'wrap', 
+                      margin: '2em auto 3em auto', 
+                      maxWidth: '70%'}} />
+                </Media>  
+                <Media greaterThan='mobile'>
+                  <Card.Group
+                    centered
+                    items={raciDefinitions}
+                    style={{
+                      flexWrap: 'nowrap',
+                      margin: '6em auto 3em auto',
+                      maxWidth: '70%'
+                    }} />
+                </Media>
               </Grid.Row>
             </Segment>
               <Grid.Row>              
@@ -257,9 +279,9 @@ export default class LandingPage extends React.Component  {
                   </ul>
                 </p>
               </Grid.Column>
-              <Grid.Column floated='right' width={6}>
-                <PhotoSlideshow photos={appScreenshots} />
-              </Grid.Column>
+                <Grid.Column floated='right' width={6}>
+                  <PhotoSlideshow photos={appScreenshots} />
+                </Grid.Column>
             </Grid.Row>
             <Grid.Row>
               <Grid.Column textAlign='center'>
