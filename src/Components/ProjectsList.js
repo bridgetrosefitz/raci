@@ -70,8 +70,8 @@ class MobileContainer extends React.Component {
             vertical
             visible={sidebarOpened}
           >
-            <Menu.Item as='a' onClick={() => { this.props.history.push('/login') }}>Log in</Menu.Item>
-            <Menu.Item as='a' onClick={() => { this.props.history.push('/signup') }}>Sign Up</Menu.Item>
+            <Menu.Item> {this.props.userFullName ? `Logged in as ${this.props.userFullName}` : ''}</Menu.Item>
+            <Menu.Item as='a' style={{ color: '#2185d0'}}onClick={() => { this.props.logOut() }}>Log out</Menu.Item>
           </Sidebar>
           <Sidebar.Pusher dimmed={sidebarOpened}>
               <Container>
