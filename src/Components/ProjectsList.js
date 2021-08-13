@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMedia } from '@artsy/fresnel'
 import PropTypes from 'prop-types'
-import { Card, Header, Icon, Container, Visibility, Segment, Menu, Button, Sidebar} from 'semantic-ui-react';
+import { Card, Header, Icon, Container, Visibility, Menu, Button, Sidebar} from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal';
 import Nav from './Nav'
 import API from '../api';
@@ -24,26 +24,20 @@ class DesktopContainer extends React.Component {
     const { children } = this.props
     const { fixed } = this.state
 
-
     return (
       <Media greaterThan='mobile'>
         <Visibility
           once={false}
         >
-            <Menu
+            <Nav
               fixed={fixed ? 'top' : null}
               inverted={!fixed}
               pointing={!fixed}
               secondary={!fixed}
-              size='large'>
-              <Container>
-                <Menu.Item position='right'>
-                  <Button onClick={() => { this.props.history.push('/login') }} as='a' inverted={!fixed}>
-                    Log out
-                  </Button>
-                </Menu.Item>
-              </Container>
-            </Menu>
+              size='large'
+              logOut={this.props.logOut} 
+              userFullName={this.props.userFullName}>
+            </Nav>
         </Visibility>
         {children}
       </Media>
@@ -223,7 +217,7 @@ export default class ProjectsList extends React.Component {
 
   createCardGroup = () => {
     return (
-      <>
+      <Container style={{margin: '0 1em'}}>
       <Media at='mobile'>
         <Card.Group itemsPerRow={1} style={{ marginTop: 20 }}>
         {this.createProjectCards()}
@@ -256,15 +250,14 @@ export default class ProjectsList extends React.Component {
           />
         </Card.Group>
       </Media>
-      </>
+      </Container>
     )
   }
 
 
   render() {
     return (
-      <ResponsiveContainer>
-        <Nav logOut={this.props.logOut} userFullName={this.props.userFullName}/>
+      <ResponsiveContainer {...this.props}>
         {this.createCardGroup()}
       </ResponsiveContainer>
     )
