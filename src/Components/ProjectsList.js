@@ -66,7 +66,6 @@ class MobileContainer extends React.Component {
           <Sidebar
             as={Menu}
             animation='overlay'
-            inverted
             onHide={this.handleSidebarHide}
             vertical
             visible={sidebarOpened}
@@ -74,10 +73,9 @@ class MobileContainer extends React.Component {
             <Menu.Item as='a' onClick={() => { this.props.history.push('/login') }}>Log in</Menu.Item>
             <Menu.Item as='a' onClick={() => { this.props.history.push('/signup') }}>Sign Up</Menu.Item>
           </Sidebar>
-
           <Sidebar.Pusher dimmed={sidebarOpened}>
               <Container>
-                <Menu inverted pointing secondary size='large'>
+                <Menu secondary size='large'>
                   <Menu.Item onClick={this.handleToggle}>
                     <Icon name='sidebar' />
                   </Menu.Item>
@@ -218,38 +216,38 @@ export default class ProjectsList extends React.Component {
   createCardGroup = () => {
     return (
       <Container style={{margin: '0 1em'}}>
-      <Media at='mobile'>
-        <Card.Group itemsPerRow={1} style={{ marginTop: 20 }}>
-        {this.createProjectCards()}
-          <CreateProjectModal
-            projectNameHasError={this.state.newProjectNameHasError}
-            trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
-            propsForCreateProjectModal
-            onDropdownChange={this.handleNewMemberSelection}
-            dropdownOptions={this.mapAllUsersToDropdownOptions()}
-            onProjectNameChange={this.handleProjectNameChange}
-            projectName={this.state.projectName}
-            onSubmit={this.createNewProject}
-            onCancel={this.clearProjectNameField}
-          />
-        </Card.Group>
-      </Media>
-       <Media greaterThan='mobile'>
-        <Card.Group itemsPerRow={3} style={{ marginTop: 20 }}>
-        {this.createProjectCards()}
-          <CreateProjectModal
-            projectNameHasError={this.state.newProjectNameHasError}
-            trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
-            propsForCreateProjectModal
-            onDropdownChange={this.handleNewMemberSelection}
-            dropdownOptions={this.mapAllUsersToDropdownOptions()}
-            onProjectNameChange={this.handleProjectNameChange}
-            projectName={this.state.projectName}
-            onSubmit={this.createNewProject}
-            onCancel={this.clearProjectNameField}
-          />
-        </Card.Group>
-      </Media>
+        <Media at='mobile'>
+          <Card.Group itemsPerRow={1} style={{ marginTop: 20 }}>
+          {this.createProjectCards()}
+            <CreateProjectModal
+              projectNameHasError={this.state.newProjectNameHasError}
+              trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
+              propsForCreateProjectModal
+              onDropdownChange={this.handleNewMemberSelection}
+              dropdownOptions={this.mapAllUsersToDropdownOptions()}
+              onProjectNameChange={this.handleProjectNameChange}
+              projectName={this.state.projectName}
+              onSubmit={this.createNewProject}
+              onCancel={this.clearProjectNameField}
+            />
+          </Card.Group>
+        </Media>
+        <Media greaterThan='mobile'>
+          <Card.Group itemsPerRow={3} style={{ marginTop: 20 }}>
+          {this.createProjectCards()}
+            <CreateProjectModal
+              projectNameHasError={this.state.newProjectNameHasError}
+              trigger={<Card color="blue" header={<span><Icon name="plus" color="blue" /><Header color="blue">Add project</Header></span>}/>}
+              propsForCreateProjectModal
+              onDropdownChange={this.handleNewMemberSelection}
+              dropdownOptions={this.mapAllUsersToDropdownOptions()}
+              onProjectNameChange={this.handleProjectNameChange}
+              projectName={this.state.projectName}
+              onSubmit={this.createNewProject}
+              onCancel={this.clearProjectNameField}
+            />
+          </Card.Group>
+        </Media>
       </Container>
     )
   }
