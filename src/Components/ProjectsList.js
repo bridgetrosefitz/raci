@@ -217,7 +217,7 @@ export default class ProjectsList extends React.Component {
     return (
       <Container style={{margin: '0 1em'}}>
         <Media at='mobile'>
-          <Card.Group itemsPerRow={1} style={{ marginTop: 20 }}>
+          <Card.Group itemsPerRow={1} style={{ marginTop: '1em', marginBottom: '2em' }}>
           {this.createProjectCards()}
             <CreateProjectModal
               projectNameHasError={this.state.newProjectNameHasError}
