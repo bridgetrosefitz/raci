@@ -8,6 +8,13 @@ const Nav = props => {
         <Menu.Item>
         {props.userFullName ? `Logged in as ${props.userFullName}` : ''}
         </Menu.Item>
+        {props.onBack &&
+          <Menu.Item>
+            <Button
+              onClick={props.onBack}
+              floated="right"
+            >{props.backText}</Button>
+          </Menu.Item>}
         <Menu.Item>
           <Button
             onClick={props.logOut}
