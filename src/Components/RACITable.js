@@ -255,7 +255,6 @@ export default class RACITable extends React.Component {
       })
   }
 
-
   handleTextFieldChange = event => {
     this.setState({
       // selectedTask: {
@@ -903,30 +902,6 @@ export default class RACITable extends React.Component {
     }
 
 }
-
-
-// const TestComponent = (props) => {
-//   props.fab
-//   return (
-//     <select onChange={(event, data) => props.onChange(event, data, 2)}>
-//       {props.options.map(option => <option value={option.value}>{option.text}</option>)}
-//       {/* <option value={2}>hi</option>
-//       <option value={3}>yo</option> */}
-//     </select>
-//   )
-// }
-
-// <TestComponent onChange={(hi, fab, gu) => {alert(gu)}} fab='poop' options={[{text: 'hi', value: 2}, {text: 'yo', value: 3}]}/>
-
-
-{/* <select id="poop"></select>
-
-document.querySelector("#poop").addEventListener("change", (event,poop, gu,sup, pickles) => {
-
-})
-
-myFunciton(event) */}
-
 
 
 // const DropDown = (props) => {
