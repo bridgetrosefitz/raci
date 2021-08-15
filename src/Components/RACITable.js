@@ -13,7 +13,10 @@ import {
   Header, 
   Container, 
   TableBody, 
-  Popup } from 'semantic-ui-react';
+  Sidebar,
+  Menu,
+  Popup 
+} from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
 import EditProjectModal from './EditProjectModal';
@@ -60,11 +63,52 @@ DesktopContainer.propTypes = {
   children: PropTypes.node,
 }
 
+class MobileContainer extends React.Component {
+  state = {}
+
+  handleSidebarHide = () => this.setState({ sidebarOpened: false })
+
+  handleToggle = () => this.setState({ sidebarOpened: true })
+
+  render() {
+    const { children } = this.props
+    const { sidebarOpened } = this.state
+
+    return(
+      <Media at='mobile'>
+        <Sidebar.Pushable>
+          <Sidebar
+            as={Menu}
+            animation='overlay'
+            onHide={this.handleSidebarHide}
+            vertical
+            visible={sidebarOpened}
+          >
+            <Menu.Item> {this.props.userFullName ? `Logged in as ${this.props.userFullName}` : ''}</Menu.Item>
+            <Menu.Item as='a' style={{ color: '#2185d0' }} onClick={() => { this.props.logOut() }}>Log out</Menu.Item>
+          </Sidebar>
+          <Sidebar.Pusher dimmed={sidebarOpened}>
+            <Container style={{ margin: '0 1em' }}>
+              <Menu secondary size='large'>
+                <Menu.Item onClick={this.handleToggle}>
+                  <Icon name='sidebar' />
+                </Menu.Item>
+              </Menu>
+              {children}
+            </Container>
+          </Sidebar.Pusher>
+        </Sidebar.Pushable>
+      </Media>
+    )
+  }
+}
+
 const ResponsiveContainer = (props) => {
 
   return (
     <MediaContextProvider>
       <DesktopContainer {...props}>{props.children}</DesktopContainer>
+      <MobileContainer {...props}>{props.children}</MobileContainer>
     </MediaContextProvider>
   )
 }

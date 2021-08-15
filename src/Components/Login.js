@@ -61,8 +61,6 @@ export default class Login extends React.Component {
     }
   }
 
-
-
   render(){
     return(
       <Container style={{height: '100vh', marginTop: '1%'}}textAlign="center">
