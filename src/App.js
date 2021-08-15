@@ -44,7 +44,13 @@ class App extends React.Component {
       }
     }
 
+  redirectToProjectsIndexPage = () => {
+    this.props.history.push(`/projects`)
+  }
+
+  
   render () {
+
     return (
       <div>
         <Dimmer inverted active={this.state.loaderIsActive} >
@@ -73,6 +79,8 @@ class App extends React.Component {
                                       loaderIsActive={this.state.loaderIsActive}
                                       toggleLoader={this.toggleLoader}
                                       userId={this.state.user_id} 
+                                      onBack={this.redirectToProjectsIndexPage}
+                                      backText={'Back to Projects'}
                                       userFullName={this.state.full_name} 
                                       logOut={this.logOut}/>} />
           <Route 

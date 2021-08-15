@@ -1,7 +1,13 @@
 import React from 'react';
 import { createMedia } from '@artsy/fresnel'
 import PropTypes from 'prop-types'
-import { Card, Header, Icon, Container, Visibility, Menu, Button, Sidebar} from 'semantic-ui-react';
+import { 
+  Card, 
+  Header, 
+  Icon, 
+  Container, 
+  Menu, 
+  Sidebar} from 'semantic-ui-react';
 import CreateProjectModal from './CreateProjectModal';
 import Nav from './Nav'
 import API from '../api';
@@ -27,19 +33,15 @@ class DesktopContainer extends React.Component {
     return (
       <Media greaterThan='mobile'>
         <Container>
-          <Visibility
-            once={false}
-          >
-              <Nav
-                fixed={fixed ? 'top' : null}
-                inverted={!fixed}
-                pointing={!fixed}
-                secondary={!fixed}
-                size='large'
-                logOut={this.props.logOut} 
-                userFullName={this.props.userFullName}>
-              </Nav>
-          </Visibility>
+          <Nav
+            fixed={fixed ? 'top' : null}
+            inverted={!fixed}
+            pointing={!fixed}
+            secondary={!fixed}
+            size='large'
+            logOut={this.props.logOut} 
+            userFullName={this.props.userFullName}>
+          </Nav>
           {children}
         </Container>
       </Media>

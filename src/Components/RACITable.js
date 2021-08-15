@@ -1,12 +1,73 @@
 import React from "react";
-import { Grid, Icon, Label, Table, Button, Form, Dropdown, Message, Header, Container, TableBody, Popup } from 'semantic-ui-react';
+import { createMedia } from '@artsy/fresnel'
+import PropTypes from 'prop-types'
+import { 
+  Grid, 
+  Icon, 
+  Label, 
+  Table, 
+  Button, 
+  Form, 
+  Dropdown, 
+  Message, 
+  Header, 
+  Container, 
+  TableBody, 
+  Popup } from 'semantic-ui-react';
 import TaskModal from './TaskModal';
 import EditTaskModal from './EditTaskModal';
-// import DeleteProjectWarningModal from './DeleteProjectWarningModal'
 import EditProjectModal from './EditProjectModal';
 import Nav from './Nav'
-import { Link } from 'react-router-dom';
 import API from '../api';
+
+const { MediaContextProvider, Media } = createMedia({
+  breakpoints: {
+    mobile: 0,
+    tablet: 768,
+    computer: 1024,
+  },
+})
+
+class DesktopContainer extends React.Component {
+  state = {}
+
+  hideFixedMenu = () => this.setState({ fixed: false })
+  showFixedMenu = () => this.setState({ fixed: true })
+
+  render() {
+    const { children } = this.props
+    const { fixed } = this.state
+
+    return(
+      <Media greaterThan='mobile'>
+        <Container>
+          <Nav 
+          {...this.props} 
+          fixed={fixed ? 'top' : null}
+          inverted={!fixed}
+          pointing={!fixed}
+          secondary={!fixed}
+          size='large'
+          />
+          {children}
+        </Container>
+      </Media>
+    )
+  }
+}
+
+DesktopContainer.propTypes = {
+  children: PropTypes.node,
+}
+
+const ResponsiveContainer = (props) => {
+
+  return (
+    <MediaContextProvider>
+      <DesktopContainer {...props}>{props.children}</DesktopContainer>
+    </MediaContextProvider>
+  )
+}
 
 export default class RACITable extends React.Component {
   constructor() {
@@ -694,10 +755,6 @@ export default class RACITable extends React.Component {
     .then(this.redirectToProjectsIndexPage)
   }
 
-  redirectToProjectsIndexPage = () => {
-    this.props.history.push(`/projects`)
-  }
-
   handleProjectNameChange = (event) => {
     const projectName = event.target.value;
     this.setState({ projectNameForUpdating: projectName })
@@ -715,14 +772,13 @@ export default class RACITable extends React.Component {
 
     render() {
       return(
-        <Container>
+        <ResponsiveContainer {...this.props}>
           <Message hidden={this.state.hideTopMessage}>
             <Message.Header>{this.state.topMessage.header}</Message.Header>
             <p>
               {this.state.topMessage.message}
             </p>
           </Message>
-          <Nav logOut={this.props.logOut} onBack={this.redirectToProjectsIndexPage} backText={'Back to Projects'} userFullName={this.props.userFullName}/>
           <Header as="h1">{this.state.projectName}
             <EditProjectModal 
               projectId={this.state.projectId}
@@ -755,14 +811,7 @@ export default class RACITable extends React.Component {
               </Grid.Column>
             )
           }
-
-            {/* <Popup content='Add users to your feed' trigger={<Button icon='add' />} /> */}
-
-
-
           </Grid>
-          
-       
           <Table celled> 
             <Table.Header>
               <Table.Row>
@@ -897,7 +946,7 @@ export default class RACITable extends React.Component {
               </Table.Row>
             </Table.Footer>
           </Table>
-        </Container>
+        </ResponsiveContainer>
       )
     }
 
