@@ -34,6 +34,9 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 
 I kept myself organized with user stories, available [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e).
 
+### ERD for the back-end
+
+Visualization of the models and join tables in this app is [here](https://drive.google.com/file/d/19gD3T03EcybSZ50n4mYA6m3KnfGvKGB8/view?usp=sharing).
 
 ## What's next
 
