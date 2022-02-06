@@ -40,7 +40,7 @@ Visualization of the models and join tables in this app is [here](https://drive.
 
 ## What's next
 
-The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 08/09/21) are:
+The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities are:
 * Add media queries for mobile and larger screens
 * Create an onboarding experience
 * Implement authorization for viewing projects, based on whether the user is a team member or not
