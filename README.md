@@ -5,10 +5,10 @@
 Code for the API is here: [https://github.com/bridgetrosefitz/raci_api](https://github.com/bridgetrosefitz/raci_api)
 
 <p float="left">
-  <img alt='projects-page' src="https://bridgetro.se/images/project-snapshots/raci/raci-5-projects-page.png" width='400' />
-  <img alt="project-and-tasks-page" src="https://bridgetro.se/images/project-snapshots/raci/raci-1-project-and-tasks-page.png" width='400'/>
-  <img alt="edit-project" src="https://bridgetro.se/images/project-snapshots/raci/raci-6-edit-project.png" width='400'/>
-  <img alt="login" src="https://bridgetro.se/images/project-snapshots/raci/raci-3-login.png" width='400'/>
+  <img alt='projects-page' src="https://bridgetro.se/project-snapshots/raci/raci-6-projects-page.png" width='400' />
+  <img alt="project-and-tasks-page" src="https://bridgetro.se/project-snapshots/raci/raci-2-project-and-tasks-page.png" width='400'/>
+  <img alt="edit-project" src="https://bridgetro.se/project-snapshots/raci/raci-7-edit-project.png" width='400'/>
+  <img alt="login" src="https://bridgetro.se/project-snapshots/raci/raci-4-login.png" width='400'/>
 </p>
 
 ## Why I made it
@@ -34,10 +34,13 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 
 I kept myself organized with user stories, available [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e).
 
+### ERD for the back-end
+
+Visualization of the models and join tables in this app is [here](https://drive.google.com/file/d/19gD3T03EcybSZ50n4mYA6m3KnfGvKGB8/view?usp=sharing).
 
 ## What's next
 
-The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities (as of 08/09/21) are:
+The app is currently an MVP with full CRUD of projects and tasks, and the ability to flag tasks. From here, I'd like to make it more user-ready. Major next-up priorities are:
 * Add media queries for mobile and larger screens
 * Create an onboarding experience
 * Implement authorization for viewing projects, based on whether the user is a team member or not
