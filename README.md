@@ -32,7 +32,7 @@ On past projects, I used Google Sheets to build my own RACI frameworks. This app
 
 ### User Stories
 
-I kept myself organized with user stories, available [here]([https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-3166a2742268438889473e69c943d72e](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-1b9405dfd358807fbe04daafbfbdcd51)).
+I kept myself organized with user stories, available [here](https://bridgetrosefitz.notion.site/Bridget-Fitzgerald-RACI-1b9405dfd358807fbe04daafbfbdcd51).
 
 ### ERD for the back-end
 
